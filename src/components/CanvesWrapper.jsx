@@ -8,6 +8,7 @@ import {
 } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
 import BaseEnvironment from "./BaseEnvironment";
+import { EffectComposer, Noise } from "@react-three/postprocessing";
 
 function CanvesWrapper({ children }) {
   useEffect(() => {
@@ -33,6 +34,7 @@ function CanvesWrapper({ children }) {
             height: "100%",
           }}
         >
+          
           <BaseEnvironment />
           {children}
           <OrbitControls  />
@@ -50,6 +52,9 @@ function CanvesWrapper({ children }) {
             cellSize={1}
             cellThickness={1}
           /> */}
+          <EffectComposer>
+            <Noise opacity={0.01} />
+          </EffectComposer>
         </Canvas>
       </div>
     </div>
