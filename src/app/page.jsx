@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { Loader } from "@react-three/drei";
 import { Nurse } from "@/Three/Humans";
 import { Suspense, useRef } from "react";
+import PointingModel from "@/Three/PointingModel";
 
 export default function Home() {
   const nurseRef = useRef();
@@ -15,6 +16,7 @@ export default function Home() {
         <Suspense fallback={<mesh />}>
           <Idel />
           <Nurse ref={nurseRef} />
+          <PointingModel />
         </Suspense>
       </CanvesWrapper>
     </div>

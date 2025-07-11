@@ -20,7 +20,8 @@ function CanvesWrapper({ children }) {
 
   return (
     <div className="w-full h-full relative p-5">
-      <div className="w-full h-full relative bg-[#F2F2F2] rounded-[3rem] overflow-hidden shadow-xl">
+      <div className="w-full h-full relative bg-black rounded-[3rem] overflow-hidden shadow-xl">
+      {/* F2F2F2 */}
         <Canvas
           camera={{ fov: 40, position: [0, 0, 20] }}
           gl={{ antialias: true, preserveDrawingBuffer: true }}
