@@ -6,19 +6,21 @@ import { Loader } from "@react-three/drei";
 import { Nurse } from "@/Three/Humans";
 import { Suspense, useRef } from "react";
 import PointingModel from "@/Three/PointingModel";
+import Hero from "@/Pages/Hero";
 
 export default function Home() {
   const nurseRef = useRef();
   return (
     <div className="h-[100vh] w-[100vw] relative">
-      <Header />
+      {/* <Header />
       <CanvesWrapper>
         <Suspense fallback={<mesh />}>
           <Idel />
           <Nurse ref={nurseRef} />
           <PointingModel />
         </Suspense>
-      </CanvesWrapper>
+      </CanvesWrapper> */}
+      <Hero />
     </div>
   );
 }
