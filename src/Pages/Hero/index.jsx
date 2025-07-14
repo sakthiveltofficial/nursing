@@ -19,13 +19,23 @@ export default function Hero() {
             <Environment preset="studio" />
             <fog attach="fog" args={["#e8e6e1", 8, 15]} />
             <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
+              {/* <MorphingParticles 
+                modelPath="/Models/baby.glb" 
+                clearColor="#e8e6e1" 
+                showBackground={true}
+                initialParticleColor="#1d1c17"
+                particleDensity={3} // Higher density for more precise shape
+                initialScale={1} // Larger model scale
+                maxParticleCount={200000} // More particles for better detail
+                initialPosition={[0.8, -2.8, 0]} // Center position
+              /> */}
               <MorphingParticles 
                 modelPath="/Models/humanHeart.glb" 
                 clearColor="#e8e6e1" 
                 showBackground={true}
                 initialParticleColor="#1d1c17"
                 particleDensity={3} // Higher density for more precise shape
-                initialScale={67.8} // Larger model scale
+                initialScale={69.4} // Larger model scale
                 maxParticleCount={200000} // More particles for better detail
                 initialPosition={[0.8, -2.8, 0]} // Center position
               />
