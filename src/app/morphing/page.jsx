@@ -16,7 +16,7 @@ export default function MorphingPage() {
         }}
       >
         <Suspense fallback={null}>
-          <MorphingParticles modelPath="/Models/brian.glb" />
+          <MorphingParticles modelPath="/Models/stylizedhumanheart.glb" />
         </Suspense>
       </Canvas>
     </div>

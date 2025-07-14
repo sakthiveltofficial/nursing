@@ -19,16 +19,22 @@ export default function Hero() {
             <Environment preset="studio" />
             <fog attach="fog" args={["#e8e6e1", 8, 15]} />
             <Float speed={1} rotationIntensity={0.2} floatIntensity={0.5}>
-              <MorphingParticles modelPath="/Models/brian.glb" clearColor="#e8e6e1" />
+              <MorphingParticles 
+                modelPath="/Models/baby.glb" 
+                clearColor="#e8e6e1" 
+                showBackground={true}
+                initialParticleColor="#000000"
+                particleDensity={3} // Higher density for more precise shape
+              />
             </Float>
           </Suspense>
         </Canvas>
       </div>
 
-      {/* Content Overlay */}
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Header */}
-        <header className="flex items-center justify-between p-6 lg: px-[4rem] ">
+      {/* Content Overlay - Added pointer-events-none to allow interaction with Canvas */}
+      <div className="relative z-10 min-h-screen flex flex-col pointer-events-none">
+        {/* Header - Re-enable pointer events */}
+        <header className="flex items-center justify-between p-6 lg:px-[4rem] pointer-events-auto">
           <div className="flex items-center space-x-1">
             <span className="text-2xl font-bold text-black">A</span>
             <span className="text-2xl font-bold text-black">J</span>
@@ -38,7 +44,7 @@ export default function Hero() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 ">
+          <nav className="hidden lg:flex items-center space-x-8">
             <a href="#" className="text-black hover:text-gray-600 transition-colors">
               Home
             </a>
@@ -67,7 +73,7 @@ export default function Hero() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-[#e8e6e1] border-t border-gray-300 p-6">
+          <div className="lg:hidden bg-[#e8e6e1] border-t border-gray-300 p-6 pointer-events-auto">
             <nav className="flex flex-col space-y-4">
               <a href="#" className="text-black hover:text-gray-600 transition-colors">
                 Home
@@ -84,10 +90,10 @@ export default function Hero() {
 
         {/* Main Content */}
         <main className="flex-1 flex items-end pb-16">
-          <div className="w-full  ">
+          <div className="w-full">
             <div className="flex justify-between items-end px-[4rem]">
-              {/* Left Content */}
-              <div className="pl-6 lg:pl-8 lg:max-w-xl text-left self-end">
+              {/* Left Content - Re-enable pointer events */}
+              <div className="pl-6 lg:pl-8 lg:max-w-xl text-left self-end pointer-events-auto">
                 <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light text-black leading-tight mb-6">
                   Design That Feels.
                   <br />
@@ -105,8 +111,8 @@ export default function Hero() {
                 </Button>
               </div>
 
-              {/* Right Content - Desktop Only */}
-              <div className="hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm">
+              {/* Right Content - Desktop Only - Re-enable pointer events */}
+              <div className="hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm pointer-events-auto">
                 <div className="space-y-6">
                   <p className="text-gray-600 text-lg leading-relaxed">
                     Whether through intuitive interfaces, immersive 3D, or bold visual storytelling,
