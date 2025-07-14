@@ -1,18 +1,19 @@
-import React, { useRef, useMemo, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import { GPUComputationRenderer } from 'three/examples/jsm/misc/GPUComputationRenderer.js';
-import { useControls, folder } from 'leva';
+import React, { useRef, useMemo, useEffect, useState } from "react";
+import * as THREE from "three";
+import { useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
+import { useControls, folder } from "leva";
 
-const MorphingParticles = ({ 
-  modelPath = '/Models/models.glb', 
-  clearColor = '#29191f',
+const MorphingParticles = ({
+  modelPath = "/Models/models.glb",
+  clearColor = "#29191f",
   showBackground = true,
-  initialParticleColor = '#ffffff',
+  initialParticleColor = "#1d1c17",
   particleDensity = 1, // Multiplier for particle count
-  initialScale = 1.0,  // Initial model scale
-  maxParticleCount = 100000 // Maximum number of particles to render
+  initialScale = 1.0, // Initial model scale
+  maxParticleCount = 100000, // Maximum number of particles to render
+  initialPosition = [0, 0, 0], // Initial position [x, y, z]
 }) => {
   const { scene, gl, size } = useThree();
   const pointsRef = useRef();
@@ -20,10 +21,10 @@ const MorphingParticles = ({
   const previousTimeRef = useRef(0);
   const gpgpuRef = useRef(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   // Load model
   const { scene: modelScene } = useGLTF(modelPath);
-  
+
   // Controls with Leva - use separate state variables to track changes
   const {
     particleSize,
@@ -31,32 +32,49 @@ const MorphingParticles = ({
     particleOpacity,
     particleDensityValue,
     modelScale,
+    positionX,
+    positionY,
+    positionZ,
     maxParticles,
     flowFieldInfluence,
     flowFieldStrength,
     flowFieldFrequency,
     showBackgroundValue,
-    clearColorValue
+    clearColorValue,
   } = useControls({
     particles: folder({
       particleSize: { value: 0.04, min: 0, max: 1, step: 0.001 },
       particleColor: { value: initialParticleColor },
       particleOpacity: { value: 1, min: 0, max: 1, step: 0.01 },
-      particleDensityValue: { value: particleDensity, min: 0.5, max: 5, step: 0.1, label: 'particleDensity' },
-      maxParticles: { value: maxParticleCount, min: 1000, max: 500000, step: 1000 }
+      particleDensityValue: {
+        value: particleDensity,
+        min: 0.5,
+        max: 5,
+        step: 0.1,
+        label: "particleDensity",
+      },
+      maxParticles: {
+        value: maxParticleCount,
+        min: 1000,
+        max: 500000,
+        step: 1000,
+      },
     }),
     model: folder({
-      modelScale: { value: initialScale, min: 0.1, max: 10, step: 0.1 }
+      modelScale: { value: initialScale, min: 0.1, max: 100, step: 0.1 },
+      positionX: { value: initialPosition[0], min: -50, max: 50, step: 0.1 },
+      positionY: { value: initialPosition[1], min: -50, max: 50, step: 0.1 },
+      positionZ: { value: initialPosition[2], min: -50, max: 50, step: 0.1 },
     }),
     flowField: folder({
-      flowFieldInfluence: { value: 0.5, min: 0, max: 1, step: 0.001 },
-      flowFieldStrength: { value: 2, min: 0, max: 10, step: 0.001 },
-      flowFieldFrequency: { value: 0.5, min: 0, max: 1, step: 0.001 }
+      flowFieldInfluence: { value: 0.27, min: 0, max: 1, step: 0.001 },
+      flowFieldStrength: { value: 0.97, min: 0, max: 10, step: 0.001 },
+      flowFieldFrequency: { value: 0.5, min: 0, max: 1, step: 0.001 },
     }),
     background: folder({
-      showBackgroundValue: { value: showBackground, label: 'showBackground' },
-      clearColorValue: { value: clearColor, label: 'clearColor' }
-    })
+      showBackgroundValue: { value: showBackground, label: "showBackground" },
+      clearColorValue: { value: clearColor, label: "clearColor" },
+    }),
   });
 
   // Set renderer clear color based on showBackground
@@ -77,61 +95,86 @@ const MorphingParticles = ({
   };
 
   // Create duplicate vertices to increase particle density
-  const createDenseGeometry = (baseGeometry, density, scale, maxCount) => {
+  const createDenseGeometry = (
+    baseGeometry,
+    density,
+    scale,
+    maxCount,
+    position
+  ) => {
     const positions = baseGeometry.attributes.position.array;
     const count = baseGeometry.attributes.position.count;
-    
+
     // Calculate how many extra vertices we need based on density
     const multiplier = Math.ceil(density);
     let totalCount = count * multiplier;
-    
+
     // Limit total count to maxCount
     totalCount = Math.min(totalCount, maxCount);
-    
+
     // Calculate actual multiplier based on maxCount
     const actualMultiplier = Math.floor(totalCount / count);
     const remainder = totalCount % count;
-    
+
     // Create new arrays
     const newPositions = new Float32Array(totalCount * 3);
-    
-    // Copy original vertices with scaling
+
+    // Copy original vertices with scaling and position offset
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      newPositions[i3] = positions[i3] * scale;
-      newPositions[i3 + 1] = positions[i3 + 1] * scale;
-      newPositions[i3 + 2] = positions[i3 + 2] * scale;
+      newPositions[i3] = positions[i3] * scale + position[0];
+      newPositions[i3 + 1] = positions[i3 + 1] * scale + position[1];
+      newPositions[i3 + 2] = positions[i3 + 2] * scale + position[2];
     }
-    
+
     // Add additional vertices with slight offsets
     for (let m = 1; m < actualMultiplier; m++) {
       for (let i = 0; i < count; i++) {
         const i3 = i * 3;
         const newI3 = (m * count + i) * 3;
-        
+
         // Add small random offset to create denser appearance
         const offset = 0.01; // Small offset
-        newPositions[newI3] = positions[i3] * scale + (Math.random() - 0.5) * offset;
-        newPositions[newI3 + 1] = positions[i3 + 1] * scale + (Math.random() - 0.5) * offset;
-        newPositions[newI3 + 2] = positions[i3 + 2] * scale + (Math.random() - 0.5) * offset;
+        newPositions[newI3] =
+          positions[i3] * scale + position[0] + (Math.random() - 0.5) * offset;
+        newPositions[newI3 + 1] =
+          positions[i3 + 1] * scale +
+          position[1] +
+          (Math.random() - 0.5) * offset;
+        newPositions[newI3 + 2] =
+          positions[i3 + 2] * scale +
+          position[2] +
+          (Math.random() - 0.5) * offset;
       }
     }
-    
+
     // Add remaining vertices up to maxCount
     for (let i = 0; i < remainder; i++) {
       const sourceI3 = i * 3;
       const newI3 = (actualMultiplier * count + i) * 3;
-      
+
       const offset = 0.01; // Small offset
-      newPositions[newI3] = positions[sourceI3] * scale + (Math.random() - 0.5) * offset;
-      newPositions[newI3 + 1] = positions[sourceI3 + 1] * scale + (Math.random() - 0.5) * offset;
-      newPositions[newI3 + 2] = positions[sourceI3 + 2] * scale + (Math.random() - 0.5) * offset;
+      newPositions[newI3] =
+        positions[sourceI3] * scale +
+        position[0] +
+        (Math.random() - 0.5) * offset;
+      newPositions[newI3 + 1] =
+        positions[sourceI3 + 1] * scale +
+        position[1] +
+        (Math.random() - 0.5) * offset;
+      newPositions[newI3 + 2] =
+        positions[sourceI3 + 2] * scale +
+        position[2] +
+        (Math.random() - 0.5) * offset;
     }
-    
+
     // Create new geometry
     const denseGeometry = new THREE.BufferGeometry();
-    denseGeometry.setAttribute('position', new THREE.BufferAttribute(newPositions, 3));
-    
+    denseGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(newPositions, 3)
+    );
+
     return { geometry: denseGeometry, count: totalCount };
   };
 
@@ -323,197 +366,258 @@ const MorphingParticles = ({
   // Initialize GPU computation and particles
   useEffect(() => {
     if (!modelScene || !modelScene.children.length) return;
-    
+
     // Get base geometry from the model
     const baseGeometry = modelScene.children[0].geometry;
-    
-    // Create denser geometry based on particleDensity, scale, and maxParticles
+
+    // Create position vector
+    const position = [positionX, positionY, positionZ];
+
+    // Create denser geometry based on particleDensity, scale, maxParticles, and position
     const { geometry: denseGeometry, count } = createDenseGeometry(
-      baseGeometry, 
-      particleDensityValue, 
+      baseGeometry,
+      particleDensityValue,
       modelScale,
-      maxParticles
+      maxParticles,
+      position
     );
-    
+
     // Setup GPU Compute
     const gpgpuSize = Math.ceil(Math.sqrt(count));
-    const gpgpuComputation = new GPUComputationRenderer(gpgpuSize, gpgpuSize, gl);
-    
+    const gpgpuComputation = new GPUComputationRenderer(
+      gpgpuSize,
+      gpgpuSize,
+      gl
+    );
+
     // Base particles texture
     const baseParticlesTexture = gpgpuComputation.createTexture();
-    
+
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
       const i4 = i * 4;
-      
+
       // Position based on geometry
-      baseParticlesTexture.image.data[i4 + 0] = denseGeometry.attributes.position.array[i3 + 0];
-      baseParticlesTexture.image.data[i4 + 1] = denseGeometry.attributes.position.array[i3 + 1];
-      baseParticlesTexture.image.data[i4 + 2] = denseGeometry.attributes.position.array[i3 + 2];
+      baseParticlesTexture.image.data[i4 + 0] =
+        denseGeometry.attributes.position.array[i3 + 0];
+      baseParticlesTexture.image.data[i4 + 1] =
+        denseGeometry.attributes.position.array[i3 + 1];
+      baseParticlesTexture.image.data[i4 + 2] =
+        denseGeometry.attributes.position.array[i3 + 2];
       baseParticlesTexture.image.data[i4 + 3] = Math.random();
     }
-    
+
     // Particles variable
-    const particlesVariable = gpgpuComputation.addVariable('uParticles', gpgpuParticlesShader, baseParticlesTexture);
-    gpgpuComputation.setVariableDependencies(particlesVariable, [particlesVariable]);
-    
+    const particlesVariable = gpgpuComputation.addVariable(
+      "uParticles",
+      gpgpuParticlesShader,
+      baseParticlesTexture
+    );
+    gpgpuComputation.setVariableDependencies(particlesVariable, [
+      particlesVariable,
+    ]);
+
     // Uniforms
     particlesVariable.material.uniforms.uTime = { value: 0 };
     particlesVariable.material.uniforms.uDeltaTime = { value: 0 };
     particlesVariable.material.uniforms.uBase = { value: baseParticlesTexture };
-    particlesVariable.material.uniforms.uFlowFieldInfluence = { value: flowFieldInfluence };
-    particlesVariable.material.uniforms.uFlowFieldStrength = { value: flowFieldStrength };
-    particlesVariable.material.uniforms.uFlowFieldFrequency = { value: flowFieldFrequency };
-    
+    particlesVariable.material.uniforms.uFlowFieldInfluence = {
+      value: flowFieldInfluence,
+    };
+    particlesVariable.material.uniforms.uFlowFieldStrength = {
+      value: flowFieldStrength,
+    };
+    particlesVariable.material.uniforms.uFlowFieldFrequency = {
+      value: flowFieldFrequency,
+    };
+
     // Init
     gpgpuComputation.init();
-    
+
     // Create particles geometry
     const particlesUvArray = new Float32Array(count * 2);
     const sizesArray = new Float32Array(count);
-    
+
     for (let y = 0; y < gpgpuSize; y++) {
       for (let x = 0; x < gpgpuSize; x++) {
-        const i = (y * gpgpuSize + x);
+        const i = y * gpgpuSize + x;
         if (i >= count) break; // Ensure we don't go beyond count
-        
+
         const i2 = i * 2;
-        
+
         // UV
         const uvX = (x + 0.5) / gpgpuSize;
         const uvY = (y + 0.5) / gpgpuSize;
-        
+
         particlesUvArray[i2 + 0] = uvX;
         particlesUvArray[i2 + 1] = uvY;
-        
+
         // Size - smaller sizes for denser particles
         sizesArray[i] = Math.random() * 0.8 + 0.2; // Range from 0.2 to 1.0
       }
     }
-    
+
     // Create particles geometry
     const geometry = new THREE.BufferGeometry();
     geometry.setDrawRange(0, count);
-    geometry.setAttribute('aParticlesUv', new THREE.BufferAttribute(particlesUvArray, 2));
-    
+    geometry.setAttribute(
+      "aParticlesUv",
+      new THREE.BufferAttribute(particlesUvArray, 2)
+    );
+
     // If the model has color attribute, use it; otherwise create a default color
     if (baseGeometry.attributes.color) {
-      geometry.setAttribute('aColor', baseGeometry.attributes.color);
+      geometry.setAttribute("aColor", baseGeometry.attributes.color);
     } else {
       const colorArray = new Float32Array(count * 3);
       for (let i = 0; i < count; i++) {
         const i3 = i * 3;
-        colorArray[i3] = 1.0;  // R
-        colorArray[i3 + 1] = 1.0;  // G
-        colorArray[i3 + 2] = 1.0;  // B
+        colorArray[i3] = 1.0; // R
+        colorArray[i3 + 1] = 1.0; // G
+        colorArray[i3 + 2] = 1.0; // B
       }
-      geometry.setAttribute('aColor', new THREE.BufferAttribute(colorArray, 3));
+      geometry.setAttribute("aColor", new THREE.BufferAttribute(colorArray, 3));
     }
-    
-    geometry.setAttribute('aSize', new THREE.BufferAttribute(sizesArray, 1));
-    
+
+    geometry.setAttribute("aSize", new THREE.BufferAttribute(sizesArray, 1));
+
     // Create particles material
     const material = new THREE.ShaderMaterial({
       vertexShader: particlesVertexShader,
       fragmentShader: particlesFragmentShader,
       uniforms: {
         uSize: { value: particleSize },
-        uResolution: { value: new THREE.Vector2(size.width * window.devicePixelRatio, size.height * window.devicePixelRatio) },
+        uResolution: {
+          value: new THREE.Vector2(
+            size.width * window.devicePixelRatio,
+            size.height * window.devicePixelRatio
+          ),
+        },
         uParticlesTexture: { value: null },
         uParticleColor: { value: hexToRgb(particleColor) },
-        uOpacity: { value: particleOpacity }
+        uOpacity: { value: particleOpacity },
       },
       transparent: !showBackgroundValue || particleOpacity < 1,
-      depthWrite: showBackgroundValue && particleOpacity >= 1
+      depthWrite: showBackgroundValue && particleOpacity >= 1,
     });
-    
+
     // Set points
     if (pointsRef.current) {
       pointsRef.current.geometry = geometry;
       pointsRef.current.material = material;
     }
-    
+
     // Store references
     gpgpuRef.current = {
       computation: gpgpuComputation,
       particlesVariable: particlesVariable,
-      size: gpgpuSize
+      size: gpgpuSize,
     };
-    
+
     setIsInitialized(true);
-    
+
     // Cleanup
     return () => {
       geometry.dispose();
       material.dispose();
       gpgpuComputation.dispose();
     };
-  }, [modelScene, gl, size, particleDensityValue, modelScale, maxParticles]); // Recreate when model, density, scale or maxParticles changes
-  
+  }, [
+    modelScene,
+    gl,
+    size,
+    particleDensityValue,
+    modelScale,
+    maxParticles,
+    positionX,
+    positionY,
+    positionZ,
+  ]); // Recreate when model, density, scale, maxParticles, or position changes
+
   // Handle resize
   useEffect(() => {
     const handleResize = () => {
       if (pointsRef.current && pointsRef.current.material) {
         const pixelRatio = Math.min(window.devicePixelRatio, 2);
         pointsRef.current.material.uniforms.uResolution.value.set(
-          size.width * pixelRatio, 
+          size.width * pixelRatio,
           size.height * pixelRatio
         );
       }
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [size]);
-  
+
   // Update uniforms when controls change
   useEffect(() => {
-    if (!pointsRef.current || !pointsRef.current.material || !isInitialized) return;
-    
+    if (!pointsRef.current || !pointsRef.current.material || !isInitialized)
+      return;
+
     // Update material uniforms
     pointsRef.current.material.uniforms.uSize.value = particleSize;
-    pointsRef.current.material.uniforms.uParticleColor.value = hexToRgb(particleColor);
+    pointsRef.current.material.uniforms.uParticleColor.value =
+      hexToRgb(particleColor);
     pointsRef.current.material.uniforms.uOpacity.value = particleOpacity;
-    
+
     // Update material properties
-    pointsRef.current.material.transparent = !showBackgroundValue || particleOpacity < 1;
-    pointsRef.current.material.depthWrite = showBackgroundValue && particleOpacity >= 1;
+    pointsRef.current.material.transparent =
+      !showBackgroundValue || particleOpacity < 1;
+    pointsRef.current.material.depthWrite =
+      showBackgroundValue && particleOpacity >= 1;
     pointsRef.current.material.needsUpdate = true;
-    
-  }, [particleSize, particleColor, particleOpacity, showBackgroundValue, isInitialized]);
-  
+  }, [
+    particleSize,
+    particleColor,
+    particleOpacity,
+    showBackgroundValue,
+    isInitialized,
+  ]);
+
   // Update flow field parameters when they change
   useEffect(() => {
     if (!gpgpuRef.current || !isInitialized) return;
-    
-    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldInfluence.value = flowFieldInfluence;
-    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldStrength.value = flowFieldStrength;
-    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldFrequency.value = flowFieldFrequency;
-    
-  }, [flowFieldInfluence, flowFieldStrength, flowFieldFrequency, isInitialized]);
-  
+
+    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldInfluence.value =
+      flowFieldInfluence;
+    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldStrength.value =
+      flowFieldStrength;
+    gpgpuRef.current.particlesVariable.material.uniforms.uFlowFieldFrequency.value =
+      flowFieldFrequency;
+  }, [
+    flowFieldInfluence,
+    flowFieldStrength,
+    flowFieldFrequency,
+    isInitialized,
+  ]);
+
   // Animation loop
   useFrame(() => {
     if (!gpgpuRef.current || !pointsRef.current || !isInitialized) return;
-    
+
     const elapsedTime = clockRef.current.getElapsedTime();
     const deltaTime = elapsedTime - previousTimeRef.current;
     previousTimeRef.current = elapsedTime;
-    
+
     // Update GPGPU computation time
-    gpgpuRef.current.particlesVariable.material.uniforms.uTime.value = elapsedTime;
-    gpgpuRef.current.particlesVariable.material.uniforms.uDeltaTime.value = deltaTime;
-    
+    gpgpuRef.current.particlesVariable.material.uniforms.uTime.value =
+      elapsedTime;
+    gpgpuRef.current.particlesVariable.material.uniforms.uDeltaTime.value =
+      deltaTime;
+
     // Compute the new particle positions
     gpgpuRef.current.computation.compute();
-    
+
     // Update particles texture
     if (pointsRef.current.material) {
-      pointsRef.current.material.uniforms.uParticlesTexture.value = 
-        gpgpuRef.current.computation.getCurrentRenderTarget(gpgpuRef.current.particlesVariable).texture;
+      pointsRef.current.material.uniforms.uParticlesTexture.value =
+        gpgpuRef.current.computation.getCurrentRenderTarget(
+          gpgpuRef.current.particlesVariable
+        ).texture;
     }
   });
-  
+
   return (
     <>
       <OrbitControls enableDamping />
