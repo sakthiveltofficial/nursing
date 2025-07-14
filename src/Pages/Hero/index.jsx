@@ -25,6 +25,8 @@ export default function Hero() {
                 showBackground={true}
                 initialParticleColor="#000000"
                 particleDensity={3} // Higher density for more precise shape
+                initialScale={1.5} // Larger model scale
+                maxParticleCount={200000} // More particles for better detail
               />
             </Float>
           </Suspense>

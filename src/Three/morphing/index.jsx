@@ -10,7 +10,9 @@ const MorphingParticles = ({
   clearColor = '#29191f',
   showBackground = true,
   initialParticleColor = '#ffffff',
-  particleDensity = 1 // Multiplier for particle count
+  particleDensity = 1, // Multiplier for particle count
+  initialScale = 1.0,  // Initial model scale
+  maxParticleCount = 100000 // Maximum number of particles to render
 }) => {
   const { scene, gl, size } = useThree();
   const pointsRef = useRef();
@@ -28,6 +30,8 @@ const MorphingParticles = ({
     particleColor,
     particleOpacity,
     particleDensityValue,
+    modelScale,
+    maxParticles,
     flowFieldInfluence,
     flowFieldStrength,
     flowFieldFrequency,
@@ -38,7 +42,11 @@ const MorphingParticles = ({
       particleSize: { value: 0.04, min: 0, max: 1, step: 0.001 },
       particleColor: { value: initialParticleColor },
       particleOpacity: { value: 1, min: 0, max: 1, step: 0.01 },
-      particleDensityValue: { value: particleDensity, min: 0.5, max: 5, step: 0.1, label: 'particleDensity' }
+      particleDensityValue: { value: particleDensity, min: 0.5, max: 5, step: 0.1, label: 'particleDensity' },
+      maxParticles: { value: maxParticleCount, min: 1000, max: 500000, step: 1000 }
+    }),
+    model: folder({
+      modelScale: { value: initialScale, min: 0.1, max: 10, step: 0.1 }
     }),
     flowField: folder({
       flowFieldInfluence: { value: 0.5, min: 0, max: 1, step: 0.001 },
@@ -69,46 +77,62 @@ const MorphingParticles = ({
   };
 
   // Create duplicate vertices to increase particle density
-  const createDenseGeometry = (baseGeometry, density) => {
-    if (density <= 1) return baseGeometry;
-
+  const createDenseGeometry = (baseGeometry, density, scale, maxCount) => {
     const positions = baseGeometry.attributes.position.array;
     const count = baseGeometry.attributes.position.count;
     
-    // Calculate how many extra vertices we need
+    // Calculate how many extra vertices we need based on density
     const multiplier = Math.ceil(density);
-    const totalCount = count * multiplier;
+    let totalCount = count * multiplier;
+    
+    // Limit total count to maxCount
+    totalCount = Math.min(totalCount, maxCount);
+    
+    // Calculate actual multiplier based on maxCount
+    const actualMultiplier = Math.floor(totalCount / count);
+    const remainder = totalCount % count;
     
     // Create new arrays
     const newPositions = new Float32Array(totalCount * 3);
     
-    // Copy original vertices
+    // Copy original vertices with scaling
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      newPositions[i3] = positions[i3];
-      newPositions[i3 + 1] = positions[i3 + 1];
-      newPositions[i3 + 2] = positions[i3 + 2];
+      newPositions[i3] = positions[i3] * scale;
+      newPositions[i3 + 1] = positions[i3 + 1] * scale;
+      newPositions[i3 + 2] = positions[i3 + 2] * scale;
     }
     
     // Add additional vertices with slight offsets
-    for (let m = 1; m < multiplier; m++) {
+    for (let m = 1; m < actualMultiplier; m++) {
       for (let i = 0; i < count; i++) {
         const i3 = i * 3;
         const newI3 = (m * count + i) * 3;
         
         // Add small random offset to create denser appearance
         const offset = 0.01; // Small offset
-        newPositions[newI3] = positions[i3] + (Math.random() - 0.5) * offset;
-        newPositions[newI3 + 1] = positions[i3 + 1] + (Math.random() - 0.5) * offset;
-        newPositions[newI3 + 2] = positions[i3 + 2] + (Math.random() - 0.5) * offset;
+        newPositions[newI3] = positions[i3] * scale + (Math.random() - 0.5) * offset;
+        newPositions[newI3 + 1] = positions[i3 + 1] * scale + (Math.random() - 0.5) * offset;
+        newPositions[newI3 + 2] = positions[i3 + 2] * scale + (Math.random() - 0.5) * offset;
       }
+    }
+    
+    // Add remaining vertices up to maxCount
+    for (let i = 0; i < remainder; i++) {
+      const sourceI3 = i * 3;
+      const newI3 = (actualMultiplier * count + i) * 3;
+      
+      const offset = 0.01; // Small offset
+      newPositions[newI3] = positions[sourceI3] * scale + (Math.random() - 0.5) * offset;
+      newPositions[newI3 + 1] = positions[sourceI3 + 1] * scale + (Math.random() - 0.5) * offset;
+      newPositions[newI3 + 2] = positions[sourceI3 + 2] * scale + (Math.random() - 0.5) * offset;
     }
     
     // Create new geometry
     const denseGeometry = new THREE.BufferGeometry();
     denseGeometry.setAttribute('position', new THREE.BufferAttribute(newPositions, 3));
     
-    return denseGeometry;
+    return { geometry: denseGeometry, count: totalCount };
   };
 
   // GLSL Shaders
@@ -303,9 +327,13 @@ const MorphingParticles = ({
     // Get base geometry from the model
     const baseGeometry = modelScene.children[0].geometry;
     
-    // Create denser geometry based on particleDensity
-    const denseGeometry = createDenseGeometry(baseGeometry, particleDensityValue);
-    const count = denseGeometry.attributes.position.count;
+    // Create denser geometry based on particleDensity, scale, and maxParticles
+    const { geometry: denseGeometry, count } = createDenseGeometry(
+      baseGeometry, 
+      particleDensityValue, 
+      modelScale,
+      maxParticles
+    );
     
     // Setup GPU Compute
     const gpgpuSize = Math.ceil(Math.sqrt(count));
@@ -347,6 +375,8 @@ const MorphingParticles = ({
     for (let y = 0; y < gpgpuSize; y++) {
       for (let x = 0; x < gpgpuSize; x++) {
         const i = (y * gpgpuSize + x);
+        if (i >= count) break; // Ensure we don't go beyond count
+        
         const i2 = i * 2;
         
         // UV
@@ -418,7 +448,7 @@ const MorphingParticles = ({
       material.dispose();
       gpgpuComputation.dispose();
     };
-  }, [modelScene, gl, size, particleDensityValue]); // Only recreate when model or density changes
+  }, [modelScene, gl, size, particleDensityValue, modelScale, maxParticles]); // Recreate when model, density, scale or maxParticles changes
   
   // Handle resize
   useEffect(() => {
