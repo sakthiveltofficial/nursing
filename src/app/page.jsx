@@ -11,7 +11,7 @@ import Hero from "@/Pages/Hero";
 export default function Home() {
   const nurseRef = useRef();
   return (
-    <div className="h-[100vh] w-[100vw] relative">
+    <div className="h-fit w-[100vw] relative">
       {/* <Header />
       <CanvesWrapper>
         <Suspense fallback={<mesh />}>
@@ -21,6 +21,7 @@ export default function Home() {
         </Suspense>
       </CanvesWrapper> */}
       <Hero />
+      <div className="h-[100vh] w-[100vw] bg-red-500"></div>
     </div>
   );
 }
