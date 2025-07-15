@@ -21,7 +21,7 @@ export default function Home() {
         </Suspense>
       </CanvesWrapper> */}
       <Hero />
-      <div className="h-[100vh] w-[100vw] bg-red-500"></div>
+      <div className="h-[100vh] w-[100vw] "></div>
     </div>
   );
 }
