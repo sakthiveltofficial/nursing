@@ -136,7 +136,7 @@ export default function Hero() {
                 {/* Subtle fog for depth */}
                 <fog attach="fog" args={["#e8e6e1", 12, 20]} />
                 
-                <Float speed={1} rotationIntensity={0.1} floatIntensity={0.3}>
+                <Float >
                   <ParticleMorphing ref={particleMorphingRef} />
                 </Float>
               </Suspense>
