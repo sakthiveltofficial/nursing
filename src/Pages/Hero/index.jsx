@@ -4,7 +4,7 @@ import { Environment, Float } from "@react-three/drei"
 import { Suspense, useState, useEffect, useRef } from "react"
 import { Menu, X, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import ParticleMorphing from "@/app/ParticleMorphing/page"
+import ParticleMorphing from "@/components/ParticleMorphing/page"
 import gsap from "gsap"
 import ScrollTrigger from "gsap/ScrollTrigger"
 
