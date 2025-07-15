@@ -103,7 +103,8 @@ void main()
     float noise = mix(noiseOrigin, noiseTarget, uProgress);
     noise = smoothstep(-1.0, 1.0, noise);
     
-    float duration = 0.4;
+    // Increased duration for smoother transitions
+    float duration = 0.6;
     float delay = (1.0 - duration) * noise;
     float end = delay + duration;
     float progress = smoothstep(delay, end, uProgress);
@@ -154,6 +155,7 @@ function Particles({
   const [particleData, setParticleData] = useState(null)
   const [currentMorphIndex, setCurrentMorphIndex] = useState(0)
   const [targetMorphIndex, setTargetMorphIndex] = useState(0)
+  const [morphProgress, setMorphProgress] = useState(0)
   
   // Load GLTF model
   const { scene } = useGLTF(modelPath)
@@ -216,27 +218,55 @@ function Particles({
     })
   }, [scene])
 
-  // Handle scroll progress changes
+  // Handle scroll progress changes with buffer zones
   useEffect(() => {
     if (!particleData || particleData.positions.length === 0) return
 
     const totalShapes = particleData.positions.length
-    const progressPerShape = 1 / (totalShapes - 1)
     
-    // Calculate which morph target we should be at
-    const targetIndex = Math.min(
-      Math.floor(scrollProgress / progressPerShape),
-      totalShapes - 1
-    )
+    // Clamp scrollProgress to [0, 1]
+    const clampedScroll = Math.min(Math.max(scrollProgress, 0), 1)
     
-    // Calculate progress within current morph
-    const morphProgress = (scrollProgress % progressPerShape) / progressPerShape
+    // Create buffer zones - transitions don't start immediately
+    const bufferZone = 0.15 // 15% buffer before transition starts
+    const transitionZone = 0.7 // 70% for actual transition
+    // Remaining 15% is hold zone after transition
+    
+    const segmentSize = 1 / totalShapes
+    
+    // Calculate which segment we're in
+    const currentSegment = Math.floor(clampedScroll * totalShapes)
+    const segmentProgress = (clampedScroll * totalShapes) % 1
+    
+    // Calculate target morph index
+    let targetIndex = currentSegment
+    let localProgress = 0
+    
+    if (segmentProgress < bufferZone) {
+      // In buffer zone - stay at current shape
+      localProgress = 0
+    } else if (segmentProgress > bufferZone + transitionZone) {
+      // In hold zone - transition complete
+      localProgress = 1
+    } else {
+      // In transition zone
+      localProgress = (segmentProgress - bufferZone) / transitionZone
+    }
+    
+    // Ensure we don't go beyond available shapes
+    if (targetIndex >= totalShapes - 1) {
+      targetIndex = totalShapes - 1
+      localProgress = 1
+    }
     
     setTargetMorphIndex(targetIndex)
-    
-    // Update material progress
+    setMorphProgress(localProgress)
+
+    // Update material progress with easing
     if (materialRef.current) {
-      materialRef.current.uniforms.uProgress.value = morphProgress
+      // Apply easing to the progress for smoother transitions
+      const easedProgress = localProgress * localProgress * (3 - 2 * localProgress) // smoothstep
+      materialRef.current.uniforms.uProgress.value = easedProgress
     }
   }, [scrollProgress, particleData])
 
@@ -271,17 +301,26 @@ function Particles({
 
   // Update geometry when morph target changes
   useEffect(() => {
-    if (!particleData || !geometry || targetMorphIndex === currentMorphIndex) return
+    if (!particleData || !geometry) return
 
     const nextIndex = targetMorphIndex + 1
-    const targetPosition = particleData.positions[targetMorphIndex]
-    const nextPosition = particleData.positions[nextIndex] || particleData.positions[0]
-
-    geometry.setAttribute('position', targetPosition)
-    geometry.setAttribute('aPositionTarget', nextPosition)
+    
+    // Handle boundary conditions
+    if (nextIndex >= particleData.positions.length) {
+      // At the last shape
+      const lastPosition = particleData.positions[targetMorphIndex]
+      geometry.setAttribute('position', lastPosition)
+      geometry.setAttribute('aPositionTarget', lastPosition)
+    } else {
+      // Normal transition
+      const currentPosition = particleData.positions[targetMorphIndex]
+      const nextPosition = particleData.positions[nextIndex]
+      geometry.setAttribute('position', currentPosition)
+      geometry.setAttribute('aPositionTarget', nextPosition)
+    }
     
     setCurrentMorphIndex(targetMorphIndex)
-  }, [targetMorphIndex, particleData, geometry, currentMorphIndex])
+  }, [targetMorphIndex, particleData, geometry])
 
   // Update uniforms
   useEffect(() => {

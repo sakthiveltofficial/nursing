@@ -38,7 +38,7 @@ export default function Hero() {
   
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Create ScrollTrigger for particle morphing
+      // Create ScrollTrigger for particle morphing with longer duration
       ScrollTrigger.create({
         trigger: heroRef.current,
         start: "top top",
@@ -239,8 +239,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Spacer for scroll height */}
-      <div className="h-[200vh]" />
+      {/* Longer spacer for extended scroll duration */}
+      <div className="h-[400vh]" />
     </>
   )
 }
