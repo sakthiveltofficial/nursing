@@ -95,7 +95,7 @@ export default function Hero() {
   return (
     <>
       {/* Hero Section - Extended height to match scroll duration */}
-      <div ref={heroRef} className="h-[500vh] relative overflow-hidden">
+      <div ref={heroRef} className="h-[400vh] relative overflow-hidden">
         {/* Background with Vignette - Only visible during hero section */}
         <div 
           className="absolute inset-0 z-0 h-full w-full"
