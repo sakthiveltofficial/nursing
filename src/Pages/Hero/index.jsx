@@ -6,6 +6,7 @@ import { Suspense, useState } from "react"
 import { Menu, X, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import MorphingParticles from "@/Three/morphing"
+import ParticleMorphing from "@/app/ParticleMorphing/page"
 
 export default function Hero() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -29,7 +30,7 @@ export default function Hero() {
                 maxParticleCount={200000} // More particles for better detail
                 initialPosition={[0.8, -2.8, 0]} // Center position
               /> */}
-              <MorphingParticles 
+              {/* <MorphingParticles 
                 modelPath="/Models/humanHeart.glb" 
                 clearColor="#e8e6e1" 
                 showBackground={true}
@@ -38,7 +39,8 @@ export default function Hero() {
                 initialScale={69.4} // Larger model scale
                 maxParticleCount={200000} // More particles for better detail
                 initialPosition={[0.8, -2.8, 0]} // Center position
-              />
+              /> */}
+              <ParticleMorphing/>
             </Float>
           </Suspense>
         </Canvas>
