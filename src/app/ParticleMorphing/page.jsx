@@ -1,9 +1,8 @@
 "use client"
-import React, { useRef, useEffect, useState, useMemo } from 'react'
+import React, { useRef, useEffect, useState, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import { useControls } from 'leva'
 import gsap from 'gsap'
 
 // Simplex Noise 3D shader function
@@ -142,31 +141,23 @@ void main()
 `
 
 // Particles component
-function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
+function Particles({ 
+  modelPath = '/Models/HeroModels_24.glb',
+  scrollProgress = 0,
+  colorA = '#000000',
+  colorB = '#727272',
+  pointSize = 0.1
+}) {
   const pointsRef = useRef()
   const materialRef = useRef()
   const { size } = useThree()
   const [particleData, setParticleData] = useState(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentMorphIndex, setCurrentMorphIndex] = useState(0)
+  const [targetMorphIndex, setTargetMorphIndex] = useState(0)
   
   // Load GLTF model
   const { scene } = useGLTF(modelPath)
   
-  // Leva controls
-  const {
-    colorA,
-    colorB,
-    progress,
-    pointSize,
-    morphTarget
-  } = useControls({
-    colorA: '#000000',
-    colorB: '#727272',
-    progress: { value: 0, min: 0, max: 1, step: 0.001 },
-    pointSize: { value: 0.1, min: 0.1, max: 2, step: 0.1 },
-    morphTarget: { value: 0, min: 0, max: 3, step: 1 }
-  })
-
   // Process model data
   useEffect(() => {
     if (!scene || !scene.children.length) return
@@ -225,13 +216,40 @@ function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
     })
   }, [scene])
 
+  // Handle scroll progress changes
+  useEffect(() => {
+    if (!particleData || particleData.positions.length === 0) return
+
+    const totalShapes = particleData.positions.length
+    const progressPerShape = 1 / (totalShapes - 1)
+    
+    // Calculate which morph target we should be at
+    const targetIndex = Math.min(
+      Math.floor(scrollProgress / progressPerShape),
+      totalShapes - 1
+    )
+    
+    // Calculate progress within current morph
+    const morphProgress = (scrollProgress % progressPerShape) / progressPerShape
+    
+    setTargetMorphIndex(targetIndex)
+    
+    // Update material progress
+    if (materialRef.current) {
+      materialRef.current.uniforms.uProgress.value = morphProgress
+    }
+  }, [scrollProgress, particleData])
+
   // Create geometry and material
   const { geometry, material } = useMemo(() => {
     if (!particleData) return { geometry: null, material: null }
 
     const geom = new THREE.BufferGeometry()
-    geom.setAttribute('position', particleData.positions[0])
-    geom.setAttribute('aPositionTarget', particleData.positions[3] || particleData.positions[0])
+    const initialPosition = particleData.positions[0]
+    const initialTarget = particleData.positions[1] || particleData.positions[0]
+    
+    geom.setAttribute('position', initialPosition)
+    geom.setAttribute('aPositionTarget', initialTarget)
     geom.setAttribute('aSize', new THREE.BufferAttribute(particleData.sizesArray, 1))
 
     const mat = new THREE.ShaderMaterial({
@@ -240,7 +258,7 @@ function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
       uniforms: {
         uSize: new THREE.Uniform(pointSize),
         uResolution: new THREE.Uniform(new THREE.Vector2(size.width, size.height)),
-        uProgress: new THREE.Uniform(progress),
+        uProgress: new THREE.Uniform(0),
         uColorA: new THREE.Uniform(new THREE.Color(colorA)),
         uColorB: new THREE.Uniform(new THREE.Color(colorB))
       },
@@ -249,7 +267,21 @@ function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
     })
 
     return { geometry: geom, material: mat }
-  }, [particleData, size, pointSize, progress, colorA, colorB])
+  }, [particleData, size, pointSize, colorA, colorB])
+
+  // Update geometry when morph target changes
+  useEffect(() => {
+    if (!particleData || !geometry || targetMorphIndex === currentMorphIndex) return
+
+    const nextIndex = targetMorphIndex + 1
+    const targetPosition = particleData.positions[targetMorphIndex]
+    const nextPosition = particleData.positions[nextIndex] || particleData.positions[0]
+
+    geometry.setAttribute('position', targetPosition)
+    geometry.setAttribute('aPositionTarget', nextPosition)
+    
+    setCurrentMorphIndex(targetMorphIndex)
+  }, [targetMorphIndex, particleData, geometry, currentMorphIndex])
 
   // Update uniforms
   useEffect(() => {
@@ -257,32 +289,9 @@ function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
     
     materialRef.current.uniforms.uSize.value = pointSize
     materialRef.current.uniforms.uResolution.value.set(size.width, size.height)
-    materialRef.current.uniforms.uProgress.value = progress
     materialRef.current.uniforms.uColorA.value.set(colorA)
     materialRef.current.uniforms.uColorB.value.set(colorB)
-  }, [pointSize, size, progress, colorA, colorB])
-
-  // Handle morph target changes
-  useEffect(() => {
-    if (!particleData || !materialRef.current || !geometry) return
-    
-    const targetIndex = Math.min(morphTarget, particleData.positions.length - 1)
-    
-    if (targetIndex !== currentIndex) {
-      // Update geometry attributes
-      geometry.setAttribute('position', particleData.positions[currentIndex])
-      geometry.setAttribute('aPositionTarget', particleData.positions[targetIndex])
-      
-      // Animate progress
-      gsap.fromTo(
-        materialRef.current.uniforms.uProgress,
-        { value: 0 },
-        { value: 1, duration: 3, ease: 'linear' }
-      )
-      
-      setCurrentIndex(targetIndex)
-    }
-  }, [morphTarget, particleData, currentIndex, geometry])
+  }, [pointSize, size, colorA, colorB])
 
   if (!geometry || !material) return null
 
@@ -293,22 +302,36 @@ function Particles({ modelPath = '/Models/HeroModels_24.glb' }) {
   )
 }
 
-// Main component
-export default function ParticleMorphing({ 
+// Main component with forwardRef
+const ParticleMorphing = forwardRef(function ParticleMorphing({ 
   modelPath = '/Models/HeroModels_24.glb',
   cameraPosition = [0, 0, 16],
   backgroundColor = '#160920',
   enableControls = true
-}) {
-  return (
-    <group position={[0,-1,0]}>
+}, ref) {
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const morphingRef = useRef()
 
-    <Particles modelPath={modelPath} />
+  useImperativeHandle(ref, () => ({
+    updateMorphProgress: (progress) => {
+      setScrollProgress(progress)
+    }
+  }))
+
+  return (
+    <group position={[0, -1, 0]} ref={morphingRef}>
+      <Particles 
+        modelPath={modelPath} 
+        scrollProgress={scrollProgress}
+        colorA="#000000"
+        colorB="#727272"
+        pointSize={0.1}
+      />
     </group>
-        
- 
   )
-}
+})
+
+export default ParticleMorphing
 
 // Preload the model
 useGLTF.preload('/Models/HeroModels_24.glb')
