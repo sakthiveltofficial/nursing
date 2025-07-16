@@ -21,7 +21,6 @@ export default function Home() {
         </Suspense>
       </CanvesWrapper> */}
       <Hero />
-      <div className="h-[100vh] w-[100vw] "></div>
     </div>
   );
 }

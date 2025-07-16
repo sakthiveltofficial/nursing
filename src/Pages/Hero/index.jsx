@@ -1,6 +1,6 @@
 "use client";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Float } from "@react-three/drei";
+import { ContactShadows, Environment, Float } from "@react-three/drei";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -190,11 +190,18 @@ export default function Hero() {
                   Home
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
-                  Projects
+                  About Us
                 </a>
                 <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
-                  Services
+                  Admission / Academics
                 </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
+                  Facilities
+                </a>
+                <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
+                  Gallery
+                </a>
+              
               </nav>
 
               {/* Desktop CTA Button */}
@@ -202,7 +209,7 @@ export default function Hero() {
                 variant="ghost"
                 className="hidden lg:flex items-center space-x-2 text-black hover:text-gray-600 p-0 h-auto font-normal"
               >
-                <span>Let's talk</span>
+                <span>Contact us</span>
                 <ArrowUpRight className="w-4 h-4" />
               </Button>
 
@@ -225,10 +232,19 @@ export default function Hero() {
                     Home
                   </a>
                   <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
-                    Projects
+                    About Us
                   </a>
                   <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
-                    Services
+                    Admission / Academics
+                  </a>
+                  <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
+                    Facilities
+                  </a>
+                  <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
+                    Gallery
+                  </a>
+                  <a href="#" className="text-gray-500 hover:text-gray-700 transition-colors">
+                    Contact us
                   </a>
                 </nav>
               </div>
@@ -236,63 +252,59 @@ export default function Hero() {
 
             {/* Main Content */}
             <main className="flex-1 flex items-end pb-16">
-              <div className="w-full">
-                <div className="flex justify-between items-end px-[4rem]">
-                  {/* Left Content */}
-                  <div className="hero-content pl-6 lg:pl-8 lg:max-w-xl text-left self-end pointer-events-auto">
-                    <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light text-black leading-tight mb-6">
-                      Design That Feels.
-                      <br />
-                      Experiences That Resonate.
-                    </h1>
-                    <p className="text-gray-600 text-lg lg:text-xl mb-8 max-w-lg">
-                      We blend creativity, emotion, and innovation to create
-                      digital worlds that your audience can connect with.
-                    </p>
-                    <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-lg font-medium inline-flex items-center space-x-2">
-                      <span className="text-white">LET'S TALK</span>
-                      <ArrowUpRight className="w-5 h-5 text-orange-400" />
-                    </Button>
-                  </div>
+  <div className="w-full">
+    <div className="flex justify-between items-end px-[4rem]">
+      {/* Left Content */}
+      <div className="hero-content pl-6 lg:pl-8 lg:max-w-xl text-left self-end pointer-events-auto">
+        <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light text-black leading-tight mb-6">
+          Transforming Healthcare,
+          <br />
+          One Nurse at a Time.
+        </h1>
+        <p className="text-gray-600 text-lg lg:text-xl mb-8 max-w-lg">
+          Join one of the leading nursing colleges in the region, offering
+          industry-recognized programs like B.Sc Nursing, GNM, and Post Basic
+          B.Sc. Experience clinical excellence, expert faculty, and
+          state-of-the-art labs that prepare you for real-world healthcare.
+        </p>
+        <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-lg font-medium inline-flex items-center space-x-2">
+          <span className="text-white">APPLY NOW</span>
+          <ArrowUpRight className="w-5 h-5 text-orange-400" />
+        </Button>
+      </div>
 
-                  {/* Right Content - Desktop Only */}
-                  <div className="hero-content hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm pointer-events-auto">
-                    <div className="space-y-6">
-                      <p className="text-gray-600 text-lg leading-relaxed">
-                        Whether through intuitive interfaces, immersive 3D, or
-                        bold visual storytelling,
-                        <span className="text-black font-medium">
-                          {" "}
-                          we design moments that people don't just see — they
-                          feel.
-                        </span>
-                      </p>
-                      <div className="flex flex-wrap gap-3">
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          UI/UX
-                        </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          3D VISUALIZATION
-                        </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          DEVELOPMENT
-                        </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          •
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </main>
+      {/* Right Content - Desktop Only */}
+      <div className="hero-content hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm pointer-events-auto">
+        <div className="space-y-6">
+          <p className="text-gray-600 text-lg leading-relaxed">
+            Gain hands-on experience with clinical placements, NCLEX-focused
+            preparation, and a student-first learning environment.
+            <span className="text-black font-medium">
+              {" "}
+              Your future in nursing starts with the right foundation — and we're here to build it with you.
+            </span>
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+              B.Sc Nursing
+            </span>
+            <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+              Clinical Training
+            </span>
+            <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+              NCLEX Prep
+            </span>
+            <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+              Career Support
+            </span>
           </div>
         </div>
       </div>
-
-      {/* Next Section */}
-      <div className="h-screen bg-white flex items-center justify-center">
-        <h2 className="text-4xl font-bold text-black">Next Section</h2>
+    </div>
+  </div>
+</main>
+          </div>
+        </div>
       </div>
     </>
   );
