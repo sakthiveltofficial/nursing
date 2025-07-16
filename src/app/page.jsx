@@ -1,11 +1,11 @@
 "use client";
-import CanvesWrapper from "@/components/CanvesWrapper";
-import { Idel } from "@/Three/Room/Scene";
-import Header from "@/components/Header";
-import { Loader } from "@react-three/drei";
-import { Nurse } from "@/Three/Humans";
+// import CanvesWrapper from "@/components/CanvesWrapper";
+// import { Idel } from "@/Three/Room/Scene";
+// import Header from "@/components/Header";
+// import { Loader } from "@react-three/drei";
+// import { Nurse } from "@/Three/Humans";
 import { Suspense, useRef } from "react";
-import PointingModel from "@/Three/PointingModel";
+// import PointingModel from "@/Three/PointingModel";
 import Hero from "@/Pages/Hero";
 
 export default function Home() {
