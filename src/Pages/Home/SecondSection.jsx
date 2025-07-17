@@ -105,7 +105,7 @@ export default function SecondSection() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden z-10"
+      className="relative min-h-screen h-[120vh] flex items-center justify-center overflow-hidden z-10"
       style={{ background: "transparent" }}
     >
       {/* Large Background Circle - Centered and Much Bigger */}
