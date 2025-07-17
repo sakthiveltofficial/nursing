@@ -22,7 +22,7 @@ import ScrollbasedAnimation from "@/Pages/Home/ScrollbasedAnimation";
 //   studio.extend(extension);
 // }
 
-function CanvesWrapper({ children }) {
+function CanvesWrapper({ children, isActive = false }) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -35,7 +35,7 @@ function CanvesWrapper({ children }) {
   const cameraLookAtRef = useRef(null);
 
   return (
-    <div className="w-full h-full relative p-5">
+    <div className="w-full h-full relative">
       {/* F2F2F2 */}
       <Canvas
         camera={{ fov: 40, position: [0, 0, 20] }}
@@ -46,12 +46,13 @@ function CanvesWrapper({ children }) {
           position: "absolute",
           top: 0,
           left: 0,
-          width: "100%",
+          width: "110%",
           height: "100%",
+          transform: "translateX(-2%)",
         }}
       >
          <SheetProvider sheet={sheet}>
-        <ScrollbasedAnimation project={project} />
+        <ScrollbasedAnimation project={project} isActive={isActive} />
         <BaseEnvironment />
         <PerspectiveCamera
           makeDefault

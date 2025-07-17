@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -18,6 +18,41 @@ export default function ThirdSection() {
   const contentRef = useRef(null);
   const laptopRef = useRef(null);
   const nurseRef = useRef(null);
+  const [isInViewport, setIsInViewport] = useState(false);
+
+  // Intersection Observer to detect when section is fully in viewport
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // Check if the section is fully visible (intersectionRatio close to 1)
+          const isFullyVisible = entry.intersectionRatio > 0.9; // 90% visible threshold for more precision
+          setIsInViewport(isFullyVisible);
+          
+          // Debug log to see when animation should start
+          console.log('ThirdSection visibility:', {
+            intersectionRatio: entry.intersectionRatio,
+            isFullyVisible,
+            isInViewport: isFullyVisible
+          });
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-10px", // Slight margin to ensure it's truly in viewport
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // Multiple thresholds for smooth detection
+      }
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.unobserve(container);
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -145,7 +180,7 @@ export default function ThirdSection() {
               transformOrigin: "center center",
             }}
           >
-            <MainCanvesScene />
+            <MainCanvesScene isActive={isInViewport} />
           </div>
         </div>
       </div>

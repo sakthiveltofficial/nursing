@@ -15,7 +15,7 @@ const easeInOutQuint = (x) => {
     : 1 - Math.pow(-2 * x + 2, 5) / 2;
 };
 
-function ScrollbasedAnimation({ project }) {
+function ScrollbasedAnimation({ project, isActive = false }) {
   const sheet = useCurrentSheet();
   const scrollRef = useRef({
     current: 0,
@@ -32,7 +32,7 @@ function ScrollbasedAnimation({ project }) {
 
     project.ready.then(() => {
       setProjectReady(true);
-      // Start from position 0 immediately
+      // Start from position 0 but don't activate until isActive is true
       if (sheet) {
         sheet.sequence.position = 0;
         scrollRef.current.current = 0;
@@ -41,28 +41,41 @@ function ScrollbasedAnimation({ project }) {
     });
   }, [project, sheet]);
 
+  // Reset animation when section becomes inactive
+  useEffect(() => {
+    if (!isActive && sheet && projectReady) {
+      sheet.sequence.position = 0;
+      scrollRef.current.current = 0;
+      scrollRef.current.target = 0;
+    }
+  }, [isActive, sheet, projectReady]);
+
   useEffect(() => {
     const handleWheel = (e) => {
-      if (!projectReady) return;
+      if (!projectReady || !isActive) return; // Only handle scroll when section is active
 
       e.preventDefault();
       const scrollSpeed = 0.0015;
       const deltaY = e.deltaY * scrollSpeed;
       
       const newTarget = Math.max(
-        0, // Start from 0 instead of INTRO_DURATION
+        0,
         Math.min(totalDuration, scrollRef.current.target + deltaY)
       );
       
       scrollRef.current.target = newTarget;
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
+    // Only add event listener when section is active
+    if (isActive) {
+      window.addEventListener("wheel", handleWheel, { passive: false });
+    }
+    
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [totalDuration, projectReady]);
+  }, [totalDuration, projectReady, isActive]);
 
   useFrame((state, delta) => {
-    if (!sheet || !projectReady) return;
+    if (!sheet || !projectReady || !isActive) return; // Only animate when section is active
 
     const { current, target } = scrollRef.current;
     const distance = target - current;
@@ -71,7 +84,7 @@ function ScrollbasedAnimation({ project }) {
     scrollRef.current.current += distance * smoothness;
     
     scrollRef.current.current = Math.max(
-      0, // Start from 0 instead of INTRO_DURATION
+      0,
       Math.min(totalDuration, scrollRef.current.current)
     );
     
