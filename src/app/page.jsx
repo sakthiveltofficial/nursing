@@ -6,7 +6,8 @@
 // import { Nurse } from "@/Three/Humans";
 import { Suspense, useRef } from "react";
 // import PointingModel from "@/Three/PointingModel";
-import Hero from "@/Pages/Hero";
+import Hero from "@/Pages/Home";
+import SecondSection from "@/Pages/Home/SecondSection";
 
 export default function Home() {
   const nurseRef = useRef();
@@ -21,6 +22,7 @@ export default function Home() {
         </Suspense>
       </CanvesWrapper> */}
       <Hero />
+      <SecondSection />
     </div>
   );
 }
