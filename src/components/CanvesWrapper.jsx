@@ -20,7 +20,6 @@ function CanvesWrapper({ children }) {
 
   return (
     <div className="w-full h-full relative p-5">
-      <div className="w-full h-full relative bg-black rounded-[3rem] overflow-hidden shadow-xl">
       {/* F2F2F2 */}
         <Canvas
           camera={{ fov: 40, position: [0, 0, 20] }}
@@ -53,11 +52,10 @@ function CanvesWrapper({ children }) {
             cellSize={1}
             cellThickness={1}
           /> */}
-          <EffectComposer>
-            <Noise opacity={0.01} />
-          </EffectComposer>
+            {/* <EffectComposer>
+              <Noise opacity={0.001} />
+            </EffectComposer> */}
         </Canvas>
-      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Room } from "..";
 
 function Idel() {
   const ref = useRef();
-  return <Room position={[0, -0.64, 10]} ref={ref} />;
+  return <Room position={[-10, -0.10, 10]} ref={ref} />;
 }
 
 export { Idel };

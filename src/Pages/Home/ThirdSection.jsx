@@ -1,29 +1,32 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Suspense, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import MainCanvesScene from "./MainCanvesScene";
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 export default function ThirdSection() {
-  const containerRef = useRef(null)
-  const outerDivRef = useRef(null)
-  const innerDivRef = useRef(null)
-  const contentRef = useRef(null)
-  const laptopRef = useRef(null)
+  const containerRef = useRef(null);
+  const outerDivRef = useRef(null);
+  const innerDivRef = useRef(null);
+  const contentRef = useRef(null);
+  const laptopRef = useRef(null);
+  const nurseRef = useRef(null);
 
   useEffect(() => {
-    const container = containerRef.current
-    const outerDiv = outerDivRef.current
-    const innerDiv = innerDivRef.current
-    const content = contentRef.current
-    const laptop = laptopRef.current
+    const container = containerRef.current;
+    const outerDiv = outerDivRef.current;
+    const innerDiv = innerDivRef.current;
+    const content = contentRef.current;
+    const laptop = laptopRef.current;
 
-    if (!container || !outerDiv || !innerDiv || !content || !laptop) return
+    if (!container || !outerDiv || !innerDiv || !content || !laptop) return;
 
     // Set initial states - door opening effect (full height, narrow width)
     gsap.set(outerDiv, {
@@ -32,21 +35,21 @@ export default function ThirdSection() {
       borderRadius: "20px", // Minimal border radius for narrow state
       opacity: 0.2,
       transformOrigin: "center center",
-    })
+    });
 
     gsap.set(innerDiv, {
       scaleX: 0.05, // Even narrower horizontally for smoother start
       scaleY: 1, // Full height
       opacity: 0,
       transformOrigin: "center center",
-    })
+    });
 
     gsap.set([content, laptop], {
       opacity: 0,
       scaleX: 0.1, // More compressed horizontally
       scaleY: 1, // Full height
       transformOrigin: "center center",
-    })
+    });
 
     // Create timeline for scroll-triggered door opening animation - longer and smoother
     const tl = gsap.timeline({
@@ -56,9 +59,8 @@ export default function ThirdSection() {
         end: "bottom 50%", // End later for extended animation
         scrub: 3, // Increased scrub for much smoother animation
         pin: false,
-        markers: true,
       },
-    })
+    });
 
     // Animate the door opening effect (width expansion from center) - longer durations
     tl.to(outerDiv, {
@@ -101,12 +103,12 @@ export default function ThirdSection() {
           ease: "power4.out", // Smoother easing
         },
         "-=1" // More overlap for fluid transition
-      )
+      );
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   return (
     <div
@@ -143,7 +145,7 @@ export default function ThirdSection() {
               transformOrigin: "center center",
             }}
           >
-            {/* Your content goes here */}
+            <MainCanvesScene />
           </div>
         </div>
       </div>
@@ -159,5 +161,5 @@ export default function ThirdSection() {
         {/* Your overlay content goes here */}
       </div>
     </div>
-  )
+  );
 }
