@@ -120,9 +120,10 @@ export default function Hero() {
 
   return (
     <>
-      {/* Extended background that continues beyond Hero */}
+      <div ref={heroRef} className="h-[600vh] relative overflow-hidden">
+        {/* Section-specific background */}
         <div
-        className="fixed inset-0 z-0 h-full w-full"
+          className="absolute inset-0 z-0 h-full w-full"
           style={{
             background: `
               radial-gradient(ellipse at center, 
@@ -135,22 +136,20 @@ export default function Hero() {
           }}
         />
 
-      {/* Subtle vignette overlay for depth */}
-      <div
-        className="fixed inset-0 z-1 h-full w-full pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(ellipse at center, 
-              transparent 0%,
-              transparent 50%,
-              rgba(0, 0, 0, 0.03) 80%,
-              rgba(0, 0, 0, 0.06) 100%
-            )
-          `,
-        }}
-      />
-
-      <div ref={heroRef} className="h-[600vh] relative overflow-hidden">
+        {/* Subtle vignette overlay for depth */}
+        <div
+          className="absolute inset-0 z-1 h-full w-full pointer-events-none"
+          style={{
+            background: `
+              radial-gradient(ellipse at center, 
+                transparent 0%,
+                transparent 50%,
+                rgba(0, 0, 0, 0.03) 80%,
+                rgba(0, 0, 0, 0.06) 100%
+              )
+            `,
+          }}
+        />
         {/* Pinned visual container */}
         <div className="hero-pin-container h-screen w-full relative overflow-hidden">
           {/* 3D Canvas */}

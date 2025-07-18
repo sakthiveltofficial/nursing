@@ -61,13 +61,20 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     // Use scroll progress directly for Theatre.js sequence
     const targetPosition = scrollProgress * totalDuration;
     
+    // Clamp target position to sequence duration to prevent over-scrolling
+    const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
+    
     // Smooth interpolation for fluid animation
     const { current } = scrollRef.current;
-    const distance = targetPosition - current;
+    const distance = clampedTargetPosition - current;
     const smoothness = 0.05; // Slower smoothing for more fluid animation
     
-    scrollRef.current.current += distance * smoothness;
+    // Only update if we're not at the end and trying to go further
+    if (current < totalDuration || distance < 0) {
+      scrollRef.current.current += distance * smoothness;
+    }
     
+    // Clamp current position to sequence bounds
     scrollRef.current.current = Math.max(
       0,
       Math.min(totalDuration, scrollRef.current.current)

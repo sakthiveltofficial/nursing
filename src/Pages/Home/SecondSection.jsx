@@ -106,12 +106,41 @@ export default function SecondSection() {
     <div
       ref={containerRef}
       className="relative min-h-screen h-[120vh] flex items-center justify-center overflow-hidden z-10"
-      style={{ background: "transparent" }}
     >
+      {/* Section-specific background */}
+      <div
+        className="absolute inset-0 z-0 h-full w-full"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, 
+              #f0f0f0 0%,
+              #e8e6e1 30%,
+              #d8d6d1 60%,
+              #c8c6c1 100%
+            )
+          `,
+        }}
+      />
+
+      {/* Subtle vignette overlay for depth */}
+      <div
+        className="absolute inset-0 z-1 h-full w-full pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, 
+              transparent 0%,
+              transparent 50%,
+              rgba(0, 0, 0, 0.03) 80%,
+              rgba(0, 0, 0, 0.06) 100%
+            )
+          `,
+        }}
+      />
+
       {/* Large Background Circle - Centered and Much Bigger */}
       <div
         ref={circleRef}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full pointer-events-none"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full pointer-events-none z-5"
         style={{
           background:
             "radial-gradient(circle, rgba(255, 165, 0, 0.4) 0%, rgba(255, 140, 0, 0.25) 30%, rgba(255, 165, 0, 0.15) 50%, rgba(255, 165, 0, 0.08) 70%, transparent 100%)",

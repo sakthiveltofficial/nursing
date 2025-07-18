@@ -100,12 +100,12 @@ export default function ThirdSection() {
     ScrollTrigger.create({
       trigger: container,
       start: "top top", // Start pinning when container hits top
-      end: "bottom 140%", // End pinning when container bottom hits top
+      end: "bottom 130%", // End pinning when container bottom hits top
       pin: canvasContainer, // Pin the canvas container
       pinSpacing: true,
       onUpdate: (self) => {
         // Calculate progress from 0 to 100% based on scroll position
-        const progress = self.progress;
+        const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
         // Pass progress to MainCanvesScene for Theatre.js sequence control
         if (canvasContainer) {
           // Round to 3 decimal places to prevent excessive updates
@@ -122,13 +122,42 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[800vh] flex justify-center  overflow-hidden z-10 p-4"
-      style={{ background: "transparent" }}
+      className="relative h-[550vh] flex justify-center overflow-hidden z-10 p-4"
     >
+      {/* Section-specific background */}
+      <div
+        className="absolute inset-0 z-0 h-full w-full"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, 
+              #f0f0f0 0%,
+              #e8e6e1 30%,
+              #d8d6d1 60%,
+              #c8c6c1 100%
+            )
+          `,
+        }}
+      />
+
+      {/* Subtle vignette overlay for depth */}
+      <div
+        className="absolute inset-0 z-1 h-full w-full pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, 
+              transparent 0%,
+              transparent 50%,
+              rgba(0, 0, 0, 0.03) 80%,
+              rgba(0, 0, 0, 0.06) 100%
+            )
+          `,
+        }}
+      />
+
       {/* Canvas container with clip-path reveal effect */}
       <div
         ref={canvasContainerRef}
-        className="relative w-[90vw] mt-[4%] h-[80vh] bg-white overflow-hidden"
+        className="relative w-[90vw] mt-[4%] h-[80vh] bg-white overflow-hidden z-10"
         style={{
           borderRadius: "80px", // Initial border radius - moderately rounded
           // clip-path, scale, and opacity will be animated via GSAP
