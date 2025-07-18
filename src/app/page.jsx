@@ -12,6 +12,7 @@ export default function Home() {
       <Hero />
       <SecondSection />
       <ThirdSection />
+      <div className="h-[900vh] w-[100vw] bg-transparent"></div>
     </div>
   );
 }

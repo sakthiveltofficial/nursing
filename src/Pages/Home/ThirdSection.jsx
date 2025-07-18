@@ -4,7 +4,6 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-
 import MainCanvesScene from "./MainCanvesScene";
 
 // Register ScrollTrigger plugin
@@ -26,16 +25,9 @@ export default function ThirdSection() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Check if the section is fully visible (intersectionRatio close to 1)
-          const isFullyVisible = entry.intersectionRatio > 0.9; // 90% visible threshold for more precision
-          setIsInViewport(isFullyVisible);
-          
-          // Debug log to see when animation should start
-          console.log('ThirdSection visibility:', {
-            intersectionRatio: entry.intersectionRatio,
-            isFullyVisible,
-            isInViewport: isFullyVisible
-          });
+          // Check if the section is partially visible (much lower threshold)
+          const isPartiallyVisible = entry.intersectionRatio > 0.1; // 10% visible threshold
+          setIsInViewport(isPartiallyVisible);
         });
       },
       {
@@ -79,7 +71,7 @@ export default function ThirdSection() {
       scrollTrigger: {
         trigger: container,
         start: "top 90%", // Start when section enters viewport
-        end: "bottom 50%", // End when section is well into view
+        end: "top 80%", // End when section is well into view
         scrub: 2, // Smooth scrub for fluid animation
         pin: false,
       },
@@ -92,18 +84,34 @@ export default function ThirdSection() {
       borderRadius: "70px", // Moderately rounded corners when fully revealed
       duration: 3, // Longer duration for smooth reveal
       ease: "power3.out", // Smooth easing
-    })
-      .to(
-        content,
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 2, // Content fades in after clip-path starts revealing
-          ease: "power2.out",
-        },
-        "-=2" // Start content animation before clip-path completes
-      );
+    }).to(
+      content,
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 2, // Content fades in after clip-path starts revealing
+        ease: "power2.out",
+      },
+      "-=2" // Start content animation before clip-path completes
+    );
+
+    // Create pin trigger for canvas container
+    ScrollTrigger.create({
+      trigger: container,
+      start: "top top", // Start pinning when container hits top
+      end: "bottom bottom", // End pinning when container bottom hits top
+      pin: canvasContainer, // Pin the canvas container
+      pinSpacing: true,
+      onUpdate: (self) => {
+        // Calculate progress from 0 to 100% based on scroll position
+        const progress = self.progress;
+        // Pass progress to MainCanvesScene for Theatre.js sequence control
+        if (canvasContainer) {
+          canvasContainer.dataset.scrollProgress = progress;
+        }
+      },
+    });
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
@@ -113,8 +121,8 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden z-10 p-4"
-      style={{ background: "transparent" }}
+      className="relative h-[400vh] flex justify-center overflow-hidden z-10 p-4"
+      style={{ background: "red" }}
     >
       {/* Canvas container with clip-path reveal effect */}
       <div

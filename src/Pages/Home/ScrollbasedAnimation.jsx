@@ -15,7 +15,7 @@ const easeInOutQuint = (x) => {
     : 1 - Math.pow(-2 * x + 2, 5) / 2;
 };
 
-function ScrollbasedAnimation({ project, isActive = false }) {
+function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 }) {
   const sheet = useCurrentSheet();
   const scrollRef = useRef({
     current: 0,
@@ -25,6 +25,8 @@ function ScrollbasedAnimation({ project, isActive = false }) {
   });
   const [projectReady, setProjectReady] = useState(false);
   const totalDuration = val(sheet.sequence.pointer.length);
+  
+
 
   // Wait for project to be ready
   useEffect(() => {
@@ -39,7 +41,7 @@ function ScrollbasedAnimation({ project, isActive = false }) {
         scrollRef.current.target = 0;
       }
     });
-  }, [project, sheet]);
+  }, [project, sheet, totalDuration]);
 
   // Reset animation when section becomes inactive
   useEffect(() => {
@@ -50,45 +52,32 @@ function ScrollbasedAnimation({ project, isActive = false }) {
     }
   }, [isActive, sheet, projectReady]);
 
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (!projectReady || !isActive) return; // Only handle scroll when section is active
-
-      e.preventDefault();
-      const scrollSpeed = 0.0015;
-      const deltaY = e.deltaY * scrollSpeed;
-      
-      const newTarget = Math.max(
-        0,
-        Math.min(totalDuration, scrollRef.current.target + deltaY)
-      );
-      
-      scrollRef.current.target = newTarget;
-    };
-
-    // Only add event listener when section is active
-    if (isActive) {
-      window.addEventListener("wheel", handleWheel, { passive: false });
-    }
-    
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, [totalDuration, projectReady, isActive]);
+  // Remove wheel event listener since we're using scroll progress from parent
+  // The scroll progress is now controlled by the parent component's ScrollTrigger
 
   useFrame((state, delta) => {
     if (!sheet || !projectReady || !isActive) return; // Only animate when section is active
 
-    const { current, target } = scrollRef.current;
-    const distance = target - current;
-    const smoothness = 0.075;
+    // Use scroll progress directly for Theatre.js sequence
+    const targetPosition = scrollProgress * totalDuration;
     
-    scrollRef.current.current += distance * smoothness;
+
+    
+    // Direct assignment instead of smooth interpolation for testing
+    scrollRef.current.current = targetPosition;
     
     scrollRef.current.current = Math.max(
       0,
       Math.min(totalDuration, scrollRef.current.current)
     );
     
+    // Force update the sequence position
     sheet.sequence.position = scrollRef.current.current;
+    
+    // Additional debug to confirm sequence is updating
+    if (scrollRef.current.current !== sheet.sequence.position) {
+      console.warn('Sequence position not updating correctly!');
+    }
   });
 
   return null;
