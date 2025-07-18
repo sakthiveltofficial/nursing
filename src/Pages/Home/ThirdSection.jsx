@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
 import MainCanvesScene from "./MainCanvesScene";
 
 // Register ScrollTrigger plugin
