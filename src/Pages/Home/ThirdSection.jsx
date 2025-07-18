@@ -100,7 +100,7 @@ export default function ThirdSection() {
     ScrollTrigger.create({
       trigger: container,
       start: "top top", // Start pinning when container hits top
-      end: "bottom bottom", // End pinning when container bottom hits top
+      end: "bottom 140%", // End pinning when container bottom hits top
       pin: canvasContainer, // Pin the canvas container
       pinSpacing: true,
       onUpdate: (self) => {
@@ -108,7 +108,8 @@ export default function ThirdSection() {
         const progress = self.progress;
         // Pass progress to MainCanvesScene for Theatre.js sequence control
         if (canvasContainer) {
-          canvasContainer.dataset.scrollProgress = progress;
+          // Round to 3 decimal places to prevent excessive updates
+          canvasContainer.dataset.scrollProgress = Math.round(progress * 1000) / 1000;
         }
       },
     });
@@ -121,13 +122,13 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[400vh] flex justify-center overflow-hidden z-10 p-4"
-      style={{ background: "red" }}
+      className="relative h-[800vh] flex justify-center  overflow-hidden z-10 p-4"
+      style={{ background: "transparent" }}
     >
       {/* Canvas container with clip-path reveal effect */}
       <div
         ref={canvasContainerRef}
-        className="relative w-[90vw] h-[80vh] bg-white overflow-hidden"
+        className="relative w-[90vw] mt-[4%] h-[80vh] bg-white overflow-hidden"
         style={{
           borderRadius: "80px", // Initial border radius - moderately rounded
           // clip-path, scale, and opacity will be animated via GSAP

@@ -61,23 +61,20 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     // Use scroll progress directly for Theatre.js sequence
     const targetPosition = scrollProgress * totalDuration;
     
-
+    // Smooth interpolation for fluid animation
+    const { current } = scrollRef.current;
+    const distance = targetPosition - current;
+    const smoothness = 0.05; // Slower smoothing for more fluid animation
     
-    // Direct assignment instead of smooth interpolation for testing
-    scrollRef.current.current = targetPosition;
+    scrollRef.current.current += distance * smoothness;
     
     scrollRef.current.current = Math.max(
       0,
       Math.min(totalDuration, scrollRef.current.current)
     );
     
-    // Force update the sequence position
+    // Update the sequence position
     sheet.sequence.position = scrollRef.current.current;
-    
-    // Additional debug to confirm sequence is updating
-    if (scrollRef.current.current !== sheet.sequence.position) {
-      console.warn('Sequence position not updating correctly!');
-    }
   });
 
   return null;
