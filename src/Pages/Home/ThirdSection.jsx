@@ -157,7 +157,7 @@ export default function ThirdSection() {
       {/* Canvas container with clip-path reveal effect */}
       <div
         ref={canvasContainerRef}
-        className="relative w-[90vw] mt-[4%] h-[80vh] bg-white overflow-hidden z-10"
+        className="relative w-[100vw] mt-[2%] h-[90vh] bg-white overflow-hidden z-10"
         style={{
           borderRadius: "80px", // Initial border radius - moderately rounded
           // clip-path, scale, and opacity will be animated via GSAP

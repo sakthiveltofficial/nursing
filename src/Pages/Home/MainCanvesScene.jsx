@@ -10,12 +10,12 @@ import extension from "@theatre/r3f/dist/extension";
 import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
-import sequences from "@/../public/Sequences/sequence_1.json";
+import sequences from "@/../public/Sequences/sequence_2.json";
 
-// if (process.env.NODE_ENV === "development") {
-//   studio.initialize();
-//   studio.extend(extension);
-// }
+if (process.env.NODE_ENV === "development") {
+  studio.initialize();
+  studio.extend(extension);
+}
 
 function MainCanvesScene({ isActive = false }) {
   const nurseRef = useRef(null);
