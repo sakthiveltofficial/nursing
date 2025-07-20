@@ -70,8 +70,8 @@ export default function ThirdSection() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container,
-        start: "top 90%", // Start when section enters viewport
-        end: "top 80%", // End when section is well into view
+        start: "top 20%", // Start when section enters viewport
+        end: "top 40%", // End when section is well into view
         scrub: 2, // Smooth scrub for fluid animation
         pin: false,
       },
