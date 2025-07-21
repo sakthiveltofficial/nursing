@@ -58,7 +58,7 @@ export default function ThirdSection() {
 
       // Set initial state - start shrunk in
       gsap.set(canvasContainer, {
-        clipPath: "inset(15% 15% 15% 15% round 20px)", // Start shrunk in
+        clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk in
         scale: 1,
         opacity: 1,
         transformOrigin: "center center",
@@ -75,7 +75,7 @@ export default function ThirdSection() {
       const clipPathTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          start: "top bottom", // Start when section enters viewport
+          start: "top 70%", // Start when section enters viewport
           end: "bottom top", // End when section leaves viewport
           scrub: 1,
           pin: false,
@@ -86,7 +86,7 @@ export default function ThirdSection() {
         // PHASE 1: IN Animation - expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
-            clipPath: "inset(15% 15% 15% 15% round 0)", // Start shrunk (matches initial state)
+            clipPath: "insinset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
           },
           {
             clipPath: "inset(10% 5% 10% 5% round 50px)", // Expand to full
