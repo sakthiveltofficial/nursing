@@ -11,6 +11,9 @@ import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
 import sequences from "@/../public/Sequences/sequence_2.json";
+import { SittingDoct } from "@/Three/Doctor";
+import { OrbitControls } from "@react-three/drei";
+import { StandingDoct } from "@/Three/Doctor/Standing";
 
 // if (process.env.NODE_ENV === "development") {
 //   studio.initialize();
@@ -23,13 +26,11 @@ function MainCanvesScene({ isActive = false }) {
   const sheet = project.sheet("MainScene");
   const cameraLookAtRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  
-
 
   // Listen for scroll progress updates from parent
   useEffect(() => {
     const findCanvasContainer = () => {
-      return document.querySelector('[data-scroll-progress]');
+      return document.querySelector("[data-scroll-progress]");
     };
 
     const setupObserver = () => {
@@ -42,8 +43,13 @@ function MainCanvesScene({ isActive = false }) {
 
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'data-scroll-progress') {
-            const progress = parseFloat(canvasContainer.dataset.scrollProgress || '0');
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "data-scroll-progress"
+          ) {
+            const progress = parseFloat(
+              canvasContainer.dataset.scrollProgress || "0"
+            );
             setScrollProgress(progress);
           }
         });
@@ -51,7 +57,7 @@ function MainCanvesScene({ isActive = false }) {
 
       observer.observe(canvasContainer, {
         attributes: true,
-        attributeFilter: ['data-scroll-progress']
+        attributeFilter: ["data-scroll-progress"],
       });
 
       return observer;
@@ -73,6 +79,16 @@ function MainCanvesScene({ isActive = false }) {
             <StudyRoom />
           </group>
           <Nurse ref={nurseRef} />
+          <group position={[17.05, -0.01, 49]}>
+            <group rotation={[0, -Math.PI / 2, 0]} position={[-1, 0, 1.5]}>
+              <StandingDoct />
+            </group>
+            <group rotation={[0, -Math.PI / 3, 0]}>
+              <group position={[-.85, -0.01, 0]} rotation={[0, 0.2, 0]}>
+                <SittingDoct />
+              </group>
+            </group>
+          </group>
         </Suspense>
         <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
@@ -82,6 +98,7 @@ function MainCanvesScene({ isActive = false }) {
           theatreKey="camera"
           lookAt={cameraLookAtRef}
         />
+        {/* <OrbitControls /> */}
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
