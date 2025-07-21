@@ -77,6 +77,7 @@ function MainCanvesScene({ isActive = false }) {
           </group>
           <group position={[-15, -0.64, 75]} rotation={[0, -Math.PI / 2, 0]}>
             <StudyRoom />
+
           </group>
           <Nurse ref={nurseRef} />
           <group position={[17.05, -0.01, 49]}>
@@ -90,15 +91,15 @@ function MainCanvesScene({ isActive = false }) {
             </group>
           </group>
         </Suspense>
-        <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
+        {/* <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
           makeDefault
           position={[0, 2, 50]}
           fov={70}
           theatreKey="camera"
           lookAt={cameraLookAtRef}
-        />
-        {/* <OrbitControls /> */}
+        /> */}
+        <OrbitControls />
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
