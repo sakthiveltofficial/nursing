@@ -22,6 +22,7 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     target: 0,
     velocity: 0,
     lastScrollTime: 0,
+    hasInitialized: false,
   });
   const [projectReady, setProjectReady] = useState(false);
   const totalDuration = val(sheet.sequence.pointer.length);
@@ -49,6 +50,7 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
       sheet.sequence.position = 0;
       scrollRef.current.current = 0;
       scrollRef.current.target = 0;
+      scrollRef.current.hasInitialized = false; // Reset initialization flag
     }
   }, [isActive, sheet, projectReady]);
 
@@ -64,14 +66,26 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     // Clamp target position to sequence duration to prevent over-scrolling
     const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
     
-    // Smooth interpolation for fluid animation
     const { current } = scrollRef.current;
-    const distance = clampedTargetPosition - current;
-    const smoothness = 0.05; // Slower smoothing for more fluid animation
+    const distance = Math.abs(clampedTargetPosition - current);
     
-    // Only update if we're not at the end and trying to go further
-    if (current < totalDuration || distance < 0) {
-      scrollRef.current.current += distance * smoothness;
+    // Fast seek when starting from middle or when distance is large
+    const largeJumpThreshold = totalDuration * 0.1; // 10% of total duration
+    const shouldFastSeek = !scrollRef.current.hasInitialized || distance > largeJumpThreshold;
+    
+    if (shouldFastSeek) {
+      // Directly set position for fast catch-up
+      scrollRef.current.current = clampedTargetPosition;
+      scrollRef.current.hasInitialized = true;
+    } else {
+      // Smooth interpolation for small movements
+      const smoothDistance = clampedTargetPosition - current;
+      const smoothness = 0.08; // Slightly faster smoothing
+      
+      // Only update if we're not at the end and trying to go further
+      if (current < totalDuration || smoothDistance < 0) {
+        scrollRef.current.current += smoothDistance * smoothness;
+      }
     }
     
     // Clamp current position to sequence bounds
