@@ -83,48 +83,52 @@ export default function ThirdSection() {
       });
 
       clipPathTimeline
-        // Start from current shrunk state, expand when entering
+        // PHASE 1: IN Animation - expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
             clipPath: "inset(15% 15% 15% 15% round 20px)", // Start shrunk (matches initial state)
           },
           {
             clipPath: "inset(0% 0% 0% 0% round 0px)", // Expand to full
-            duration: 0.4, // 40% of timeline for expansion
+            duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
         )
-        // HOLD - Stay full while in view
+        // PHASE 2: CONTENT Animation - content fades in (40% of timeline)
+        .fromTo(content,
+          {
+            opacity: 0,
+            scale: 0.8,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.4, // 40% of timeline for content animation
+            ease: "power2.out",
+          },
+          "-=0.1" // Start slightly before clip path completes for smooth transition
+        )
+        // PHASE 3: HOLD - Stay full with content visible (10% of timeline)
         .to(canvasContainer, {
           clipPath: "inset(0% 0% 0% 0% round 0px)", // Stay full
-          duration: 0.2, // 20% of timeline
+          duration: 0.1, // 10% of timeline
           ease: "none",
         })
-        // OUT Animation - Shrink back when leaving
+        // PHASE 4: OUT Animation - content fades out then shrink back (20% of timeline)
+        .to(content, {
+          opacity: 0,
+          scale: 0.8,
+          y: 20,
+          duration: 0.1, // Quick content fade out
+          ease: "power2.in",
+        })
         .to(canvasContainer, {
           clipPath: "inset(15% 15% 15% 15% round 20px)", // Shrink back to initial
-          duration: 0.4, // 40% of timeline for shrinking
+          duration: 0.1, // Quick shrink back
           ease: "power2.in",
         });
-
-      // Content animation timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: "top 20%", // Start when section enters viewport
-          end: "top 40%", // End when section is well into view
-          scrub: 2, // Smooth scrub for fluid animation
-          pin: false,
-        },
-      });
-
-      tl.to(content, {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 2,
-        ease: "power2.out",
-      });
 
       // Create pin trigger for canvas container with scroll progress
       ScrollTrigger.create({
