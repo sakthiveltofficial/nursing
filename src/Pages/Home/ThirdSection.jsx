@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 import MainCanvesScene from "./MainCanvesScene";
 
@@ -13,6 +14,7 @@ if (typeof window !== "undefined") {
 
 export default function ThirdSection() {
   const containerRef = useRef(null);
+  const outerDivRef = useRef(null);
   const canvasContainerRef = useRef(null);
   const contentRef = useRef(null);
   const [isInViewport, setIsInViewport] = useState(false);
@@ -44,140 +46,172 @@ export default function ThirdSection() {
     };
   }, []);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const canvasContainer = canvasContainerRef.current;
-    const content = contentRef.current;
+  // Replace useEffect with useGSAP for better GSAP integration
+  useGSAP(
+    () => {
+      const container = containerRef.current;
+      const outerDiv = outerDivRef.current;
+      const canvasContainer = canvasContainerRef.current;
+      const content = contentRef.current;
 
-    if (!container || !canvasContainer || !content) return;
+      if (!container || !outerDiv || !canvasContainer || !content) return;
 
-    // Set initial states for clip-path reveal animation
-    gsap.set(canvasContainer, {
-      clipPath: "ellipse(0.5% 50% at 50% 50%)", // Start as thin ellipse in center
-      opacity: 0.2,
-      borderRadius: "70px", // Moderately rounded initially
-      transformOrigin: "center center",
-    });
+      // Set initial state - start shrunk in
+      gsap.set(canvasContainer, {
+        clipPath: "inset(15% 15% 15% 15% round 20px)", // Start shrunk in
+        scale: 1,
+        opacity: 1,
+        transformOrigin: "center center",
+      });
 
-    gsap.set(content, {
-      opacity: 0,
-      scale: 0.8,
-      y: 20,
-      transformOrigin: "center center",
-    });
+      gsap.set(content, {
+        opacity: 0,
+        scale: 0.8,
+        y: 20,
+        transformOrigin: "center center",
+      });
 
-    // Create timeline for scroll-triggered clip-path reveal animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: "top 20%", // Start when section enters viewport
-        end: "top 40%", // End when section is well into view
-        scrub: 2, // Smooth scrub for fluid animation
-        pin: false,
-      },
-    });
+      // Single timeline covering entire scroll range to avoid conflicts
+      const clipPathTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top bottom", // Start when section enters viewport
+          end: "bottom top", // End when section leaves viewport
+          scrub: 1,
+          pin: false,
+        },
+      });
 
-    // Animate the clip-path reveal effect - expanding from center vertically and horizontally
-    tl.to(canvasContainer, {
-      clipPath: "ellipse(100% 100% at 50% 50%)", // Expand to full ellipse covering entire area
-      opacity: 1,
-      borderRadius: "70px", // Moderately rounded corners when fully revealed
-      duration: 3, // Longer duration for smooth reveal
-      ease: "power3.out", // Smooth easing
-    }).to(
-      content,
-      {
+      clipPathTimeline
+        // Start from current shrunk state, expand when entering
+        .fromTo(canvasContainer, 
+          {
+            clipPath: "inset(15% 15% 15% 15% round 20px)", // Start shrunk (matches initial state)
+          },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 0px)", // Expand to full
+            duration: 0.4, // 40% of timeline for expansion
+            ease: "power2.out",
+          }
+        )
+        // HOLD - Stay full while in view
+        .to(canvasContainer, {
+          clipPath: "inset(0% 0% 0% 0% round 0px)", // Stay full
+          duration: 0.2, // 20% of timeline
+          ease: "none",
+        })
+        // OUT Animation - Shrink back when leaving
+        .to(canvasContainer, {
+          clipPath: "inset(15% 15% 15% 15% round 20px)", // Shrink back to initial
+          duration: 0.4, // 40% of timeline for shrinking
+          ease: "power2.in",
+        });
+
+      // Content animation timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top 20%", // Start when section enters viewport
+          end: "top 40%", // End when section is well into view
+          scrub: 2, // Smooth scrub for fluid animation
+          pin: false,
+        },
+      });
+
+      tl.to(content, {
         opacity: 1,
         scale: 1,
         y: 0,
-        duration: 2, // Content fades in after clip-path starts revealing
+        duration: 2,
         ease: "power2.out",
-      },
-      "-=2" // Start content animation before clip-path completes
-    );
+      });
 
-    // Create pin trigger for canvas container
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top top", // Start pinning when container hits top
-      end: "bottom 130%", // End pinning when container bottom hits top
-      pin: canvasContainer, // Pin the canvas container
-      pinSpacing: true,
-      onUpdate: (self) => {
-        // Calculate progress from 0 to 100% based on scroll position
-        const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
-        // Pass progress to MainCanvesScene for Theatre.js sequence control
-        if (canvasContainer) {
-          // Round to 3 decimal places to prevent excessive updates
-          canvasContainer.dataset.scrollProgress = Math.round(progress * 1000) / 1000;
-        }
-      },
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+      // Create pin trigger for canvas container with scroll progress
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top top", // Start pinning when container hits top
+        end: "bottom 130%", // End pinning when container bottom hits top
+        pin: canvasContainer, // Pin the canvas container
+        pinSpacing: true,
+        onUpdate: (self) => {
+          // Calculate progress from 0 to 100% based on scroll position
+          const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
+          // Pass progress to MainCanvesScene for Theatre.js sequence control
+          if (canvasContainer) {
+            // Round to 3 decimal places to prevent excessive updates
+            canvasContainer.dataset.scrollProgress = Math.round(progress * 1000) / 1000;
+          }
+        },
+      });
+    },
+    { scope: containerRef }
+  );
 
   return (
     <div
       ref={containerRef}
-      className="relative h-[550vh] flex justify-center overflow-hidden z-10 p-4"
+      className="relative h-[550vh] flex justify-center overflow-hidden z-10 "
     >
-      {/* Section-specific background */}
+      {/* Outer div with inset clip-path animation */}
       <div
-        className="absolute inset-0 z-0 h-full w-full"
-        style={{
-          background: `
-            radial-gradient(ellipse at center, 
-              #f0f0f0 0%,
-              #e8e6e1 30%,
-              #d8d6d1 60%,
-              #c8c6c1 100%
-            )
-          `,
-        }}
-      />
-
-      {/* Subtle vignette overlay for depth */}
-      <div
-        className="absolute inset-0 z-1 h-full w-full pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(ellipse at center, 
-              transparent 0%,
-              transparent 50%,
-              rgba(0, 0, 0, 0.03) 80%,
-              rgba(0, 0, 0, 0.06) 100%
-            )
-          `,
-        }}
-      />
-
-      {/* Canvas container with clip-path reveal effect */}
-      <div
-        ref={canvasContainerRef}
-        className="relative w-[100vw] mt-[2%] h-[90vh] bg-white overflow-hidden z-10"
-        style={{
-          borderRadius: "80px", // Initial border radius - moderately rounded
-          // clip-path, scale, and opacity will be animated via GSAP
-        }}
+        ref={outerDivRef}
+        className="relative w-full h-full"
       >
-        {/* 3D Canvas Content */}
-        <div className="relative w-full h-full flex items-center justify-center">
-          <MainCanvesScene isActive={isInViewport} />
+        {/* Section-specific background */}
+        <div
+          className="absolute inset-0 z-0 h-full w-full"
+          style={{
+            background: `
+              radial-gradient(ellipse at center, 
+                #f0f0f0 0%,
+                #e8e6e1 30%,
+                #d8d6d1 60%,
+                #c8c6c1 100%
+              )
+            `,
+          }}
+        />
+
+        {/* Subtle vignette overlay for depth */}
+        <div
+          className="absolute inset-0 z-1 h-full w-full pointer-events-none"
+          style={{
+            background: `
+              radial-gradient(ellipse at center, 
+                transparent 0%,
+                transparent 50%,
+                rgba(0, 0, 0, 0.03) 80%,
+                rgba(0, 0, 0, 0.06) 100%
+              )
+            `,
+          }}
+        />
+
+        {/* Inner canvas container with ellipse clip-path reveal effect */}
+        <div
+          ref={canvasContainerRef}
+          className="relative w-[100vw] h-[100vh] bg-white overflow-hidden z-10 mx-auto"
+          style={{
+            borderRadius: "0", // Initial border radius - moderately rounded
+            // clip-path, scale, and opacity will be animated via GSAP
+          }}
+        >
+          {/* 3D Canvas Content */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            <MainCanvesScene isActive={isInViewport} />
+          </div>
         </div>
-      </div>
 
-      {/* Content overlay */}
-      <div
-        ref={contentRef}
-        className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-center z-20"
-        style={{
-          transformOrigin: "center center",
-        }}
-      >
-        {/* Your overlay content goes here */}
+        {/* Content overlay */}
+        <div
+          ref={contentRef}
+          className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-center z-20"
+          style={{
+            transformOrigin: "center center",
+          }}
+        >
+          {/* Your overlay content goes here */}
+        </div>
       </div>
     </div>
   );

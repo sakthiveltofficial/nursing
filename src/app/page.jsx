@@ -12,7 +12,9 @@ export default function Home() {
       <Hero />
       <SecondSection />
       <ThirdSection />
-    
+      <div className="h-[100vh] w-[100vw] bg-red-500">
+        <h1>Hello</h1>
+      </div>
     </div>
   );
 }
