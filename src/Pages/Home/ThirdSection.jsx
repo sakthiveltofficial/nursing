@@ -86,10 +86,10 @@ export default function ThirdSection() {
         // PHASE 1: IN Animation - expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
-            clipPath: "inset(15% 15% 15% 15% round 20px)", // Start shrunk (matches initial state)
+            clipPath: "inset(15% 15% 15% 15% round 0)", // Start shrunk (matches initial state)
           },
           {
-            clipPath: "inset(0% 0% 0% 0% round 0px)", // Expand to full
+            clipPath: "inset(10% 5% 10% 5% round 50px)", // Expand to full
             duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
@@ -110,12 +110,7 @@ export default function ThirdSection() {
           },
           "-=0.1" // Start slightly before clip path completes for smooth transition
         )
-        // PHASE 3: HOLD - Stay full with content visible (10% of timeline)
-        .to(canvasContainer, {
-          clipPath: "inset(0% 0% 0% 0% round 0px)", // Stay full
-          duration: 0.1, // 10% of timeline
-          ease: "none",
-        })
+
         // PHASE 4: OUT Animation - content fades out then shrink back (20% of timeline)
         .to(content, {
           opacity: 0,
@@ -124,11 +119,7 @@ export default function ThirdSection() {
           duration: 0.1, // Quick content fade out
           ease: "power2.in",
         })
-        .to(canvasContainer, {
-          clipPath: "inset(15% 15% 15% 15% round 20px)", // Shrink back to initial
-          duration: 0.1, // Quick shrink back
-          ease: "power2.in",
-        });
+  
 
       // Create pin trigger for canvas container with scroll progress
       ScrollTrigger.create({
