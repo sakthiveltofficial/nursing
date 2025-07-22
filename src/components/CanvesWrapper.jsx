@@ -37,7 +37,7 @@ function CanvesWrapper({ children }) {
           
           <BaseEnvironment />
           {children}
-          <OrbitControls  />
+          {/* <OrbitControls  /> */}
           <ambientLight intensity={0.5} />
           <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
             <GizmoViewport

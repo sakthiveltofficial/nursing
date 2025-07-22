@@ -1,5 +1,5 @@
 import CanvesWrapper from "@/components/CanvesWrapper";
-import { Nurse } from "@/Three/Humans";
+// import { Nurse } from "@/Three/Humans";
 import { ClassRoom } from "@/Three/ClassRoom";
 import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Idel } from "@/Three/Room/Scene";
@@ -11,9 +11,9 @@ import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
 import sequences from "@/../public/Sequences/sequence_2.json";
-import { SittingDoct } from "@/Three/Doctor";
+// import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
-import { StandingDoct } from "@/Three/Doctor/Standing";
+// import { StandingDoct } from "@/Three/Doctor/Standing";
 
 // if (process.env.NODE_ENV === "development") {
 //   studio.initialize();
@@ -79,7 +79,7 @@ function MainCanvesScene({ isActive = false }) {
             <StudyRoom />
 
           </group>
-          <Nurse ref={nurseRef} />
+          {/* <Nurse ref={nurseRef} />
           <group position={[17.05, -0.01, 49]}>
             <group rotation={[0, -Math.PI / 2, 0]} position={[-1, 0, 1.5]}>
               <StandingDoct />
@@ -89,7 +89,7 @@ function MainCanvesScene({ isActive = false }) {
                 <SittingDoct />
               </group>
             </group>
-          </group>
+          </group> */}
         </Suspense>
         <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
