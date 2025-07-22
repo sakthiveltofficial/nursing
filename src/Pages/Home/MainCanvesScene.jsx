@@ -91,15 +91,15 @@ function MainCanvesScene({ isActive = false }) {
             </group>
           </group>
         </Suspense>
-        {/* <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
+        <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
           makeDefault
           position={[0, 2, 50]}
           fov={70}
           theatreKey="camera"
           lookAt={cameraLookAtRef}
-        /> */}
-        <OrbitControls />
+        />
+        {/* <OrbitControls /> */}
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
