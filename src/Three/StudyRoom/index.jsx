@@ -39,7 +39,7 @@ export function StudyRoom(props) {
       />
       <group
         name="Sketchfab_model001"
-        position={[0.843, 1.803, 0.788]}
+        position={[0.843, 1.65, 0.788]}
         rotation={[0.222, -1.49, 0.241]}
         scale={0.015}>
         <group name="Cylinder001" position={[-0.33, 10.485, 0]} scale={10.401}>

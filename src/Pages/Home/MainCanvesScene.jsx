@@ -1,5 +1,4 @@
 import CanvesWrapper from "@/components/CanvesWrapper";
-import { Nurse } from "@/Three/Humans";
 import { ClassRoom } from "@/Three/ClassRoom";
 import React, { Suspense, useRef, useEffect, useState } from "react";
 import { Idel } from "@/Three/Room/Scene";
@@ -14,6 +13,7 @@ import sequences from "@/../public/Sequences/sequence_2.json";
 import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
+import { Nurse } from "@/Three/Nurse";
 
 // if (process.env.NODE_ENV === "development") {
 //   studio.initialize();
@@ -77,15 +77,36 @@ function MainCanvesScene({ isActive = false }) {
           </group>
           <group position={[-15, -0.64, 75]} rotation={[0, -Math.PI / 2, 0]}>
             <StudyRoom />
-
           </group>
-          <Nurse ref={nurseRef} />
+
+          <group name="left-group">
+            <group name="2nd-row" position={[9.7, 0, 0.6]}>
+              <Nurse position={[0, -0.45, 60.79]} />
+              <Nurse position={[0, -0.45, 59.5]} />
+            </group>
+            <group name="3rd-row" position={[8.69, 0, 0]}>
+              <Nurse position={[0, -0.45, 60.79]} />
+              <Nurse position={[0, -0.45, 59.5]} />
+            </group>
+          </group>
+
+          <group name="left-group" position={[.1,0,-3.7 ]}>
+            <group name="2nd-row" position={[9.7, 0, 0.6]}>
+              <Nurse position={[0, -0.45, 60.79]} />
+              <Nurse position={[0, -0.45, 59.5]} />
+            </group>
+            <group name="3rd-row" position={[8.69, 0, 0]}>
+              <Nurse position={[0, -0.45, 60.79]} />
+              <Nurse position={[0, -0.45, 59.5]} />
+            </group>
+          </group>
+
           <group position={[17.05, -0.01, 49]}>
             <group rotation={[0, -Math.PI / 2, 0]} position={[-1, 0, 1.5]}>
               <StandingDoct />
             </group>
             <group rotation={[0, -Math.PI / 3, 0]}>
-              <group position={[-.85, -0.01, 0]} rotation={[0, 0.2, 0]}>
+              <group position={[-0.85, -0.01, 0]} rotation={[0, 0.2, 0]}>
                 <SittingDoct />
               </group>
             </group>
