@@ -620,7 +620,7 @@ const MorphingParticles = ({
 
   return (
     <>
-      <OrbitControls enableDamping />
+      {/* <OrbitControls enableDamping /> */}
       <points ref={pointsRef} />
     </>
   );

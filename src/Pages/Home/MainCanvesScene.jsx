@@ -10,7 +10,7 @@ import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
 import sequences from "@/../public/Sequences/sequence_2.json";
-import { SittingDoct } from "@/Three/Doctor";
+// import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
 import { Nurse } from "@/Three/Nurse";
@@ -110,17 +110,17 @@ function MainCanvesScene({ isActive = false }) {
                 <SittingDoct />
               </group>
             </group>
-          </group>
+          </group> */}
         </Suspense>
-        {/* <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
+        <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
           makeDefault
           position={[0, 2, 50]}
           fov={70}
           theatreKey="camera"
           lookAt={cameraLookAtRef}
-        /> */}
-        <OrbitControls />
+        />
+        {/* <OrbitControls /> */}
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
