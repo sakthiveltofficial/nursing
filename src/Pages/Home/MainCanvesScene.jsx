@@ -110,7 +110,7 @@ function MainCanvesScene({ isActive = false }) {
                 <SittingDoct />
               </group>
             </group>
-          </group> */}
+          </group> 
         </Suspense>
         <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
