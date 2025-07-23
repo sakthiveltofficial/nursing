@@ -10,7 +10,7 @@ import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
 import sequences from "@/../public/Sequences/sequence_2.json";
-// import { SittingDoct } from "@/Three/Doctor";
+import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
 import { Nurse } from "@/Three/Nurse";
