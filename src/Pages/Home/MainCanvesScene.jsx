@@ -78,26 +78,27 @@ function MainCanvesScene({ isActive = false }) {
           <group position={[-15, -0.64, 75]} rotation={[0, -Math.PI / 2, 0]}>
             <StudyRoom />
           </group>
+          <group name="nurse-group" position={[9.3, -0.1, -6.95]}>
+            <group name="left-group" position={[0, 0, 0]}>
+              <group name="2nd-row" position={[9.7, 0, 0.6]}>
+                <Nurse position={[0, -0.45, 60.79]} />
+                <Nurse position={[0, -0.45, 59.5]} />
+              </group>
+              <group name="3rd-row" position={[8.69, 0, 0]}>
+                <Nurse position={[0, -0.45, 60.79]} />
+                <Nurse position={[0, -0.45, 59.5]} />
+              </group>
+            </group>
 
-          <group name="left-group">
-            <group name="2nd-row" position={[9.7, 0, 0.6]}>
-              <Nurse position={[0, -0.45, 60.79]} />
-              <Nurse position={[0, -0.45, 59.5]} />
-            </group>
-            <group name="3rd-row" position={[8.69, 0, 0]}>
-              <Nurse position={[0, -0.45, 60.79]} />
-              <Nurse position={[0, -0.45, 59.5]} />
-            </group>
-          </group>
-
-          <group name="left-group" position={[.1,0,-3.7 ]}>
-            <group name="2nd-row" position={[9.7, 0, 0.6]}>
-              <Nurse position={[0, -0.45, 60.79]} />
-              <Nurse position={[0, -0.45, 59.5]} />
-            </group>
-            <group name="3rd-row" position={[8.69, 0, 0]}>
-              <Nurse position={[0, -0.45, 60.79]} />
-              <Nurse position={[0, -0.45, 59.5]} />
+            <group name="left-group" position={[0.1, 0, -3.7]}>
+              <group name="2nd-row" position={[9.7, 0, 0.6]}>
+                <Nurse position={[0, -0.45, 60.79]} />
+                <Nurse position={[0, -0.45, 59.5]} />
+              </group>
+              <group name="3rd-row" position={[8.69, 0, 0]}>
+                <Nurse position={[0, -0.45, 60.79]} />
+                <Nurse position={[0, -0.45, 59.5]} />
+              </group>
             </group>
           </group>
 
@@ -110,7 +111,7 @@ function MainCanvesScene({ isActive = false }) {
                 <SittingDoct />
               </group>
             </group>
-          </group> 
+          </group>
         </Suspense>
         <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera

@@ -9,14 +9,14 @@ export default function Home() {
   return (
     <div className="h-fit w-[100vw] relative overflow-x-hidden">
     
-      {/* <Hero />
-      <SecondSection /> */}
+      <Hero />
+      <SecondSection />
       <ThirdSection />
       <div className="h-[100vh] w-[100vw] ">
       </div>
-      {/* <div className="h-[100vh] w-[100vw] bg-red-500">
+      <div className="h-[100vh] w-[100vw] bg-red-500">
         <h1>Hello</h1>
-      </div> */}
+      </div>
     </div>
   );
 }
