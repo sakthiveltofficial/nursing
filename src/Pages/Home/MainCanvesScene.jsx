@@ -14,6 +14,7 @@ import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
 import { Nurse } from "@/Three/Nurse";
+import { StudingNurse } from "@/Three/Nurse/StudingNurse";
 
 // if (process.env.NODE_ENV === "development") {
 //   studio.initialize();
@@ -78,26 +79,26 @@ function MainCanvesScene({ isActive = false }) {
           <group position={[-15, -0.64, 75]} rotation={[0, -Math.PI / 2, 0]}>
             <StudyRoom />
           </group>
-          <group name="nurse-group" position={[9.3, -0.1, -6.95]}>
+          <group name="nurse-group" position={[0.2, -0.2, -8.8]}>
             <group name="left-group" position={[0, 0, 0]}>
               <group name="2nd-row" position={[9.7, 0, 0.6]}>
                 <Nurse position={[0, -0.45, 60.79]} />
                 <Nurse position={[0, -0.45, 59.5]} />
               </group>
-              <group name="3rd-row" position={[8.69, 0, 0]}>
+              <group name="3rd-row" position={[8.75, 0, 0]}>
                 <Nurse position={[0, -0.45, 60.79]} />
                 <Nurse position={[0, -0.45, 59.5]} />
               </group>
             </group>
 
-            <group name="left-group" position={[0.1, 0, -3.7]}>
-              <group name="2nd-row" position={[9.7, 0, 0.6]}>
+            <group name="right-group" position={[0.1, 0, -3.9]}>
+              <group name="2nd-row" position={[9.8, 0, 0.6]}>
                 <Nurse position={[0, -0.45, 60.79]} />
                 <Nurse position={[0, -0.45, 59.5]} />
               </group>
-              <group name="3rd-row" position={[8.69, 0, 0]}>
-                <Nurse position={[0, -0.45, 60.79]} />
-                <Nurse position={[0, -0.45, 59.5]} />
+              <group name="3rd-row" position={[8.75, 0, 0]}>
+                <Nurse position={[0.3, -0.45, 60.79]} />
+                <Nurse position={[0.3, -0.45, 59.5]} />
               </group>
             </group>
           </group>
@@ -113,15 +114,15 @@ function MainCanvesScene({ isActive = false }) {
             </group>
           </group>
         </Suspense>
-        <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
+        {/* <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
         <PerspectiveCamera
           makeDefault
           position={[0, 2, 50]}
           fov={70}
           theatreKey="camera"
           lookAt={cameraLookAtRef}
-        />
-        {/* <OrbitControls /> */}
+        /> */}
+        <OrbitControls />
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
