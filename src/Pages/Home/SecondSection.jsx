@@ -113,10 +113,10 @@ export default function SecondSection() {
         style={{
           background: `
             radial-gradient(ellipse at center, 
-              #f0f0f0 0%,
-              #e8e6e1 30%,
-              #d8d6d1 60%,
-              #c8c6c1 100%
+              #FEFCFD 0%,
+              #F8F6F7 30%,
+              #F0EEEF 60%,
+              #E8E6E7 100%
             )
           `,
         }}
@@ -130,8 +130,8 @@ export default function SecondSection() {
             radial-gradient(ellipse at center, 
               transparent 0%,
               transparent 50%,
-              rgba(0, 0, 0, 0.03) 80%,
-              rgba(0, 0, 0, 0.06) 100%
+              rgba(0, 0, 0, 0.02) 80%,
+              rgba(0, 0, 0, 0.04) 100%
             )
           `,
         }}
@@ -143,7 +143,7 @@ export default function SecondSection() {
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full pointer-events-none z-5"
         style={{
           background:
-            "radial-gradient(circle, rgba(255, 165, 0, 0.4) 0%, rgba(255, 140, 0, 0.25) 30%, rgba(255, 165, 0, 0.15) 50%, rgba(255, 165, 0, 0.08) 70%, transparent 100%)",
+            "radial-gradient(circle, rgba(254, 200, 222, 0.4) 0%, rgba(254, 200, 222, 0.25) 30%, rgba(254, 200, 222, 0.15) 50%, rgba(254, 200, 222, 0.08) 70%, transparent 100%)",
           filter: "blur(1px)",
         }}
       />

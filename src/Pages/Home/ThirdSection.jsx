@@ -158,10 +158,10 @@ export default function ThirdSection() {
           style={{
             background: `
               radial-gradient(ellipse at center, 
-                #f0f0f0 0%,
-                #e8e6e1 30%,
-                #d8d6d1 60%,
-                #c8c6c1 100%
+                #FEFCFD 0%,
+                #F8F6F7 30%,
+                #F0EEEF 60%,
+                #E8E6E7 100%
               )
             `,
           }}
@@ -175,8 +175,8 @@ export default function ThirdSection() {
               radial-gradient(ellipse at center, 
                 transparent 0%,
                 transparent 50%,
-                rgba(0, 0, 0, 0.03) 80%,
-                rgba(0, 0, 0, 0.06) 100%
+                rgba(0, 0, 0, 0.02) 80%,
+                rgba(0, 0, 0, 0.04) 100%
               )
             `,
           }}

@@ -288,7 +288,7 @@ function Particles({
   // Load GLTF model
   const { scene } = useGLTF(modelPath)
   
-  // Mouse tracking
+  // Enhanced mouse and touch tracking
   useEffect(() => {
     const handleMouseMove = (event) => {
       const canvas = gl.domElement
@@ -298,18 +298,45 @@ function Particles({
       setMousePosition(new THREE.Vector2(x, y))
     }
 
+    const handleTouchMove = (event) => {
+      event.preventDefault() // Prevent scrolling while touching canvas
+      const canvas = gl.domElement
+      const rect = canvas.getBoundingClientRect()
+      const touch = event.touches[0]
+      const x = touch.clientX - rect.left
+      const y = touch.clientY - rect.top
+      setMousePosition(new THREE.Vector2(x, y))
+    }
+
     const handleMouseLeave = () => {
       // Move mouse position off-screen when leaving canvas
       setMousePosition(new THREE.Vector2(-1000, -1000))
     }
 
+    const handleTouchEnd = () => {
+      // Keep touch interaction active for a bit longer on mobile
+      setTimeout(() => {
+        setMousePosition(new THREE.Vector2(-1000, -1000))
+      }, 100)
+    }
+
     const canvas = gl.domElement
-    canvas.addEventListener('mousemove', handleMouseMove)
-    canvas.addEventListener('mouseleave', handleMouseLeave)
+    
+    // Mouse events
+    canvas.addEventListener('mousemove', handleMouseMove, { passive: true })
+    canvas.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+    
+    // Touch events for mobile
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false })
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: true })
+    canvas.addEventListener('touchcancel', handleTouchEnd, { passive: true })
 
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseleave', handleMouseLeave)
+      canvas.removeEventListener('touchmove', handleTouchMove)
+      canvas.removeEventListener('touchend', handleTouchEnd)
+      canvas.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [gl])
   
@@ -380,7 +407,7 @@ function Particles({
     })
   }, [scene])
 
-  // Handle scroll progress changes with buffer zones
+  // Handle scroll progress changes with buffer zones and mobile optimization
   useEffect(() => {
     if (!particleData || particleData.positions.length === 0) return
 
@@ -389,10 +416,10 @@ function Particles({
     // Clamp scrollProgress to [0, 1]
     const clampedScroll = Math.min(Math.max(scrollProgress, 0), 1)
     
-    // Create buffer zones - transitions don't start immediately
-    const bufferZone = 0.15 // 15% buffer before transition starts
-    const transitionZone = 0.7 // 70% for actual transition
-    // Remaining 15% is hold zone after transition
+    // Mobile-optimized buffer zones for smoother transitions
+    const isMobile = window.innerWidth <= 1024
+    const bufferZone = isMobile ? 0.1 : 0.15 // Smaller buffer on mobile for more responsive feel
+    const transitionZone = isMobile ? 0.8 : 0.7 // Longer transition zone on mobile
     
     const segmentSize = 1 / totalShapes
     
@@ -400,7 +427,7 @@ function Particles({
     const currentSegment = Math.floor(clampedScroll * totalShapes)
     const segmentProgress = (clampedScroll * totalShapes) % 1
     
-    // Calculate target morph index
+    // Calculate target morph index with mobile-specific easing
     let targetIndex = currentSegment
     let localProgress = 0
     
@@ -411,8 +438,17 @@ function Particles({
       // In hold zone - transition complete
       localProgress = 1
     } else {
-      // In transition zone
-      localProgress = (segmentProgress - bufferZone) / transitionZone
+      // In transition zone with mobile-optimized easing
+      const rawProgress = (segmentProgress - bufferZone) / transitionZone
+      
+      // Apply different easing curves for mobile vs desktop
+      if (isMobile) {
+        // Smoother, more gradual easing for mobile
+        localProgress = rawProgress * rawProgress * rawProgress * (rawProgress * (6 * rawProgress - 15) + 10) // smootherstep
+      } else {
+        // Standard smoothstep for desktop
+        localProgress = rawProgress * rawProgress * (3 - 2 * rawProgress)
+      }
     }
     
     // Ensure we don't go beyond available shapes
@@ -424,11 +460,22 @@ function Particles({
     setTargetMorphIndex(targetIndex)
     setMorphProgress(localProgress)
 
-    // Update material progress with easing
+    // Update material progress with enhanced mobile easing
     if (materialRef.current) {
-      // Apply easing to the progress for smoother transitions
-      const easedProgress = localProgress * localProgress * (3 - 2 * localProgress) // smoothstep
-      materialRef.current.uniforms.uProgress.value = easedProgress
+      // Apply additional smoothing for mobile devices
+      let finalProgress = localProgress
+      
+      if (isMobile) {
+        // Add momentum-based smoothing for mobile
+        const currentProgress = materialRef.current.uniforms.uProgress.value
+        const progressDelta = Math.abs(localProgress - currentProgress)
+        
+        // Use different interpolation speed based on how fast the change is
+        const lerpFactor = progressDelta > 0.1 ? 0.15 : 0.08
+        finalProgress = currentProgress + (localProgress - currentProgress) * lerpFactor
+      }
+      
+      materialRef.current.uniforms.uProgress.value = finalProgress
     }
   }, [scrollProgress, particleData])
 
@@ -525,7 +572,7 @@ function Particles({
   )
 }
 
-// Main component with mouse-controlled animation
+// Main component with mobile-optimized morphing and touch interaction
 const ParticleMorphing = forwardRef(function ParticleMorphing({ 
   modelPath = '/Models/HeroModels_24.glb',
   cameraPosition = [0, 0, 16],
@@ -541,12 +588,60 @@ const ParticleMorphing = forwardRef(function ParticleMorphing({
 }, ref) {
   const [scrollProgress, setScrollProgress] = useState(0)
   const morphingRef = useRef()
+  const lastUpdateTime = useRef(0)
+  const progressBuffer = useRef(0)
+
+  // Mobile-optimized progress update with throttling
+  const updateMorphProgress = useMemo(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1024
+    
+    if (isMobile) {
+      // Throttle updates on mobile for better performance
+      return (progress) => {
+        const now = Date.now()
+        if (now - lastUpdateTime.current > 16) { // ~60fps throttling
+          progressBuffer.current = progress
+          setScrollProgress(progress)
+          lastUpdateTime.current = now
+        } else {
+          // Use interpolated value for smoother animation
+          const lerp = 0.1
+          progressBuffer.current += (progress - progressBuffer.current) * lerp
+          setScrollProgress(progressBuffer.current)
+        }
+      }
+    } else {
+      // Direct updates for desktop
+      return (progress) => {
+        setScrollProgress(progress)
+      }
+    }
+  }, [])
 
   useImperativeHandle(ref, () => ({
-    updateMorphProgress: (progress) => {
-      setScrollProgress(progress)
-    }
+    updateMorphProgress
   }))
+
+  // Mobile-specific performance optimizations
+  const mobileOptimizedProps = useMemo(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1024
+    
+    if (isMobile) {
+      return {
+        pointSize: 0.08, // Slightly smaller particles for mobile
+        flowFieldStrength: flowFieldStrength * 0.8, // Reduced animation intensity
+        mouseRadius: mouseRadius * 1.2, // Larger touch radius
+        mouseInfluence: mouseInfluence * 1.1 // Stronger touch influence
+      }
+    }
+    
+    return {
+      pointSize: 0.1,
+      flowFieldStrength,
+      mouseRadius,
+      mouseInfluence
+    }
+  }, [flowFieldStrength, mouseRadius, mouseInfluence])
 
   return (
     <group position={[0, -1, 0]} ref={morphingRef}>
@@ -555,12 +650,12 @@ const ParticleMorphing = forwardRef(function ParticleMorphing({
         scrollProgress={scrollProgress}
         colorA="#000000"
         colorB="#727272"
-        pointSize={0.1}
+        pointSize={mobileOptimizedProps.pointSize}
         flowFieldInfluence={flowFieldInfluence}
-        flowFieldStrength={flowFieldStrength}
+        flowFieldStrength={mobileOptimizedProps.flowFieldStrength}
         flowFieldFrequency={flowFieldFrequency}
-        mouseRadius={mouseRadius}
-        mouseInfluence={mouseInfluence}
+        mouseRadius={mobileOptimizedProps.mouseRadius}
+        mouseInfluence={mobileOptimizedProps.mouseInfluence}
       />
     </group>
   )
