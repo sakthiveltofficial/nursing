@@ -14,7 +14,8 @@ import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
 import { Nurse } from "@/Three/Nurse";
-import { StudingNurse } from "@/Three/Nurse/StudingNurse";
+import { StandingNurse, StudingNurse } from "@/Three/Nurse/StandingNurse";
+import { NurseWithBaby } from "@/Three/Nurse/NurseWithBaby";
 
 // if (process.env.NODE_ENV === "development") {
 //   studio.initialize();
@@ -76,6 +77,13 @@ function MainCanvesScene({ isActive = false }) {
           <group position={[20, -0.64, 50]} rotation={[0, Math.PI / 2, 0]}>
             <ClassRoom />
           </group>
+          <group position={[-11.6, -0.15, 11]}>
+            <StandingNurse position={[0, 0, 3.1]} />
+            <StandingNurse position={[0, 0, -3.1]} />
+            <StandingNurse position={[0, 0, -6]} />
+            <StandingNurse position={[0, 0, 0]} />
+          </group>
+          <NurseWithBaby position={[-9.8, -1.01, 5.5]}   />
           <group position={[-15, -0.64, 75]} rotation={[0, -Math.PI / 2, 0]}>
             <StudyRoom />
           </group>
@@ -114,7 +122,11 @@ function MainCanvesScene({ isActive = false }) {
             </group>
           </group>
         </Suspense>
-        {/* <ScrollbasedAnimation project={project} isActive={isActive} scrollProgress={scrollProgress} />
+        {/* <ScrollbasedAnimation
+          project={project}
+          isActive={isActive}
+          scrollProgress={scrollProgress}
+        />
         <PerspectiveCamera
           makeDefault
           position={[0, 2, 50]}
