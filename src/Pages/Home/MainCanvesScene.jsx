@@ -112,7 +112,7 @@ function MainCanvesScene({ isActive = false }) {
           </group>
 
           <group position={[17.05, -0.01, 49]}>
-            <group rotation={[0, -Math.PI / 2, 0]} position={[-1, 0, 1.5]}>
+            <group rotation={[0, -Math.PI / 2, 0]} position={[-1, 0, 1]}>
               <StandingDoct />
             </group>
             <group rotation={[0, -Math.PI / 3, 0]}>
@@ -122,7 +122,7 @@ function MainCanvesScene({ isActive = false }) {
             </group>
           </group>
         </Suspense>
-        {/* <ScrollbasedAnimation
+        <ScrollbasedAnimation
           project={project}
           isActive={isActive}
           scrollProgress={scrollProgress}
@@ -133,8 +133,8 @@ function MainCanvesScene({ isActive = false }) {
           fov={70}
           theatreKey="camera"
           lookAt={cameraLookAtRef}
-        /> */}
-        <OrbitControls />
+        />
+        {/* <OrbitControls /> */}
         <e.mesh
           theatreKey="camera_lookAt"
           visible="editor"
