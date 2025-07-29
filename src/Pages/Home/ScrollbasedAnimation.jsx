@@ -15,6 +15,22 @@ const easeInOutQuint = (x) => {
     : 1 - Math.pow(-2 * x + 2, 5) / 2;
 };
 
+// Ultra-smooth easing for scroll animations
+const easeInOutExpo = (x) => {
+  return x === 0
+    ? 0
+    : x === 1
+    ? 1
+    : x < 0.5 
+    ? Math.pow(2, 20 * x - 10) / 2
+    : (2 - Math.pow(2, -20 * x + 10)) / 2;
+};
+
+// Smooth interpolation with momentum
+const lerp = (start, end, factor) => {
+  return start + (end - start) * factor;
+};
+
 function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 }) {
   const sheet = useCurrentSheet();
   const scrollRef = useRef({
@@ -23,9 +39,15 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     velocity: 0,
     lastScrollTime: 0,
     hasInitialized: false,
+    momentum: 0,
+    lastTarget: 0,
   });
   const [projectReady, setProjectReady] = useState(false);
   const totalDuration = val(sheet.sequence.pointer.length);
+  
+  // Scroll sensitivity - lower values require more scrolling
+  const SCROLL_SENSITIVITY = 0.25; // Base sensitivity: 0.1 = very slow, 1.0 = normal speed
+  const SCROLL_CURVE_STRENGTH = 0.8; // Curve intensity: higher = more gradual start
   
 
 
@@ -50,7 +72,10 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
       sheet.sequence.position = 0;
       scrollRef.current.current = 0;
       scrollRef.current.target = 0;
-      scrollRef.current.hasInitialized = false; // Reset initialization flag
+      scrollRef.current.lastTarget = 0;
+      scrollRef.current.momentum = 0;
+      scrollRef.current.velocity = 0;
+      scrollRef.current.hasInitialized = false;
     }
   }, [isActive, sheet, projectReady]);
 
@@ -58,44 +83,71 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
   // The scroll progress is now controlled by the parent component's ScrollTrigger
 
   useFrame((state, delta) => {
-    if (!sheet || !projectReady || !isActive) return; // Only animate when section is active
+    if (!sheet || !projectReady || !isActive) return;
 
-    // Use scroll progress directly for Theatre.js sequence
-    const targetPosition = scrollProgress * totalDuration;
-    
-    // Clamp target position to sequence duration to prevent over-scrolling
+    // Apply scroll sensitivity with progressive curve for smoother control
+    // Starts very slow, gradually increases - requires more scrolling initially
+    const curvedProgress = Math.pow(scrollProgress, 1 + SCROLL_CURVE_STRENGTH);
+    const sensitizedScrollProgress = Math.min(curvedProgress * SCROLL_SENSITIVITY, 1.0);
+    const targetPosition = sensitizedScrollProgress * totalDuration;
     const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
     
-    const { current } = scrollRef.current;
+    const ref = scrollRef.current;
+    const { current, lastTarget } = ref;
+    
+    // Calculate momentum based on target change
+    const targetDelta = clampedTargetPosition - lastTarget;
+    ref.momentum = lerp(ref.momentum, targetDelta * 0.3, 0.1);
+    ref.lastTarget = clampedTargetPosition;
+    
+    // Calculate distance and apply different smoothing strategies
     const distance = Math.abs(clampedTargetPosition - current);
     
-    // Fast seek when starting from middle or when distance is large
-    const largeJumpThreshold = totalDuration * 0.1; // 10% of total duration
-    const shouldFastSeek = !scrollRef.current.hasInitialized || distance > largeJumpThreshold;
+    // Much more conservative jump threshold - only for very large jumps
+    const largeJumpThreshold = totalDuration * 0.5; // 50% of total duration
+    const shouldFastSeek = !ref.hasInitialized || distance > largeJumpThreshold;
     
     if (shouldFastSeek) {
-      // Directly set position for fast catch-up
-      scrollRef.current.current = clampedTargetPosition;
-      scrollRef.current.hasInitialized = true;
+      ref.current = clampedTargetPosition;
+      ref.hasInitialized = true;
+      ref.momentum = 0;
     } else {
-      // Smooth interpolation for small movements
-      const smoothDistance = clampedTargetPosition - current;
-      const smoothness = 0.08; // Slightly faster smoothing
+      // Multi-layered smoothing approach
+      const baseDistance = clampedTargetPosition - current;
       
-      // Only update if we're not at the end and trying to go further
-      if (current < totalDuration || smoothDistance < 0) {
-        scrollRef.current.current += smoothDistance * smoothness;
+      // Adaptive smoothing based on distance and momentum
+      let smoothness;
+      if (distance > totalDuration * 0.1) {
+        // Medium distances - moderate smoothing
+        smoothness = 0.02;
+      } else if (distance > totalDuration * 0.05) {
+        // Small distances - gentle smoothing
+        smoothness = 0.015;
+      } else {
+        // Very small distances - ultra-gentle smoothing
+        smoothness = 0.008;
       }
+      
+      // Apply momentum for natural feel
+      const momentumInfluence = Math.abs(ref.momentum) > 0.001 ? 0.003 : 0;
+      const finalSmoothness = Math.min(smoothness + momentumInfluence, 0.04);
+      
+      // Progressive easing - slower as we approach target
+      const easingFactor = distance > 0.1 ? easeInOutExpo(1 - (distance / totalDuration)) : 1;
+      const adjustedSmoothness = finalSmoothness * (0.3 + 0.7 * easingFactor);
+      
+      ref.current = lerp(current, clampedTargetPosition, adjustedSmoothness);
     }
     
-    // Clamp current position to sequence bounds
-    scrollRef.current.current = Math.max(
-      0,
-      Math.min(totalDuration, scrollRef.current.current)
-    );
+    // Decay momentum
+    ref.momentum *= 0.95;
     
-    // Update the sequence position
-    sheet.sequence.position = scrollRef.current.current;
+    // Final clamping
+    ref.current = Math.max(0, Math.min(totalDuration, ref.current));
+    
+    // Update sequence with additional micro-smoothing
+    const currentSeqPos = sheet.sequence.position;
+    sheet.sequence.position = lerp(currentSeqPos, ref.current, 0.7);
   });
 
   return null;
