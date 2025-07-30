@@ -159,7 +159,7 @@ export default function ThirdSection() {
           // Update debug information
           setDebugScrollInfo({
             scrollProgress: progress * 100,
-            containerHeight: '1500vh',
+            containerHeight: '2000vh',
             scrollTriggerProgress: self.progress * 100,
             isPinned: self.isActive
           });
@@ -178,7 +178,7 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[1500vh] flex justify-center overflow-hidden z-10 "
+      className="relative h-[2000vh] flex justify-center overflow-hidden z-10 "
     >
       {/* Outer div with inset clip-path animation */}
       <div

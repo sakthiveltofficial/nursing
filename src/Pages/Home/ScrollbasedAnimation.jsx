@@ -47,7 +47,7 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   const totalDuration = val(sheet.sequence.pointer.length);
   
       // Scroll sensitivity - consistent linear speed throughout
-    const SCROLL_SENSITIVITY = 1.0; // Full sequence completion at 100% scroll
+    const SCROLL_SENSITIVITY = 1.0; // Full sequence completion with slower feel due to 2000vh
   
 
 
