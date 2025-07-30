@@ -96,7 +96,7 @@ export default function LoadingScreen({ progress = 0, onComplete }) {
         opacity: isFadingOut ? 0 : 1,
         transition: "opacity 1s ease-out",
       }}
-    >
+    > 
 
       {/* Overlay with pink tint and opacity */}
       <div
