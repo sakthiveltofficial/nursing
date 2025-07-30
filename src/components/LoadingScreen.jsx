@@ -54,7 +54,7 @@ export default function LoadingScreen({ progress = 0, onComplete }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 min-h-screen w-full overflow-hidden"
+      className="fixed inset-0 z-[9999] min-h-screen w-full overflow-hidden"
       style={{
         opacity: isFadingOut ? 0 : 1,
         transition: "opacity 1s ease-out",

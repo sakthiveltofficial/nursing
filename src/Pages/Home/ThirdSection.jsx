@@ -113,7 +113,7 @@ export default function ThirdSection() {
             clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
           },
           {
-            clipPath: "inset(5% 2% 5% 2% round 50px)", // Expand to full
+            clipPath: "inset(10% 2% 10% 2% round 50px)", // Expand to full
             duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
