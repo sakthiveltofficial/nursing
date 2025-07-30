@@ -193,10 +193,10 @@ export default function Hero() {
           style={{
             background: `
               radial-gradient(ellipse at center, 
-                #FEFCFD 0%,
-                #F8F6F7 30%,
-                #F0EEEF 60%,
-                #E8E6E7 100%
+                #FFFFFF 0%,
+                #FEC8DE59 30%,
+                #FEC8DE80 60%,
+                #FEC8DE100 100%
               )
             `,
           }}
@@ -210,8 +210,8 @@ export default function Hero() {
               radial-gradient(ellipse at center, 
                 transparent 0%,
                 transparent 50%,
-                rgba(0, 0, 0, 0.02) 80%,
-                rgba(0, 0, 0, 0.04) 100%
+                rgba(254, 200, 222, 0.1) 80%,
+                rgba(254, 200, 222, 0.2) 100%
               )
             `,
           }}
@@ -240,7 +240,7 @@ export default function Hero() {
                   intensity={0.4}
                   color="#ffffff"
                 />
-                <fog attach="fog" args={["#e8e6e1", 12, 20]} />
+                <fog attach="fog" args={["#FEC8DE", 12, 20]} />
                 <Float>
                   <ParticleMorphing ref={particleMorphingRef} />
                 </Float>
