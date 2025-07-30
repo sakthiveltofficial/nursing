@@ -266,8 +266,8 @@ void main()
 function Particles({ 
   modelPath = '/Models/HeroModels_24.glb',
   scrollProgress = 0,
-  colorA = '#e896e2',
-  colorB = '#e896e2',
+  colorA = '#D3D3D3',
+  colorB = '#8B2D6B',
   pointSize = 0.1,
   flowFieldInfluence = 0.27,
   flowFieldStrength = 0.97,
@@ -648,8 +648,8 @@ const ParticleMorphing = forwardRef(function ParticleMorphing({
       <Particles 
         modelPath={modelPath} 
         scrollProgress={scrollProgress}
-        colorA="#e896e2"
-        colorB="#e896e2"
+        colorA="#FEC8DE"
+        colorB="#8B2D6B"
         pointSize={mobileOptimizedProps.pointSize}
         flowFieldInfluence={flowFieldInfluence}
         flowFieldStrength={mobileOptimizedProps.flowFieldStrength}
