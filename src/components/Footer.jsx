@@ -3,8 +3,11 @@
 import { RotateCcw, Home, Users, GraduationCap, Building, ImageIcon, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export default function Footer() {
+  const pathname = usePathname()
+  const isHomePage = pathname === "/"
   const navigationItems = [
     { text: "Home", icon: Home },
     { text: "About us", icon: Users },
@@ -16,38 +19,42 @@ export default function Footer() {
 
   return (
     <div className="relative p-2 sm:p-4 lg:p-8">
-      {/* Section-specific background */}
-      <div
-        className="absolute inset-0 z-0 h-full w-full"
-        style={{
-          background: `
-            radial-gradient(ellipse at center, 
-              #FFFFFF 0%,
-              #FEC8DE59 30%,
-              #FEC8DE80 60%,
-              #FEC8DE100 100%
-            )
-          `,
-        }}
-      />
+      {/* Section-specific background - only on home page */}
+      {isHomePage && (
+        <>
+          <div
+            className="absolute inset-0 z-0 h-full w-full"
+            style={{
+              background: `
+                radial-gradient(ellipse at center, 
+                  #FFFFFF 0%,
+                  #FEC8DE59 30%,
+                  #FEC8DE80 60%,
+                  #FEC8DE100 100%
+                )
+              `,
+            }}
+          />
 
-      {/* Subtle vignette overlay for depth */}
-      <div
-        className="absolute inset-0 z-1 h-full w-full pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(ellipse at center, 
-              transparent 0%,
-              transparent 50%,
-              rgba(254, 200, 222, 0.1) 80%,
-              rgba(254, 200, 222, 0.2) 100%
-            )
-          `,
-        }}
-      />
+          {/* Subtle vignette overlay for depth */}
+          <div
+            className="absolute inset-0 z-1 h-full w-full pointer-events-none"
+            style={{
+              background: `
+                radial-gradient(ellipse at center, 
+                  transparent 0%,
+                  transparent 50%,
+                  rgba(254, 200, 222, 0.1) 80%,
+                  rgba(254, 200, 222, 0.2) 100%
+                )
+              `,
+            }}
+          />
+        </>
+      )}
 
       {/* Main Container with exact rounded corners */}
-      <div className="relative z-10 w-full min-h-[350px] sm:min-h-[400px] lg:min-h-[350px] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl">
+      <div className={`relative z-10 w-full min-h-[350px] sm:min-h-[400px] lg:min-h-[350px] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden ${isHomePage ? 'shadow-2xl' : 'bg-white'}`}>
         <div className="flex flex-col lg:flex-row min-h-full">
           {/* Left Side - Navigation with exact color #2F0014 */}
           <div className="w-full lg:w-3/5 flex flex-col relative" style={{ backgroundColor: "#2F0014" }}>

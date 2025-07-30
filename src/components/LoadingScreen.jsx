@@ -8,8 +8,6 @@ export default function LoadingScreen({ progress = 0, onComplete }) {
   const [smoothProgress, setSmoothProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const startTimeRef = useRef(Date.now());
-  const animationFrameRef = useRef();
 
   const nursingMessages = [
     "Optimizing performance...",
@@ -30,61 +28,26 @@ export default function LoadingScreen({ progress = 0, onComplete }) {
     };
   }, []);
 
-  // Smooth progress animation
+  // Use actual progress value directly
   useEffect(() => {
-    const animate = () => {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTimeRef.current;
-      const minDuration = 5000; // 5 seconds minimum
-      
-      // Calculate time-based progress (0-100 over 5 seconds)
-      const timeProgress = Math.min((elapsed / minDuration) * 100, 100);
-      
-      // Use the higher of time-based progress or actual loading progress
-      // but ensure smooth interpolation
-      const targetProgress = Math.max(timeProgress, progress);
-      
-      setSmoothProgress(prevSmooth => {
-        const diff = targetProgress - prevSmooth;
-        // Smooth interpolation - adjust speed based on difference
-        const speed = Math.max(0.02, Math.min(0.08, Math.abs(diff) / 100));
-        const newProgress = prevSmooth + (diff * speed);
-        
-        return Math.min(newProgress, 100);
-      });
-
-      // Continue animation if not complete
-      if (smoothProgress < 100 || elapsed < minDuration) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrameRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [progress, smoothProgress]);
+    setSmoothProgress(progress);
+  }, [progress]);
 
   // Handle completion with fade out
   useEffect(() => {
-    if (smoothProgress >= 99.5 && !isComplete) {
+    if (progress >= 100 && !isComplete) {
       setIsComplete(true);
       
-      // Start fade out animation
-      setTimeout(() => {
-        setIsFadingOut(true);
-      }, 800); // Show 100% for a moment
+      // Start fade out animation immediately
+      setIsFadingOut(true);
       
       // Complete the loading after fade out
       setTimeout(() => {
         setIsVisible(false);
         onComplete?.();
-      }, 1800); // Total of 1.8s delay (0.8s + 1s fade)
+      }, 1000); // 1s fade out
     }
-  }, [smoothProgress, isComplete, onComplete]);
+  }, [progress, isComplete, onComplete]);
 
   // Don't render if not visible
   if (!isVisible) return null;
