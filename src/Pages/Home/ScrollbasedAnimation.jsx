@@ -31,7 +31,7 @@ const lerp = (start, end, factor) => {
   return start + (end - start) * factor;
 };
 
-function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 }) {
+function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, onDebugUpdate = null }) {
   const sheet = useCurrentSheet();
   const scrollRef = useRef({
     current: 0,
@@ -43,11 +43,12 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     lastTarget: 0,
   });
   const [projectReady, setProjectReady] = useState(false);
+  // Remove debug state from here - will be handled by parent component
   const totalDuration = val(sheet.sequence.pointer.length);
   
-  // Scroll sensitivity - lower values require more scrolling
-  const SCROLL_SENSITIVITY = 0.25; // Base sensitivity: 0.1 = very slow, 1.0 = normal speed
-  const SCROLL_CURVE_STRENGTH = 0.8; // Curve intensity: higher = more gradual start
+      // Scroll sensitivity - same feel as before but reaches 100%
+    const SCROLL_SENSITIVITY = 0.4; // Increased from 0.25 to reach full sequence
+    const SCROLL_CURVE_STRENGTH = 0.8; // Keep same curve feel as before
   
 
 
@@ -85,10 +86,10 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
   useFrame((state, delta) => {
     if (!sheet || !projectReady || !isActive) return;
 
-    // Apply scroll sensitivity with progressive curve for smoother control
-    // Starts very slow, gradually increases - requires more scrolling initially
-    const curvedProgress = Math.pow(scrollProgress, 1 + SCROLL_CURVE_STRENGTH);
-    const sensitizedScrollProgress = Math.min(curvedProgress * SCROLL_SENSITIVITY, 1.0);
+          // Apply scroll sensitivity with progressive curve - same feel as before
+      // Starts very slow, gradually increases, but now reaches 100%
+      const curvedProgress = Math.pow(scrollProgress, 1 + SCROLL_CURVE_STRENGTH);
+      const sensitizedScrollProgress = Math.min(curvedProgress / SCROLL_SENSITIVITY, 1.0);
     const targetPosition = sensitizedScrollProgress * totalDuration;
     const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
     
@@ -148,9 +149,20 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0 })
     // Update sequence with additional micro-smoothing
     const currentSeqPos = sheet.sequence.position;
     sheet.sequence.position = lerp(currentSeqPos, ref.current, 0.7);
+    
+          // Pass debug info to parent component if callback provided
+      if (onDebugUpdate) {
+        onDebugUpdate({
+          current: ref.current,
+          total: totalDuration,
+          progress: (ref.current / totalDuration) * 100,
+          scrollProgress: scrollProgress * 100,
+          sensitizedProgress: sensitizedScrollProgress * 100
+        });
+      }
   });
 
-  return null;
+      return null;
 }
 
 export default ScrollbasedAnimation;

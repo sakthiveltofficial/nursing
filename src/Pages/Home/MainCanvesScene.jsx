@@ -22,7 +22,7 @@ import { NurseWithBaby } from "@/Three/Nurse/NurseWithBaby";
 //   studio.extend(extension);
 // }
 
-function MainCanvesScene({ isActive = false }) {
+function MainCanvesScene({ isActive = false, onTheatreDebugUpdate = null }) {
   const nurseRef = useRef(null);
   const project = getProject("MainProject", { state: sequences });
   const sheet = project.sheet("MainScene");
@@ -126,6 +126,7 @@ function MainCanvesScene({ isActive = false }) {
           project={project}
           isActive={isActive}
           scrollProgress={scrollProgress}
+          onDebugUpdate={onTheatreDebugUpdate}
         />
         <PerspectiveCamera
           makeDefault

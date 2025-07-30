@@ -18,6 +18,25 @@ export default function ThirdSection() {
   const canvasContainerRef = useRef(null);
   const contentRef = useRef(null);
   const [isInViewport, setIsInViewport] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const [project, setProject] = useState(null);
+  // Add debug state for container scroll info
+  const [debugScrollInfo, setDebugScrollInfo] = useState({
+    scrollProgress: 0,
+    containerHeight: '550vh',
+    scrollTriggerProgress: 0,
+    isPinned: false
+  });
+
+  // Add debug state for Theatre.js sequence info
+  const [theatreDebugInfo, setTheatreDebugInfo] = useState({
+    current: 0,
+    total: 0,
+    progress: 0,
+    scrollProgress: 0,
+    sensitizedProgress: 0
+  });
 
   // Intersection Observer to detect when section is fully in viewport
   useEffect(() => {
@@ -86,7 +105,7 @@ export default function ThirdSection() {
         // PHASE 1: IN Animation - expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
-            clipPath: "insinset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
+            clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
           },
           {
             clipPath: "inset(10% 5% 10% 5% round 50px)", // Expand to full
@@ -125,12 +144,21 @@ export default function ThirdSection() {
       ScrollTrigger.create({
         trigger: container,
         start: "top top", // Start pinning when container hits top
-        end: "bottom 130%", // End pinning when container bottom hits top
+        end: "bottom bottom", // Pin for the entire container duration to match animation
         pin: canvasContainer, // Pin the canvas container
         pinSpacing: true,
         onUpdate: (self) => {
           // Calculate progress from 0 to 100% based on scroll position
           const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
+          
+          // Update debug information
+          setDebugScrollInfo({
+            scrollProgress: progress * 100,
+            containerHeight: '550vh',
+            scrollTriggerProgress: self.progress * 100,
+            isPinned: self.isActive
+          });
+          
           // Pass progress to MainCanvesScene for Theatre.js sequence control
           if (canvasContainer) {
             // Round to 3 decimal places to prevent excessive updates
@@ -193,7 +221,10 @@ export default function ThirdSection() {
         >
           {/* 3D Canvas Content */}
           <div className="relative w-full h-full flex items-center justify-center">
-            <MainCanvesScene isActive={isInViewport} />
+            <MainCanvesScene 
+              isActive={isInViewport} 
+              onTheatreDebugUpdate={setTheatreDebugInfo}
+            />
           </div>
         </div>
 
@@ -207,6 +238,89 @@ export default function ThirdSection() {
         >
           {/* Your overlay content goes here */}
         </div>
+
+                 {/* Debug UI for ScrollTrigger */}
+         {isInViewport && (
+           <div
+             style={{
+               position: 'fixed',
+               top: '20px',
+               left: '20px',
+               background: 'rgba(0, 0, 139, 0.8)',
+               color: 'white',
+               padding: '15px',
+               borderRadius: '8px',
+               fontFamily: 'monospace',
+               fontSize: '12px',
+               zIndex: 9999,
+               minWidth: '250px'
+             }}
+           >
+             <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>ScrollTrigger Debug</div>
+             <div>Container Height: {debugScrollInfo.containerHeight}</div>
+             <div>Raw Scroll Progress: {debugScrollInfo.scrollTriggerProgress.toFixed(1)}%</div>
+             <div>Clamped Progress: {debugScrollInfo.scrollProgress.toFixed(1)}%</div>
+             <div>Is Pinned: {debugScrollInfo.isPinned ? 'Yes' : 'No'}</div>
+             <div style={{
+               marginTop: '8px',
+               height: '4px',
+               background: '#333',
+               borderRadius: '2px',
+               overflow: 'hidden'
+             }}>
+               <div
+                 style={{
+                   height: '100%',
+                   background: '#2196F3',
+                   width: `${Math.min(debugScrollInfo.scrollProgress, 100)}%`,
+                   transition: 'width 0.1s ease'
+                 }}
+               />
+             </div>
+           </div>
+         )}
+
+         {/* Debug UI for Theatre.js Sequence */}
+         {isInViewport && (
+           <div
+             style={{
+               position: 'fixed',
+               top: '20px',
+               right: '20px',
+               background: 'rgba(0, 0, 0, 0.8)',
+               color: 'white',
+               padding: '15px',
+               borderRadius: '8px',
+               fontFamily: 'monospace',
+               fontSize: '12px',
+               zIndex: 9999,
+               minWidth: '250px'
+             }}
+           >
+             <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>Theatre.js Sequence Debug</div>
+             <div>Scroll Progress: {theatreDebugInfo.scrollProgress.toFixed(1)}%</div>
+             <div>Sensitized Progress: {theatreDebugInfo.sensitizedProgress.toFixed(1)}%</div>
+             <div>Current Position: {theatreDebugInfo.current.toFixed(2)}</div>
+             <div>Total Duration: {theatreDebugInfo.total.toFixed(2)}</div>
+             <div>Animation Progress: {theatreDebugInfo.progress.toFixed(1)}%</div>
+             <div style={{
+               marginTop: '8px',
+               height: '4px',
+               background: '#333',
+               borderRadius: '2px',
+               overflow: 'hidden'
+             }}>
+               <div
+                 style={{
+                   height: '100%',
+                   background: theatreDebugInfo.progress < 100 ? '#4CAF50' : '#FF5722',
+                   width: `${Math.min(theatreDebugInfo.progress, 100)}%`,
+                   transition: 'width 0.1s ease'
+                 }}
+               />
+             </div>
+           </div>
+         )}
       </div>
     </div>
   );
