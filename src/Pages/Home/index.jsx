@@ -1,10 +1,11 @@
 "use client";
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, Environment, Float } from "@react-three/drei";
+import { ContactShadows, Environment, Float, useProgress } from "@react-three/drei";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ParticleMorphing from "@/components/ParticleMorphing/page";
+import LoadingScreen from "@/components/LoadingScreen";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -14,8 +15,21 @@ import Lenis from "lenis";
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
+// Progress tracker component inside Canvas
+function ProgressTracker({ setProgress }) {
+  const { progress } = useProgress()
+  
+  useEffect(() => {
+    setProgress(progress)
+  }, [progress, setProgress])
+  
+  return null
+}
+
 export default function Hero() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const heroRef = useRef(null);
   const particleMorphingRef = useRef(null);
   const morphProgress = useRef(0);
@@ -234,6 +248,7 @@ export default function Hero() {
               }}
             >
               <Suspense fallback={null}>
+                <ProgressTracker setProgress={setLoadingProgress} />
                 <ambientLight intensity={0.6} color="#ffffff" />
                 <directionalLight
                   position={[10, 10, 5]}
@@ -509,6 +524,14 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {/* Loading Screen Overlay */}
+      {!isLoaded && (
+        <LoadingScreen 
+          progress={loadingProgress} 
+          onComplete={() => setIsLoaded(true)} 
+        />
+      )}
     </>
   );
 }
