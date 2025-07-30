@@ -80,9 +80,10 @@ export default function ThirdSection() {
 
       if (!container || !outerDiv || !canvasContainer || !content) return;
 
-      // Set initial state - start shrunk in
+      // Set initial state - mobile-responsive shrunk in
+      const isMobile = window.innerWidth <= 768;
       gsap.set(canvasContainer, {
-        clipPath: "inset(10% 10% 10% 10% round 20px)", // Start shrunk in
+        clipPath: isMobile ? "inset(5% 5% 5% 5% round 15px)" : "inset(10% 10% 10% 10% round 20px)",
         scale: 1,
         opacity: 1,
         transformOrigin: "center center",
@@ -107,13 +108,13 @@ export default function ThirdSection() {
       });
 
       clipPathTimeline
-        // PHASE 1: IN Animation - expand when entering (30% of timeline)
+        // PHASE 1: IN Animation - mobile-responsive expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
-            clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
+            clipPath: isMobile ? "inset(5% 5% 5% 5% round 15px)" : "inset(20% 20% 20% 20% round 20px)",
           },
           {
-            clipPath: "inset(10% 2% 10% 2% round 50px)", // Expand to full
+            clipPath: isMobile ? "inset(2% 2% 2% 2% round 12px)" : "inset(10% 2% 10% 2% round 50px)",
             duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
@@ -145,7 +146,7 @@ export default function ThirdSection() {
         })
   
 
-      // Create pin trigger for canvas container with scroll progress
+      // Create pin trigger for canvas container with mobile-optimized scroll progress
       ScrollTrigger.create({
         trigger: container,
         start: "top top", // Start pinning when container hits top
@@ -156,10 +157,11 @@ export default function ThirdSection() {
           // Calculate progress from 0 to 100% based on scroll position
           const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
           
-          // Update debug information
+          // Update debug information with mobile-responsive height
+          const currentHeight = isMobile ? '1200vh' : '2000vh';
           setDebugScrollInfo({
             scrollProgress: progress * 100,
-            containerHeight: '2000vh',
+            containerHeight: currentHeight,
             scrollTriggerProgress: self.progress * 100,
             isPinned: self.isActive
           });
@@ -178,7 +180,7 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[2000vh] flex justify-center overflow-hidden z-10 "
+      className="relative h-[1200vh] sm:h-[1500vh] lg:h-[2000vh] flex justify-center overflow-hidden z-10"
     >
       {/* Outer div with inset clip-path animation */}
       <div
@@ -215,12 +217,11 @@ export default function ThirdSection() {
           }}
         />
 
-        {/* Inner canvas container with ellipse clip-path reveal effect */}
+        {/* Inner canvas container with mobile-optimized dimensions */}
         <div
           ref={canvasContainerRef}
-          className="relative w-[100vw] h-[100vh] bg-white overflow-hidden z-10 mx-auto"
+          className="relative w-[95vw] sm:w-[90vw] lg:w-[100vw] h-[60vh] xs:h-[70vh] sm:h-[80vh] lg:h-[100vh] bg-white overflow-hidden z-10 mx-auto rounded-xl sm:rounded-2xl lg:rounded-none"
           style={{
-            borderRadius: "0", // Initial border radius - moderately rounded
             // clip-path, scale, and opacity will be animated via GSAP
           }}
         >
@@ -233,15 +234,23 @@ export default function ThirdSection() {
           </div>
         </div>
 
-        {/* Content overlay */}
+        {/* Content overlay - Mobile optimized */}
         <div
           ref={contentRef}
-          className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-center z-20"
+          className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-1/2 transform -translate-x-1/2 text-center z-20 px-4 max-w-sm sm:max-w-md lg:max-w-lg"
           style={{
             transformOrigin: "center center",
           }}
         >
-          {/* Your overlay content goes here */}
+          {/* Mobile-friendly overlay content */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+              Interactive Learning Experience
+            </h3>
+            <p className="text-sm sm:text-base text-gray-600">
+              Explore our state-of-the-art facilities and modern learning environments.
+            </p>
+          </div>
         </div>
 
                  {/* Debug UI for ScrollTrigger */}

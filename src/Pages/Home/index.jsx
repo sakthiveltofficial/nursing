@@ -271,35 +271,34 @@ export default function Hero() {
                 {/* Mobile Layout */}
                 <div className="block lg:hidden px-4 sm:px-6">
                   <div className="hero-content text-center pointer-events-auto">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-black leading-tight mb-4 sm:mb-6">
+                    <h1 className="text-2xl xs:text-3xl sm:text-4xl font-medium text-black leading-[1.15] mb-4 sm:mb-6 tracking-tight">
                       Start Your Journey in Nursing
                       <br />
-                      With Confidence and Compassion
+                      <span className="text-pink-600">With Confidence</span>
                     </h1>
-                    <p className="text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 max-w-lg mx-auto">
-                      Accredited programs in B.Sc Nursing, GNM, and Post Basic B.Sc—designed to equip you with
-                      real-world clinical experience and lifelong skills in patient care.
+                    <p className="text-gray-600 text-sm xs:text-base sm:text-lg mb-6 sm:mb-8 max-w-sm xs:max-w-md mx-auto leading-relaxed">
+                      Accredited programs designed to equip you with real-world clinical experience and lifelong skills in patient care.
                     </p>
                     
-                    {/* Mobile tags */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-6 sm:mb-8">
-                      <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
+                    {/* Mobile tags - Grid layout for better mobile experience */}
+                    <div className="grid grid-cols-2 gap-2 mb-6 sm:mb-8 max-w-xs mx-auto">
+                      <span className="px-3 py-2 border border-gray-300 rounded-xl text-xs text-gray-700 bg-white/80 backdrop-blur-sm text-center font-medium">
                         B.Sc Nursing
                       </span>
-                      <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
+                      <span className="px-3 py-2 border border-gray-300 rounded-xl text-xs text-gray-700 bg-white/80 backdrop-blur-sm text-center font-medium">
                         Post Basic B.Sc
                       </span>
-                      <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
+                      <span className="px-3 py-2 border border-gray-300 rounded-xl text-xs text-gray-700 bg-white/80 backdrop-blur-sm text-center font-medium">
                         GNM
                       </span>
-                      <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
-                        Clinical Rotations
+                      <span className="px-3 py-2 border border-gray-300 rounded-xl text-xs text-gray-700 bg-white/80 backdrop-blur-sm text-center font-medium">
+                        Clinical Training
                       </span>
                     </div>
                     
-                    <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-6 sm:px-8 py-3 text-base sm:text-lg font-medium inline-flex items-center space-x-2">
+                    <Button className="bg-black text-white hover:bg-gray-800 active:bg-gray-900 rounded-2xl px-8 py-4 text-base font-semibold inline-flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
                       <span className="text-white">APPLY NOW</span>
-                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
+                      <ArrowUpRight className="w-5 h-5 text-orange-400" />
                     </Button>
                   </div>
                 </div>
