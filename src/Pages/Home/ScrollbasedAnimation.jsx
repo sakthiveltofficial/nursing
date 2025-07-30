@@ -46,9 +46,8 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   // Remove debug state from here - will be handled by parent component
   const totalDuration = val(sheet.sequence.pointer.length);
   
-      // Scroll sensitivity - compensated for longer container heights
-    const SCROLL_SLOWNESS_START = 0.08; // Increased to compensate for 1200vh height
-    const SCROLL_ACCELERATION = 1.3; // Higher acceleration to ensure full sequence completion
+      // Scroll sensitivity - consistent linear speed throughout
+    const SCROLL_SENSITIVITY = 1.0; // Full sequence completion at 100% scroll
   
 
 
@@ -89,12 +88,9 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
 
     // Continue updating only when section is active
     if (isActive) {
-      // Progressive scroll mapping: slow start, full range completion
-      // Creates smooth curve that starts slow but reaches 100% at the end
-      const startCurve = Math.pow(scrollProgress, 1 / SCROLL_SLOWNESS_START);
-      const endBoost = Math.pow(scrollProgress, 1 / SCROLL_ACCELERATION);
-      const blendFactor = scrollProgress; // Blend more towards end boost as we progress
-      const sensitizedScrollProgress = startCurve * (1 - blendFactor) + endBoost * blendFactor;
+      // Linear scroll mapping: consistent speed from start to end
+      // No acceleration - maintains the same speed throughout
+      const sensitizedScrollProgress = scrollProgress * SCROLL_SENSITIVITY;
       const targetPosition = sensitizedScrollProgress * totalDuration;
       const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
       
@@ -111,16 +107,17 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
         ref.current = clampedTargetPosition;
         ref.hasInitialized = true;
       } else {
-        // Very minimal smoothing for realistic feel - direct response to scroll
-        const smoothness = 0.15; // Single, consistent smoothing value
+        // Gentle smoothing for ultra-smooth feel
+        const smoothness = 0.08; // Gentler smoothing for smoother motion
         ref.current = lerp(current, clampedTargetPosition, smoothness);
       }
       
       // Final clamping
       ref.current = Math.max(0, Math.min(totalDuration, ref.current));
       
-      // Update sequence almost directly for realistic feel
-      sheet.sequence.position = ref.current;
+      // Update sequence with slight smoothing for ultra-smooth playback
+      const currentSeqPos = sheet.sequence.position;
+      sheet.sequence.position = lerp(currentSeqPos, ref.current, 0.4);
       
       // Pass debug info to parent component if callback provided
       if (onDebugUpdate) {
