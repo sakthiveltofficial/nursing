@@ -82,7 +82,7 @@ export default function ThirdSection() {
 
       // Set initial state - start shrunk in
       gsap.set(canvasContainer, {
-        clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk in
+        clipPath: "inset(10% 10% 10% 10% round 20px)", // Start shrunk in
         scale: 1,
         opacity: 1,
         transformOrigin: "center center",
@@ -113,7 +113,7 @@ export default function ThirdSection() {
             clipPath: "inset(20% 20% 20% 20% round 20px)", // Start shrunk (matches initial state)
           },
           {
-            clipPath: "inset(10% 5% 10% 5% round 50px)", // Expand to full
+            clipPath: "inset(5% 2% 5% 2% round 50px)", // Expand to full
             duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
@@ -245,7 +245,7 @@ export default function ThirdSection() {
         </div>
 
                  {/* Debug UI for ScrollTrigger */}
-         {isInViewport && (
+         {/* {isInViewport && (
            <div
              style={{
                position: 'fixed',
@@ -283,10 +283,10 @@ export default function ThirdSection() {
                />
              </div>
            </div>
-         )}
+         )} */}
 
          {/* Debug UI for Theatre.js Sequence */}
-         {isInViewport && (
+         {/* {isInViewport && (
            <div
              style={{
                position: 'fixed',
@@ -325,7 +325,7 @@ export default function ThirdSection() {
                />
              </div>
            </div>
-         )}
+         )} */}
       </div>
     </div>
   );
