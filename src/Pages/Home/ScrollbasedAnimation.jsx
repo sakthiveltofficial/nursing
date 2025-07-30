@@ -46,9 +46,9 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   // Remove debug state from here - will be handled by parent component
   const totalDuration = val(sheet.sequence.pointer.length);
   
-      // Scroll sensitivity - controls the feel of scrolling
-    const SCROLL_SLOWNESS_START = 0.3; // How slow the start is (0.1 = very slow start, 1.0 = linear)
-    const SCROLL_ACCELERATION = 2.5; // How much it accelerates towards the end
+      // Scroll sensitivity - compensated for longer container heights
+    const SCROLL_SLOWNESS_START = 0.08; // Increased to compensate for 1200vh height
+    const SCROLL_ACCELERATION = 1.3; // Higher acceleration to ensure full sequence completion
   
 
 
@@ -67,16 +67,17 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
     });
   }, [project, sheet, totalDuration]);
 
-  // Reset animation when section becomes inactive
+  // Don't reset animation when section becomes inactive - preserve position
+  // This allows smooth transitions and prevents jumping back to start
   useEffect(() => {
-    if (!isActive && sheet && projectReady) {
+    // Only reset on first load, not when transitioning between sections
+    if (!isActive && sheet && projectReady && !scrollRef.current.hasInitialized) {
       sheet.sequence.position = 0;
       scrollRef.current.current = 0;
       scrollRef.current.target = 0;
       scrollRef.current.lastTarget = 0;
       scrollRef.current.momentum = 0;
       scrollRef.current.velocity = 0;
-      scrollRef.current.hasInitialized = false;
     }
   }, [isActive, sheet, projectReady]);
 
@@ -84,75 +85,44 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   // The scroll progress is now controlled by the parent component's ScrollTrigger
 
   useFrame((state, delta) => {
-    if (!sheet || !projectReady || !isActive) return;
+    if (!sheet || !projectReady) return;
 
-          // Progressive scroll mapping: slow start, full range completion
+    // Continue updating only when section is active
+    if (isActive) {
+      // Progressive scroll mapping: slow start, full range completion
       // Creates smooth curve that starts slow but reaches 100% at the end
       const startCurve = Math.pow(scrollProgress, 1 / SCROLL_SLOWNESS_START);
       const endBoost = Math.pow(scrollProgress, 1 / SCROLL_ACCELERATION);
       const blendFactor = scrollProgress; // Blend more towards end boost as we progress
       const sensitizedScrollProgress = startCurve * (1 - blendFactor) + endBoost * blendFactor;
-    const targetPosition = sensitizedScrollProgress * totalDuration;
-    const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
-    
-    const ref = scrollRef.current;
-    const { current, lastTarget } = ref;
-    
-    // Calculate momentum based on target change
-    const targetDelta = clampedTargetPosition - lastTarget;
-    ref.momentum = lerp(ref.momentum, targetDelta * 0.3, 0.1);
-    ref.lastTarget = clampedTargetPosition;
-    
-    // Calculate distance and apply different smoothing strategies
-    const distance = Math.abs(clampedTargetPosition - current);
-    
-    // Much more conservative jump threshold - only for very large jumps
-    const largeJumpThreshold = totalDuration * 0.5; // 50% of total duration
-    const shouldFastSeek = !ref.hasInitialized || distance > largeJumpThreshold;
-    
-    if (shouldFastSeek) {
-      ref.current = clampedTargetPosition;
-      ref.hasInitialized = true;
-      ref.momentum = 0;
-    } else {
-      // Multi-layered smoothing approach
-      const baseDistance = clampedTargetPosition - current;
+      const targetPosition = sensitizedScrollProgress * totalDuration;
+      const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
       
-      // Adaptive smoothing based on distance and momentum
-      let smoothness;
-      if (distance > totalDuration * 0.1) {
-        // Medium distances - moderate smoothing
-        smoothness = 0.02;
-      } else if (distance > totalDuration * 0.05) {
-        // Small distances - gentle smoothing
-        smoothness = 0.015;
+      const ref = scrollRef.current;
+      const { current, lastTarget } = ref;
+      
+      // Direct, realistic scroll mapping with minimal smoothing
+      const distance = Math.abs(clampedTargetPosition - current);
+      
+      // Only use fast seek for initialization
+      const shouldFastSeek = !ref.hasInitialized;
+      
+      if (shouldFastSeek) {
+        ref.current = clampedTargetPosition;
+        ref.hasInitialized = true;
       } else {
-        // Very small distances - ultra-gentle smoothing
-        smoothness = 0.008;
+        // Very minimal smoothing for realistic feel - direct response to scroll
+        const smoothness = 0.15; // Single, consistent smoothing value
+        ref.current = lerp(current, clampedTargetPosition, smoothness);
       }
       
-      // Apply momentum for natural feel
-      const momentumInfluence = Math.abs(ref.momentum) > 0.001 ? 0.003 : 0;
-      const finalSmoothness = Math.min(smoothness + momentumInfluence, 0.04);
+      // Final clamping
+      ref.current = Math.max(0, Math.min(totalDuration, ref.current));
       
-      // Progressive easing - slower as we approach target
-      const easingFactor = distance > 0.1 ? easeInOutExpo(1 - (distance / totalDuration)) : 1;
-      const adjustedSmoothness = finalSmoothness * (0.3 + 0.7 * easingFactor);
+      // Update sequence almost directly for realistic feel
+      sheet.sequence.position = ref.current;
       
-      ref.current = lerp(current, clampedTargetPosition, adjustedSmoothness);
-    }
-    
-    // Decay momentum
-    ref.momentum *= 0.95;
-    
-    // Final clamping
-    ref.current = Math.max(0, Math.min(totalDuration, ref.current));
-    
-    // Update sequence with additional micro-smoothing
-    const currentSeqPos = sheet.sequence.position;
-    sheet.sequence.position = lerp(currentSeqPos, ref.current, 0.7);
-    
-          // Pass debug info to parent component if callback provided
+      // Pass debug info to parent component if callback provided
       if (onDebugUpdate) {
         onDebugUpdate({
           current: ref.current,
@@ -162,6 +132,8 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
           sensitizedProgress: sensitizedScrollProgress * 100
         });
       }
+    }
+    // When not active, preserve current sequence position without updates
   });
 
       return null;

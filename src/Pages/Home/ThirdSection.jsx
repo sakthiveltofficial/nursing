@@ -46,15 +46,20 @@ export default function ThirdSection() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Check if the section is partially visible (much lower threshold)
-          const isPartiallyVisible = entry.intersectionRatio > 0.1; // 10% visible threshold
+          // For very tall containers (1200vh), use much lower threshold
+          const isPartiallyVisible = entry.intersectionRatio > 0.01; // 1% visible threshold for tall containers
           setIsInViewport(isPartiallyVisible);
+          console.log("🔍 Section intersection:", {
+            intersectionRatio: entry.intersectionRatio,
+            isVisible: isPartiallyVisible,
+            containerHeight: '1200vh'
+          });
         });
       },
       {
         root: null,
-        rootMargin: "-10px", // Slight margin to ensure it's truly in viewport
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // Multiple thresholds for smooth detection
+        rootMargin: "0px", // No margin for better detection
+        threshold: [0, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5], // Lower thresholds for tall containers
       }
     );
 
@@ -154,7 +159,7 @@ export default function ThirdSection() {
           // Update debug information
           setDebugScrollInfo({
             scrollProgress: progress * 100,
-            containerHeight: '550vh',
+            containerHeight: '1200vh',
             scrollTriggerProgress: self.progress * 100,
             isPinned: self.isActive
           });
@@ -173,7 +178,7 @@ export default function ThirdSection() {
   return (
     <div
       ref={containerRef}
-      className="relative h-[550vh] flex justify-center overflow-hidden z-10 "
+      className="relative h-[1200vh] flex justify-center overflow-hidden z-10 "
     >
       {/* Outer div with inset clip-path animation */}
       <div

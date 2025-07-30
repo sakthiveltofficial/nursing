@@ -9,7 +9,7 @@ import extension from "@theatre/r3f/dist/extension";
 import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
-import sequences from "@/../public/Sequences/sequence_2.json";
+import sequences from "@/../public/Sequences/sequence_3.json";
 import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";
@@ -28,6 +28,31 @@ function MainCanvesScene({ isActive = false, onTheatreDebugUpdate = null }) {
   const sheet = project.sheet("MainScene");
   const cameraLookAtRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Debug Theatre.js setup
+  useEffect(() => {
+    console.log("🎭 Theatre.js Debug Info:");
+    console.log("Project:", project);
+    console.log("Sheet:", sheet);
+    console.log("Sequence length:", sheet?.sequence?.length);
+    console.log("Sequences data:", sequences);
+    
+    if (project && sheet) {
+      project.ready.then(() => {
+        console.log("✅ Theatre.js project is ready");
+        console.log("Sheet sequence length:", sheet.sequence.length);
+        console.log("Sequence details:", {
+          length: sheet.sequence.length,
+          pointer: sheet.sequence.pointer,
+          position: sheet.sequence.position
+        });
+      }).catch(err => {
+        console.error("❌ Theatre.js project failed to load:", err);
+      });
+    } else {
+      console.error("❌ Project or Sheet is null/undefined");
+    }
+  }, [project, sheet]);
 
   // Listen for scroll progress updates from parent
   useEffect(() => {
