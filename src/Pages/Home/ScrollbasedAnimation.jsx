@@ -46,9 +46,9 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   // Remove debug state from here - will be handled by parent component
   const totalDuration = val(sheet.sequence.pointer.length);
   
-      // Scroll sensitivity - same feel as before but reaches 100%
-    const SCROLL_SENSITIVITY = 0.4; // Increased from 0.25 to reach full sequence
-    const SCROLL_CURVE_STRENGTH = 0.8; // Keep same curve feel as before
+      // Scroll sensitivity - controls the feel of scrolling
+    const SCROLL_SLOWNESS_START = 0.3; // How slow the start is (0.1 = very slow start, 1.0 = linear)
+    const SCROLL_ACCELERATION = 2.5; // How much it accelerates towards the end
   
 
 
@@ -86,10 +86,12 @@ function ScrollbasedAnimation({ project, isActive = false, scrollProgress = 0, o
   useFrame((state, delta) => {
     if (!sheet || !projectReady || !isActive) return;
 
-          // Apply scroll sensitivity with progressive curve - same feel as before
-      // Starts very slow, gradually increases, but now reaches 100%
-      const curvedProgress = Math.pow(scrollProgress, 1 + SCROLL_CURVE_STRENGTH);
-      const sensitizedScrollProgress = Math.min(curvedProgress / SCROLL_SENSITIVITY, 1.0);
+          // Progressive scroll mapping: slow start, full range completion
+      // Creates smooth curve that starts slow but reaches 100% at the end
+      const startCurve = Math.pow(scrollProgress, 1 / SCROLL_SLOWNESS_START);
+      const endBoost = Math.pow(scrollProgress, 1 / SCROLL_ACCELERATION);
+      const blendFactor = scrollProgress; // Blend more towards end boost as we progress
+      const sensitizedScrollProgress = startCurve * (1 - blendFactor) + endBoost * blendFactor;
     const targetPosition = sensitizedScrollProgress * totalDuration;
     const clampedTargetPosition = Math.max(0, Math.min(totalDuration, targetPosition));
     
