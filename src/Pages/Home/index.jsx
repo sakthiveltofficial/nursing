@@ -72,10 +72,8 @@ export default function Hero() {
 
     // Enhanced scroll event listener for mobile touch handling
     lenis.on("scroll", (e) => {
-      // Force ScrollTrigger refresh for mobile devices
-      if (window.innerWidth <= 1024) {
-        ScrollTrigger.refresh();
-      }
+      // Update ScrollTrigger without causing refresh loops
+      ScrollTrigger.update();
     });
 
     return () => {
@@ -114,9 +112,10 @@ export default function Hero() {
           }
         },
         onRefresh: () => {
-          // Ensure smooth updates during refresh for mobile
-          if (window.innerWidth <= 1024) {
-            ScrollTrigger.refresh();
+          // Recalculate bounds without triggering recursive refresh
+          if (particleMorphingRef.current && window.innerWidth <= 1024) {
+            // Force a gentle update to the morph progress
+            particleMorphingRef.current.updateMorphProgress(morphProgress.current);
           }
         },
         // Mobile-specific settings
@@ -176,8 +175,8 @@ export default function Hero() {
           const minSwipeDistance = 50;
           
           if (Math.abs(swipeDistance) > minSwipeDistance) {
-            // Force ScrollTrigger update for swipe gestures
-            ScrollTrigger.refresh();
+            // Update ScrollTrigger positions without refresh
+            ScrollTrigger.update();
           }
         };
         
