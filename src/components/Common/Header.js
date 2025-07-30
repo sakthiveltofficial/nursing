@@ -14,9 +14,10 @@ export default function ToggleMenu() {
   const menuItems = [
     { name: "Home", span: 1 },
     { name: "About Us", span: 1 },
+    { name: "Admissions/ Academies", span: 1 },
     { name: "Facilities", span: 1 },
     { name: "Gallery", span: 1 },
-    { name: "Contact us", span: 2 },
+    { name: "Contact us", span: 1},
   ]
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export default function ToggleMenu() {
       case "About Us":
         window.location.href = "/about"
         break
-      case "Admissions/  Acadamies":
+      case "Admissions/ Academies":
         window.location.href = "/admissions"
         break
       case "Facilities":

@@ -3,18 +3,19 @@
 import { RotateCcw, Home, Users, GraduationCap, Building, ImageIcon, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export default function Footer() {
   const pathname = usePathname()
+  const router = useRouter()
   const isHomePage = pathname === "/"
   const navigationItems = [
-    { text: "Home", icon: Home },
-    { text: "About us", icon: Users },
-    { text: "Admissions/ Academies", icon: GraduationCap },
-    { text: "Facilities", icon: Building },
-    { text: "Gallery", icon: ImageIcon },
-    { text: "Contact us", icon: Mail },
+    { name: "Home", icon: Home, href: "/" },
+    { name: "About Us", icon: Users, href: "/about" },
+    { name: "Admissions/ Acadamies", icon: GraduationCap, href: "/admissions" },
+    { name: "Facilities", icon: Building, href: "/facilities" },
+    { name: "Gallery", icon: ImageIcon, href: "/gallery" },
+    { name: "Contact us", icon: Mail, href: "/contact" },
   ]
 
   return (
@@ -54,7 +55,7 @@ export default function Footer() {
       )}
 
       {/* Main Container with exact rounded corners */}
-      <div className={`relative z-10 w-full min-h-[350px] sm:min-h-[400px] lg:min-h-[350px] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden ${isHomePage ? 'shadow-2xl' : 'bg-white'}`}>
+             <div className={`relative z-10 w-full min-h-[50vh] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden ${isHomePage ? 'shadow-2xl' : 'bg-white'}`}>
         <div className="flex flex-col lg:flex-row min-h-full">
           {/* Left Side - Navigation with exact color #2F0014 */}
           <div className="w-full lg:w-3/5 flex flex-col relative" style={{ backgroundColor: "#2F0014" }}>
@@ -75,15 +76,16 @@ export default function Footer() {
               <nav className="space-y-2 sm:space-y-4 lg:space-y-6">
                 {navigationItems.map((item, index) => {
                   const IconComponent = item.icon
+                  const isActive = pathname === item.href
                   return (
                     <div key={index} className="text-center group">
                       <a
-                        href="#"
+                        href={item.href}
                         className="relative text-white text-sm sm:text-lg lg:text-xl font-normal block py-2 sm:py-3 px-4 sm:px-6 rounded-xl sm:rounded-2xl transition-all duration-500 ease-out overflow-hidden group-hover:scale-105 group-hover:shadow-2xl"
                         style={{
-                          background: "transparent",
-                          backdropFilter: "blur(0px)",
-                          border: "1px solid transparent",
+                          background: isActive ? "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 170, 189, 0.2) 100%)" : "transparent",
+                          backdropFilter: isActive ? "blur(20px)" : "blur(0px)",
+                          border: isActive ? "1px solid rgba(255, 255, 255, 0.2)" : "1px solid transparent",
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background =
@@ -94,10 +96,12 @@ export default function Footer() {
                             "0 8px 32px rgba(255, 170, 189, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "transparent"
-                          e.currentTarget.style.backdropFilter = "blur(0px)"
-                          e.currentTarget.style.border = "1px solid transparent"
-                          e.currentTarget.style.boxShadow = "none"
+                          if (!isActive) {
+                            e.currentTarget.style.background = "transparent"
+                            e.currentTarget.style.backdropFilter = "blur(0px)"
+                            e.currentTarget.style.border = "1px solid transparent"
+                            e.currentTarget.style.boxShadow = "none"
+                          }
                         }}
                       >
                         {/* Glowing background effect */}
@@ -109,8 +113,8 @@ export default function Footer() {
                         </div>
 
                         {/* Text with slide animation */}
-                        <span className="relative z-10 inline-block transform group-hover:translate-x-4 sm:group-hover:translate-x-6 transition-transform duration-500 ease-out">
-                          {item.text}
+                        <span className="relative z-10 inline-block transform group-hover:translate-x-4 sm:group-hover:translate-x-6 transition-transform duration-500 ease-out text-white">
+                          {item.name}
                         </span>
 
                         {/* Shimmer effect */}
@@ -134,8 +138,8 @@ export default function Footer() {
             {/* Address Section */}
             <div className="flex-shrink-0 p-4 sm:p-8 lg:p-12 text-white">
               <div className="space-y-2">
-                <p className="text-xs sm:text-sm opacity-80">Address</p>
-                <p className="text-sm sm:text-base lg:text-lg font-light">
+                <p className="text-xs sm:text-sm text-white opacity-80">Address</p>
+                <p className="text-sm sm:text-base lg:text-lg font-light text-white">
                   2972 Westheimer Rd. Santa Ana,
                   <br />
                   Illinois 85486
@@ -146,7 +150,7 @@ export default function Footer() {
 
           {/* Right Side - with padding around map section */}
           <div className="w-full lg:w-2/5 relative flex flex-col p-3 sm:p-6" style={{ backgroundColor: "#2F0014" }}>
-                        {/* Pink Map Section - full height */}
+            {/* Pink Map Section - full height */}
             <div className="flex-1 relative rounded-2xl sm:rounded-3xl overflow-hidden">
               {/* Google Maps Full Size */}
               <iframe 
@@ -158,15 +162,10 @@ export default function Footer() {
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
               />
-              
-      
-
-     
             </div>
-           
           </div>
         </div>
       </div>
     </div>
   )
-} 
+}
