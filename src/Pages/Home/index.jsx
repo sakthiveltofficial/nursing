@@ -253,13 +253,8 @@ export default function Hero() {
             {/* Header */}
             <header className="hero-header flex items-center justify-between p-4 sm:p-6 lg:px-[4rem] pointer-events-auto">
               <div className="flex items-center space-x-1">
-                <span className="text-xl sm:text-2xl font-bold text-black">A</span>
-                <span className="text-xl sm:text-2xl font-bold text-black">J</span>
-                <span className="text-xl sm:text-2xl font-bold text-black">K</span>
-                <span className="text-xl sm:text-2xl font-light text-gray-600 mx-2">
-                  |
-                </span>
-                <span className="text-xl sm:text-2xl font-light text-gray-600">—</span>
+                <span className="text-xl sm:text-2xl font-bold text-black">AJK</span>
+                <span className="text-sm text-gray-600 ml-1 hidden sm:inline-block">College of Nursing</span>
               </div>
 
               {/* Desktop Navigation */}
@@ -334,9 +329,8 @@ export default function Hero() {
                   {/* Header */}
                   <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
                     <div className="flex items-center space-x-1">
-                      <span className="text-xl font-bold text-black">A</span>
-                      <span className="text-xl font-bold text-black">J</span>
-                      <span className="text-xl font-bold text-black">K</span>
+                      <span className="text-xl font-bold text-black">AJK</span>
+                      <span className="text-xs text-gray-600 ml-1">College of Nursing</span>
                     </div>
                     <Button
                       variant="ghost"
@@ -409,10 +403,10 @@ export default function Hero() {
                         B.Sc Nursing
                       </span>
                       <span className="px-3 py-1.5 bg-gray-100 rounded-full text-xs text-gray-600">
-                        Clinical Training
+                        Post Basic B.Sc
                       </span>
                       <span className="px-3 py-1.5 bg-gray-100 rounded-full text-xs text-gray-600">
-                        NCLEX Prep
+                        GNM
                       </span>
                     </div>
                   </div>
@@ -427,14 +421,13 @@ export default function Hero() {
                 <div className="block lg:hidden px-4 sm:px-6">
                   <div className="hero-content text-center pointer-events-auto">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-light text-black leading-tight mb-4 sm:mb-6">
-                      Transforming Healthcare,
+                      Start Your Journey in Nursing
                       <br />
-                      One Nurse at a Time.
+                      With Confidence and Compassion
                     </h1>
                     <p className="text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 max-w-lg mx-auto">
-                      Join one of the leading nursing colleges in the region,
-                      offering industry-recognized programs like B.Sc Nursing,
-                      GNM, and Post Basic B.Sc.
+                      Accredited programs in B.Sc Nursing, GNM, and Post Basic B.Sc—designed to equip you with
+                      real-world clinical experience and lifelong skills in patient care.
                     </p>
                     
                     {/* Mobile tags */}
@@ -443,10 +436,13 @@ export default function Hero() {
                         B.Sc Nursing
                       </span>
                       <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
-                        Clinical Training
+                        Post Basic B.Sc
                       </span>
                       <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
-                        NCLEX Prep
+                        GNM
+                      </span>
+                      <span className="px-3 py-1.5 border border-gray-300 rounded-full text-xs text-gray-700 bg-white/50 backdrop-blur-sm">
+                        Clinical Rotations
                       </span>
                     </div>
                     
@@ -462,16 +458,14 @@ export default function Hero() {
                   {/* Left Content */}
                   <div className="hero-content pl-6 lg:pl-8 lg:max-w-xl text-left self-end pointer-events-auto">
                     <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light text-black leading-tight mb-6">
-                      Transforming Healthcare,
+                      Start Your Journey in Nursing
                       <br />
-                      One Nurse at a Time.
+                      With Confidence and Compassion
                     </h1>
                     <p className="text-gray-600 text-lg lg:text-xl mb-8 max-w-lg">
-                      Join one of the leading nursing colleges in the region,
-                      offering industry-recognized programs like B.Sc Nursing,
-                      GNM, and Post Basic B.Sc. Experience clinical excellence,
-                      expert faculty, and state-of-the-art labs that prepare you
-                      for real-world healthcare.
+                      Step into the future of healthcare with AJK College of Nursing. Our programs blend
+                      theory, hands-on clinical training, and personal growth. Learn from experienced faculty and graduate
+                      ready for global opportunities in nursing.
                     </p>
                     <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-lg font-medium inline-flex items-center space-x-2">
                       <span className="text-white">APPLY NOW</span>
@@ -483,13 +477,11 @@ export default function Hero() {
                   <div className="hero-content hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm pointer-events-auto">
                     <div className="space-y-6">
                       <p className="text-gray-600 text-lg leading-relaxed">
-                        Gain hands-on experience with clinical placements,
-                        NCLEX-focused preparation, and a student-first learning
-                        environment.
+                        From foundational courses to advanced clinical rotations, we prepare you to lead with compassion
+                        and care. Our labs, training hospitals, and personalized academic support ensure you're career-ready.
                         <span className="text-black font-medium">
                           {" "}
-                          Your future in nursing starts with the right
-                          foundation — and we're here to build it with you.
+                          Discover a future where your passion for helping others becomes a profession.
                         </span>
                       </p>
                       <div className="flex flex-wrap gap-3">
@@ -497,13 +489,16 @@ export default function Hero() {
                           B.Sc Nursing
                         </span>
                         <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          Clinical Training
+                          Post Basic B.Sc
                         </span>
                         <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          NCLEX Prep
+                          GNM
                         </span>
                         <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
-                          Career Support
+                          Clinical Rotations
+                        </span>
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                          Placement Support
                         </span>
                       </div>
                     </div>

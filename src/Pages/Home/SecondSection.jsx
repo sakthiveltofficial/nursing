@@ -1,41 +1,41 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { ArrowUpRight } from "lucide-react"
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 export default function SecondSection() {
-  const containerRef = useRef(null)
-  const circleRef = useRef(null)
-  const titleRef = useRef(null)
-  const subtitleRef = useRef(null)
-  const buttonRef = useRef(null)
+  const containerRef = useRef(null);
+  const circleRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
-    const container = containerRef.current
-    const circle = circleRef.current
-    const title = titleRef.current
-    const subtitle = subtitleRef.current
-    const button = buttonRef.current
+    const container = containerRef.current;
+    const circle = circleRef.current;
+    const title = titleRef.current;
+    const subtitle = subtitleRef.current;
+    const button = buttonRef.current;
 
-    if (!container || !circle || !title || !subtitle || !button) return
+    if (!container || !circle || !title || !subtitle || !button) return;
 
     // Set initial states
     gsap.set([title, subtitle, button], {
       opacity: 0,
       y: 50,
-    })
+    });
 
     gsap.set(circle, {
       scale: 0.3,
       opacity: 0.2,
-    })
+    });
 
     // Create timeline for entrance animations
     const tl = gsap.timeline({
@@ -45,7 +45,7 @@ export default function SecondSection() {
         end: "bottom 20%",
         toggleActions: "play none none reverse",
       },
-    })
+    });
 
     // Animate elements in sequence with circle growing much larger
     tl.to(circle, {
@@ -62,7 +62,7 @@ export default function SecondSection() {
           duration: 1,
           ease: "power2.out",
         },
-        "-=1.5",
+        "-=1.5"
       )
       .to(
         subtitle,
@@ -72,7 +72,7 @@ export default function SecondSection() {
           duration: 0.8,
           ease: "power2.out",
         },
-        "-=0.8",
+        "-=0.8"
       )
       .to(
         button,
@@ -82,8 +82,8 @@ export default function SecondSection() {
           duration: 0.6,
           ease: "power2.out",
         },
-        "-=0.5",
-      )
+        "-=0.5"
+      );
 
     // Parallax effect for the circle on scroll
     gsap.to(circle, {
@@ -95,12 +95,12 @@ export default function SecondSection() {
         end: "bottom top",
         scrub: 1,
       },
-    })
+    });
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   return (
     <div
@@ -159,22 +159,27 @@ export default function SecondSection() {
             lineHeight: 1.1,
           }}
         >
-          Every Experience
+          Empowering Nurses
           <br />
-          Begins With a Feeling
+          With Knowledge
         </h1>
 
-        <p ref={subtitleRef} className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-          We blend creativity, emotion, and innovation to craft digital worlds that invite{" "}
-          <span className="text-black">exploration</span>{" "}
-          <span className="text-gray-500">and inspire connection.</span>
+        <p
+          ref={subtitleRef}
+          className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed"
+        >
+          At AJK College of Nursing, we are dedicated to academic excellence,
+          hands-on clinical training, and the development of healthcare
+          professionals ready to serve with{" "}
+          <span className="text-black">competence</span>{" "}
+          <span className="text-gray-500">and care.</span>
         </p>
 
         <button
           ref={buttonRef}
           className="group bg-black text-white px-8 py-4 rounded-full text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-gray-800 hover:scale-105 flex items-center gap-2 mx-auto"
         >
-          About Us
+          Explore Programs
           <ArrowUpRight className="w-4 h-4 text-orange-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
         </button>
       </div>
@@ -186,5 +191,5 @@ export default function SecondSection() {
         <div className="w-px h-6 bg-gray-200"></div>
       </div>
     </div>
-  )
+  );
 }

@@ -2,6 +2,7 @@
 
 import { RotateCcw, Home, Users, GraduationCap, Building, ImageIcon, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 export default function Footer() {
   const navigationItems = [
@@ -52,7 +53,14 @@ export default function Footer() {
           <div className="w-full lg:w-3/5 flex flex-col relative" style={{ backgroundColor: "#2F0014" }}>
             {/* Logo Section */}
             <div className="flex-shrink-0 p-4 sm:p-8 lg:p-12">
-              <div className="text-white text-xl sm:text-2xl font-bold">LOGO</div>
+              <Image 
+                src="/logo.png" 
+                alt="AJK College of Nursing" 
+                width={200}
+                height={80}
+                className="h-16 sm:h-20 lg:h-28 w-auto object-contain"
+                priority
+              />
             </div>
 
             {/* Navigation Menu - Always visible, centered */}
