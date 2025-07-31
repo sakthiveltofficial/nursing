@@ -21,6 +21,109 @@ export default function ThirdSection() {
   const [progress, setProgress] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [project, setProject] = useState(null);
+  const [currentSequencePosition, setCurrentSequencePosition] = useState(0);
+
+  // Define content array with JSX content, sequence positions, and positioning
+  const overlayContents = [
+    {
+      id: 'content1',
+      start: 0,
+      end: 2,
+      contentPosition: { top: '50%', left: '20%', transform: 'translate(-50%, -50%)' },
+      content: (
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+            Welcome to Learning
+          </h3>
+          <p className="text-sm sm:text-base text-gray-600">
+            Discover our innovative approach to nursing education.
+          </p>
+        </div>
+      )
+    },
+    {
+      id: 'content2',
+      start: 2,
+      end: 4,
+      contentPosition: { top: '30%', right: '15%', transform: 'translateY(-50%)' },
+      content: (
+        <div className="bg-blue-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-blue-800 mb-2">
+            Advanced Facilities
+          </h3>
+          <p className="text-sm sm:text-base text-blue-600">
+            State-of-the-art labs and simulation rooms for hands-on learning.
+          </p>
+        </div>
+      )
+    },
+    {
+      id: 'content3',
+      start: 4,
+      end: 6,
+      contentPosition: { bottom: '20%', left: '50%', transform: 'translateX(-50%)' },
+      content: (
+        <div className="bg-green-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-2">
+            Interactive Learning
+          </h3>
+          <p className="text-sm sm:text-base text-green-600">
+            Explore our comprehensive curriculum and modern teaching methods.
+          </p>
+        </div>
+      )
+    }
+  ];
+
+  // Create refs for each content piece
+  const contentRefs = useRef(overlayContents.map(() => useRef(null)));
+
+  // Function to update content visibility based on sequence position
+  const updateContentVisibility = (sequencePosition) => {
+    setCurrentSequencePosition(sequencePosition);
+    
+    overlayContents.forEach((contentItem, index) => {
+      const contentElement = contentRefs.current[index]?.current;
+      if (!contentElement) {
+        console.log(`Content element ${contentItem.id} ref not found`);
+        return;
+      }
+
+      const isVisible = sequencePosition >= contentItem.start && sequencePosition <= contentItem.end;
+      
+      if (isVisible) {
+        // Calculate fade progress within the content's range
+        const fadeInDuration = 0.3; // Fade in over 0.3 units
+        const fadeOutDuration = 0.3; // Fade out over 0.3 units
+        
+        let opacity = 1;
+        
+        // Fade in at the start
+        if (sequencePosition < contentItem.start + fadeInDuration) {
+          opacity = (sequencePosition - contentItem.start) / fadeInDuration;
+        }
+        // Fade out at the end
+        else if (sequencePosition > contentItem.end - fadeOutDuration) {
+          opacity = (contentItem.end - sequencePosition) / fadeOutDuration;
+        }
+        
+        const finalOpacity = Math.max(0, Math.min(1, opacity));
+        console.log(`Setting ${contentItem.id} opacity to ${finalOpacity}`);
+        
+        gsap.set(contentElement, {
+          opacity: finalOpacity,
+          pointerEvents: 'auto',
+          display: 'block'
+        });
+      } else {
+        gsap.set(contentElement, {
+          opacity: 0,
+          pointerEvents: 'none'
+        });
+      }
+    });
+  };
+
   // Add debug state for container scroll info
   const [debugScrollInfo, setDebugScrollInfo] = useState({
     scrollProgress: 0,
@@ -76,9 +179,18 @@ export default function ThirdSection() {
       const container = containerRef.current;
       const outerDiv = outerDivRef.current;
       const canvasContainer = canvasContainerRef.current;
-      const content = contentRef.current;
 
-      if (!container || !outerDiv || !canvasContainer || !content) return;
+      if (!container || !outerDiv || !canvasContainer) return;
+
+      // Initialize all content elements with opacity 0
+      contentRefs.current.forEach(ref => {
+        if (ref.current) {
+          gsap.set(ref.current, {
+            opacity: 0,
+            pointerEvents: 'none'
+          });
+        }
+      });
 
       // Set initial state - mobile-responsive shrunk in
       const isMobile = window.innerWidth <= 768;
@@ -86,13 +198,6 @@ export default function ThirdSection() {
         clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(10% 2% 10% 2% round 20px)",
         scale: 1,
         opacity: 1,
-        transformOrigin: "center center",
-      });
-
-      gsap.set(content, {
-        opacity: 0,
-        scale: 0.8,
-        y: 20,
         transformOrigin: "center center",
       });
 
@@ -108,42 +213,17 @@ export default function ThirdSection() {
       });
 
       clipPathTimeline
-        // PHASE 1: IN Animation - mobile-responsive expand when entering (30% of timeline)
+        // PHASE 1: IN Animation - mobile-responsive expand when entering
         .fromTo(canvasContainer, 
           {
             clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(10% 2% 10% 2% round 20px)",
           },
           {
             clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(0% 0% 0% 0% round 50px)",
-            duration: 0.3, // 30% of timeline for expansion
+            duration: 1, // Full timeline for smooth expansion
             ease: "power2.out",
           }
         )
-        // PHASE 2: CONTENT Animation - content fades in (40% of timeline)
-        .fromTo(content,
-          {
-            opacity: 0,
-            scale: 0.8,
-            y: 20,
-          },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.4, // 40% of timeline for content animation
-            ease: "power2.out",
-          },
-          "-=0.1" // Start slightly before clip path completes for smooth transition
-        )
-
-        // PHASE 4: OUT Animation - content fades out then shrink back (20% of timeline)
-        .to(content, {
-          opacity: 0,
-          scale: 0.8,
-          y: 20,
-          duration: 0.1, // Quick content fade out
-          ease: "power2.in",
-        })
   
 
       // Create pin trigger for canvas container with mobile-optimized scroll progress
@@ -156,6 +236,13 @@ export default function ThirdSection() {
         onUpdate: (self) => {
           // Calculate progress from 0 to 100% based on scroll position
           const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
+          
+          // Convert scroll progress to sequence position (0-6 range based on content array)
+          const maxSequencePosition = 6; // Adjust this based on your content array's max end value
+          const sequencePosition = progress * maxSequencePosition;
+          
+          // Update content visibility based on sequence position
+          updateContentVisibility(sequencePosition);
           
           // Update debug information with mobile-responsive height
           const currentHeight = isMobile ? '1200vh' : '2000vh';
@@ -233,24 +320,24 @@ export default function ThirdSection() {
             />
           </div>
 
-          {/* Content overlay - Hidden on mobile, visible on desktop */}
-          <div
-            ref={contentRef}
-            className="hidden md:absolute md:inset-0 md:w-full md:h-full md:flex md:items-center md:justify-center z-20 rounded-xl sm:rounded-2xl lg:rounded-none"
-            style={{
-              transformOrigin: "center center",
-            }}
-          >
-            {/* Desktop overlay content */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-sm sm:max-w-md lg:max-w-lg mx-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
-                Interactive Learning Experience
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600">
-                Explore our state-of-the-art facilities and modern learning environments.
-              </p>
+          {/* Dynamic Content Overlays - Hidden on mobile, visible on desktop */}
+          {overlayContents.map((contentItem, index) => (
+            <div
+              key={contentItem.id}
+              ref={contentRefs.current[index]}
+              className="absolute z-50 hidden md:block"
+              style={{
+                ...contentItem.contentPosition,
+                opacity: 0,
+                pointerEvents: 'none'
+              }}
+            >
+              {contentItem.content}
             </div>
-          </div>
+          ))}
+
+          {/* Legacy content ref for backward compatibility (hidden) */}
+          <div ref={contentRef} style={{ display: 'none' }} />
 
           {/* Mobile Content Section - Only visible on mobile with 30vh height, pinned with canvas */}
           <div className="md:hidden h-[30vh] flex items-center justify-center px-4">
@@ -293,7 +380,14 @@ export default function ThirdSection() {
              <div>Container Height: {debugScrollInfo.containerHeight}</div>
              <div>Raw Scroll Progress: {debugScrollInfo.scrollTriggerProgress.toFixed(1)}%</div>
              <div>Clamped Progress: {debugScrollInfo.scrollProgress.toFixed(1)}%</div>
+             <div>Sequence Position: {currentSequencePosition.toFixed(2)}</div>
              <div>Is Pinned: {debugScrollInfo.isPinned ? 'Yes' : 'No'}</div>
+             <div style={{ marginTop: '8px', fontSize: '11px' }}>
+               Active Content: {overlayContents
+                 .filter(content => currentSequencePosition >= content.start && currentSequencePosition <= content.end)
+                 .map(content => content.id)
+                 .join(', ') || 'None'}
+             </div>
              <div style={{
                marginTop: '8px',
                height: '4px',
