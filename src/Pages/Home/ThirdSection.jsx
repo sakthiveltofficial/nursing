@@ -561,7 +561,7 @@ export default function ThirdSection() {
         </div>
 
         {/* Debug UI for ScrollTrigger */}
-        {isInViewport && (
+        {/* {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -620,10 +620,10 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Debug UI for Theatre.js Sequence */}
-        {isInViewport && (
+        {/* {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -674,7 +674,7 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

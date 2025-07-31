@@ -5,10 +5,10 @@ import { SkeletonUtils } from 'three-stdlib'
 
 export function StandingNurse(props) {
   const group = useRef()
-  const gltf = useGLTF('/Models/AttendingNurse.glb')
+  const gltf = useGLTF('/Models/Stand Nurse.glb')
   const clonedScene = useMemo(() => SkeletonUtils.clone(gltf.scene), [gltf.scene])
 
   return <primitive ref={group} object={clonedScene}  rotation={[0,0.4,0]} {...props}  ></primitive>
 }
 
-useGLTF.preload('/Models/AttendingNurse.glb')
+useGLTF.preload('/Models/Stand Nurse.glb')

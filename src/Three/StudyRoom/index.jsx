@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function StudyRoom(props) {
-  const { nodes, materials } = useGLTF('/Models/StudingNurseWithTabel.glb')
+  const { nodes, materials } = useGLTF('/Models/Writting Nurse.glb')
   return (
     <group {...props} dispose={null}>
       <mesh
@@ -41,6 +41,26 @@ export function StudyRoom(props) {
         material={materials['Material.001']}
         position={[25.098, -0.183, 11.859]}
       />
+      <group
+        name="Cylinder009_Metal002_0"
+        position={[0.725, 1.804, 0.684]}
+        rotation={[0.222, -1.49, 0.241]}
+        scale={0.13}>
+        <mesh
+          name="Cylinder009_Metal002_0001"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder009_Metal002_0001.geometry}
+          material={materials['Metal.001']}
+        />
+        <mesh
+          name="Cylinder009_Metal002_0001_1"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder009_Metal002_0001_1.geometry}
+          material={materials['BlackPlastic.002']}
+        />
+      </group>
       <group
         name="Cylinder004_WhitePlastic_0"
         position={[0.191, 1.791, 1.015]}
@@ -80,26 +100,6 @@ export function StudyRoom(props) {
           receiveShadow
           geometry={nodes.Cylinder004_WhitePlastic_0_5.geometry}
           material={materials['Metal.003']}
-        />
-      </group>
-      <group
-        name="Cylinder009_Metal002_0"
-        position={[0.725, 1.804, 0.684]}
-        rotation={[0.222, -1.49, 0.241]}
-        scale={0.13}>
-        <mesh
-          name="Cylinder009_Metal002_0001"
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder009_Metal002_0001.geometry}
-          material={materials['Metal.001']}
-        />
-        <mesh
-          name="Cylinder009_Metal002_0001_1"
-          castShadow
-          receiveShadow
-          geometry={nodes.Cylinder009_Metal002_0001_1.geometry}
-          material={materials['BlackPlastic.002']}
         />
       </group>
       <mesh
@@ -167,7 +167,7 @@ export function StudyRoom(props) {
         castShadow
         receiveShadow
         geometry={nodes.Shirt_default1_0007.geometry}
-        material={materials['Material.008']}
+        material={materials['Material.002']}
         position={[1.31, 0.492, 1.335]}
         rotation={[0, -1.488, 0]}
         scale={0.017}
@@ -312,9 +312,62 @@ export function StudyRoom(props) {
         rotation={[0, -1.488, 0]}
         scale={0.017}
       />
-
+      <group
+        name="Cylinder002_Metal_0001"
+        position={[0.022, 1.877, 1.135]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={0.062}>
+        <mesh
+          name="Cylinder002_Metal_0001_1"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_1.geometry}
+          material={materials.Metal}
+        />
+        <mesh
+          name="Cylinder002_Metal_0001_2"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_2.geometry}
+          material={materials.Vaccine}
+        />
+        <mesh
+          name="Cylinder002_Metal_0001_3"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_3.geometry}
+          material={materials.Glass}
+        />
+      </group>
+      <group
+        name="Cylinder002_Metal_0002"
+        position={[-0.059, 1.877, 1.277]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={0.062}>
+        <mesh
+          name="Cylinder002_Metal_0001_1"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_1.geometry}
+          material={materials.Metal}
+        />
+        <mesh
+          name="Cylinder002_Metal_0001_2"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_2.geometry}
+          material={materials.Vaccine}
+        />
+        <mesh
+          name="Cylinder002_Metal_0001_3"
+          castShadow
+          receiveShadow
+          geometry={nodes.Cylinder002_Metal_0001_3.geometry}
+          material={materials.Glass}
+        />
+      </group>
     </group>
   )
 }
 
-useGLTF.preload('/Models/StudingNurseWithTabel.glb')
+useGLTF.preload('/Models/Writting Nurse.glb')
