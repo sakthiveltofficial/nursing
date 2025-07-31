@@ -22,6 +22,7 @@ export default function ThirdSection() {
   const [isActive, setIsActive] = useState(false);
   const [project, setProject] = useState(null);
   const [currentSequencePosition, setCurrentSequencePosition] = useState(0);
+  const lastActiveMobileContentIndexRef = useRef(0);
 
   // Define content array with JSX content, sequence positions, and positioning
   const overlayContents = [
@@ -35,24 +36,22 @@ export default function ThirdSection() {
         transform: "translate(-50%, -50%)",
       },
       content: (
-        <div className="bg-blue-50/20 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-[30rem] flex items-center gap-4">
+        <div className="bg-white/30 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-lg max-w-[28rem] flex items-center gap-4">
           <div className="flex-shrink-0">
             <div className="w-20 h-20 rounded-xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&h=400&fit=crop&crop=center"
-                alt="Modern Hospital Facility"
+                src="https://images.unsplash.com/photo-1594824476967-48c8b9642738?auto=format&fit=crop&w=400&q=80"
+                alt="Focused student nurse"
                 className="w-full h-full object-cover"
               />
             </div>
           </div>
           <div className="flex-1">
             <h3 className="text-lg sm:text-xl font-semibold text-pink-900 mb-2">
-              Advanced Facilities
+              Passion for Learning
             </h3>
             <p className="text-sm sm:text-base text-gray-800">
-              State-of-the-art laboratories, simulation rooms, and modern
-              equipment for comprehensive hands-on nursing education and
-              training.
+              Every great nurse starts with a deep curiosity. Our students are encouraged to learn, reflect, and grow.
             </p>
           </div>
         </div>
@@ -69,18 +68,18 @@ export default function ThirdSection() {
       },
       content: (
         <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-[30rem]">
-          <div className="w-[15rem] h-20 mx-auto mb-4  overflow-hidden">
+          <div className="w-full h-20 mx-auto mb-4 overflow-hidden rounded-lg">
             <img
-              src="/logo.png"
-              alt="logo"
+              src="https://images.unsplash.com/photo-1588776814546-ec7d30dd4f9f?auto=format&fit=crop&w=600&q=80"
+              alt="Nursing classroom"
               className="w-full h-full object-cover"
             />
           </div>
           <h3 className="text-lg sm:text-xl font-semibold text-green-900 mb-2 text-center">
-            Welcome to Learning
+            Collaborative Classrooms
           </h3>
           <p className="text-sm sm:text-base text-gray-800 text-center">
-           Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus nulla sunt, dignissimos deleniti deserunt repellendus voluptas obcaecati id. Quam laudantium quas modi itaque rerum soluta temporibus voluptas qui architecto ratione commodi, rem, aut delectus. Odit deleniti cupiditate nisi odio asperiores!
+            From theory to practice, students learn together in modern, engaging environments.
           </p>
         </div>
       ),
@@ -95,13 +94,12 @@ export default function ThirdSection() {
         transform: "translateX(-50%)",
       },
       content: (
-        <div className="bg-green-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
-       
-          <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-2 text-center">
-            Interactive Learning
+        <div className="bg-pink-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-pink-800 mb-2 text-center">
+            Compassion in Action
           </h3>
-          <p className="text-sm sm:text-base text-pink-600 text-center">
-            Explore our comprehensive curriculum and modern teaching methods.
+          <p className="text-sm sm:text-base text-gray-700 text-center">
+            Building trust with every touch — caring for mothers and newborns with confidence and empathy.
           </p>
         </div>
       ),
@@ -116,13 +114,12 @@ export default function ThirdSection() {
         transform: "translateX(-50%)",
       },
       content: (
-        <div className="bg-green-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
-       
-          <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-2 text-center">
-            Interactive Learning
+        <div className="bg-blue-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-blue-800 mb-2 text-center">
+            Listening & Understanding
           </h3>
-          <p className="text-sm sm:text-base text-pink-600 text-center">
-            Explore our comprehensive curriculum and modern teaching methods.
+          <p className="text-sm sm:text-base text-gray-700 text-center">
+            Nurses are trained to listen deeply — because healing begins with understanding.
           </p>
         </div>
       ),
@@ -138,12 +135,11 @@ export default function ThirdSection() {
       },
       content: (
         <div className="bg-green-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
-       
           <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-2 text-center">
-            Interactive Learning
+            Support with Skill
           </h3>
-          <p className="text-sm sm:text-base text-pink-600 text-center">
-            Explore our comprehensive curriculum and modern teaching methods.
+          <p className="text-sm sm:text-base text-gray-700 text-center">
+            Whether it's medication, monitoring, or emotional care — precision matters.
           </p>
         </div>
       ),
@@ -158,18 +154,18 @@ export default function ThirdSection() {
         transform: "translateX(-50%)",
       },
       content: (
-        <div className="bg-green-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
-       
-          <h3 className="text-lg sm:text-xl font-semibold text-green-800 mb-2 text-center">
-            Interactive Learning
+        <div className="bg-yellow-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-yellow-800 mb-2 text-center">
+            Dedicated to Every Life
           </h3>
-          <p className="text-sm sm:text-base text-pink-600 text-center">
-            Explore our comprehensive curriculum and modern teaching methods.
+          <p className="text-sm sm:text-base text-gray-700 text-center">
+            Nursing isn’t just a profession — it's a lifelong commitment to care, service, and humanity.
           </p>
         </div>
       ),
     },
   ];
+  
 
   // Create refs for each content piece (desktop + mobile)
   const contentRefs = useRef([
@@ -184,90 +180,111 @@ export default function ThirdSection() {
     // Check if we're on mobile (768px and below)
     const isMobile = window.innerWidth <= 768;
 
+    // Handle desktop content with fade animations
     overlayContents.forEach((contentItem, index) => {
-      // Desktop content (first half of refs)
       const desktopElement = contentRefs.current[index]?.current;
-      // Mobile content (second half of refs)
-      const mobileElement =
-        contentRefs.current[index + overlayContents.length]?.current;
-
       const isVisible =
         sequencePosition >= contentItem.start &&
         sequencePosition <= contentItem.end;
 
-      if (isVisible) {
-        // Calculate fade progress within the content's range
-        const fadeInDuration = 0.1; // Fade in over 0.3 units
-        const fadeOutDuration = 0.1; // Fade out over 0.3 units
+      if (desktopElement && !isMobile) {
+        if (isVisible) {
+          // Calculate fade progress within the content's range
+          const fadeInDuration = 0.1;
+          const fadeOutDuration = 0.1;
+          let opacity = 1;
 
-        let opacity = 1;
-
-        // Fade in at the start
-        if (sequencePosition < contentItem.start + fadeInDuration) {
-          opacity = (sequencePosition - contentItem.start) / fadeInDuration;
-        }
-        // Fade out at the end
-        else if (sequencePosition > contentItem.end - fadeOutDuration) {
-          opacity = (contentItem.end - sequencePosition) / fadeOutDuration;
-        }
-
-        const finalOpacity = Math.max(0, Math.min(1, opacity));
-        console.log(
-          `Setting ${contentItem.id} opacity to ${finalOpacity}, isMobile: ${isMobile}`
-        );
-
-        // Update desktop element (only show on desktop)
-        if (desktopElement) {
-          if (!isMobile) {
-            gsap.set(desktopElement, {
-              opacity: finalOpacity,
-              pointerEvents: "auto",
-              display: "block",
-            });
-          } else {
-            // Force hide on mobile
-            gsap.set(desktopElement, {
-              opacity: 0,
-              pointerEvents: "none",
-              display: "none",
-            });
+          // Fade in at the start
+          if (sequencePosition < contentItem.start + fadeInDuration) {
+            opacity = (sequencePosition - contentItem.start) / fadeInDuration;
           }
-        }
-
-        // Update mobile element (only show on mobile)
-        if (mobileElement) {
-          if (isMobile) {
-            gsap.set(mobileElement, {
-              opacity: finalOpacity,
-              pointerEvents: "auto",
-            });
-          } else {
-            // Force hide on desktop
-            gsap.set(mobileElement, {
-              opacity: 0,
-              pointerEvents: "none",
-            });
+          // Fade out at the end
+          else if (sequencePosition > contentItem.end - fadeOutDuration) {
+            opacity = (contentItem.end - sequencePosition) / fadeOutDuration;
           }
-        }
-      } else {
-        // Hide desktop element
-        if (desktopElement) {
+
+          const finalOpacity = Math.max(0, Math.min(1, opacity));
+          gsap.set(desktopElement, {
+            opacity: finalOpacity,
+            pointerEvents: "auto",
+            display: "block",
+          });
+        } else {
           gsap.set(desktopElement, {
             opacity: 0,
             pointerEvents: "none",
-            display: isMobile ? "none" : "block",
+            display: "block",
           });
         }
+      } else if (desktopElement && isMobile) {
+        // Force hide desktop elements on mobile
+        gsap.set(desktopElement, {
+          opacity: 0,
+          pointerEvents: "none",
+          display: "none",
+        });
+      }
+    });
 
-        // Hide mobile element
+    // Handle mobile content - always show content, no blank spaces
+    if (isMobile) {
+      // Find the current active content index
+      let currentActiveIndex = -1;
+      for (let i = 0; i < overlayContents.length; i++) {
+        const contentItem = overlayContents[i];
+        if (sequencePosition >= contentItem.start && sequencePosition <= contentItem.end) {
+          currentActiveIndex = i;
+          break;
+        }
+      }
+
+      // Determine which content to show
+      let indexToShow;
+      if (currentActiveIndex !== -1) {
+        // If we found an active content, use it and update the ref
+        indexToShow = currentActiveIndex;
+        lastActiveMobileContentIndexRef.current = currentActiveIndex;
+      } else {
+        // No active content, use the last active one
+        indexToShow = lastActiveMobileContentIndexRef.current;
+      }
+
+      // Show/hide mobile content with subtle fade animation
+      overlayContents.forEach((contentItem, index) => {
+        const mobileElement = contentRefs.current[index + overlayContents.length]?.current;
+        
+        if (mobileElement) {
+          if (index === indexToShow) {
+            gsap.to(mobileElement, {
+              opacity: 1,
+              duration: 0.3,
+              ease: "power2.out",
+              pointerEvents: "auto",
+            });
+          } else {
+            gsap.to(mobileElement, {
+              opacity: 0,
+              duration: 0.2,
+              ease: "power2.in",
+              pointerEvents: "none",
+            });
+          }
+        }
+      });
+
+      console.log(`Mobile: showing content ${indexToShow} (${overlayContents[indexToShow]?.id}), current active: ${currentActiveIndex}, last stored: ${lastActiveMobileContentIndexRef.current}, sequence: ${sequencePosition.toFixed(2)}`);
+    } else {
+      // Hide all mobile elements on desktop
+      overlayContents.forEach((contentItem, index) => {
+        const mobileElement = contentRefs.current[index + overlayContents.length]?.current;
         if (mobileElement) {
           gsap.set(mobileElement, {
             opacity: 0,
             pointerEvents: "none",
           });
         }
-      }
-    });
+      });
+    }
   };
 
   // Add debug state for container scroll info
@@ -524,7 +541,7 @@ export default function ThirdSection() {
         </div>
 
         {/* Debug UI for ScrollTrigger */}
-        {isInViewport && (
+        {/* {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -583,10 +600,10 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Debug UI for Theatre.js Sequence */}
-        {isInViewport && (
+        {/* {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -637,7 +654,7 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
