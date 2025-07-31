@@ -9,7 +9,7 @@ import extension from "@theatre/r3f/dist/extension";
 import studio from "@theatre/studio";
 import { PerspectiveCamera, SheetProvider } from "@theatre/r3f";
 import { editable as e } from "@theatre/r3f";
-import sequences from "@/../public/Sequences/sequence_4.json";
+import sequences from "@/../public/Sequences/sequence_5.json";
 import { SittingDoct } from "@/Three/Doctor";
 import { OrbitControls } from "@react-three/drei";
 import { StandingDoct } from "@/Three/Doctor/Standing";

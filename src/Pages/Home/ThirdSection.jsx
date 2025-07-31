@@ -29,7 +29,7 @@ export default function ThirdSection() {
     {
       id: "content1",
       start: 0,
-      end: 0.8,
+      end: 1.67,
       contentPosition: {
         top: "25%",
         right: "0%",
@@ -59,8 +59,8 @@ export default function ThirdSection() {
     },
     {
       id: "content2",
-      start: 1.55,
-      end: 2,
+      start: 8,
+      end: 9.80,
       contentPosition: {
         top: "30%",
         right: "10%",
@@ -86,8 +86,8 @@ export default function ThirdSection() {
     },
     {
       id: "content3",
-      start: 3.7,
-      end: 3.95,
+      start: 18.72,
+      end: 21.70,
       contentPosition: {
         bottom: "10%",
         right: "0%",
@@ -106,8 +106,8 @@ export default function ThirdSection() {
     },
     {
       id: "content4",
-      start: 3.95,
-      end: 4.18,
+      start: 24.27,
+      end: 27.04,
       contentPosition: {
         bottom: "10%",
         right: "0%",
@@ -126,8 +126,8 @@ export default function ThirdSection() {
     },
     {
       id: "content5",
-      start: 4.18,
-      end: 4.26,
+      start: 28.25,
+      end: 29.80,
       contentPosition: {
         bottom: "10%",
         right: "0%",
@@ -146,8 +146,8 @@ export default function ThirdSection() {
     },
     {
       id: "content6",
-      start: 4.26,
-      end: 4.4,
+      start: 30.40,
+      end: 32,
       contentPosition: {
         bottom: "10%",
         right: "0%",
@@ -164,6 +164,26 @@ export default function ThirdSection() {
         </div>
       ),
     },
+    {
+      id: "content7",
+      start: 32.60,
+      end: 34.5,
+      contentPosition: {
+        bottom: "10%",
+        right: "0%",
+        transform: "translateX(-50%)",
+      },
+      content: (
+        <div className="bg-orange-50/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-xs">
+          <h3 className="text-lg sm:text-xl font-semibold text-orange-800 mb-2 text-center">
+            Silent Strength
+          </h3>
+          <p className="text-sm sm:text-base text-gray-700 text-center">
+            In every challenge, nurses lead with quiet courage, unwavering resolve, and open hearts.
+          </p>
+        </div>
+      ),
+    }    
   ];
   
 
@@ -409,8 +429,8 @@ export default function ThirdSection() {
           // Calculate progress from 0 to 100% based on scroll position
           const progress = Math.max(0, Math.min(1, self.progress)); // Clamp between 0 and 1
 
-          // Convert scroll progress to sequence position (0-6 range based on content array)
-          const maxSequencePosition = 6; // Adjust this based on your content array's max end value
+          // Convert scroll progress to Theatre.js sequence position (0 to total duration)
+          const maxSequencePosition = theatreDebugInfo.total || 40.04; // Use actual Theatre.js total duration
           const sequencePosition = progress * maxSequencePosition;
 
           // Update content visibility based on sequence position
@@ -541,7 +561,7 @@ export default function ThirdSection() {
         </div>
 
         {/* Debug UI for ScrollTrigger */}
-        {/* {isInViewport && (
+        {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -600,10 +620,10 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )} */}
+        )}
 
         {/* Debug UI for Theatre.js Sequence */}
-        {/* {isInViewport && (
+        {isInViewport && (
           <div
             style={{
               position: "fixed",
@@ -654,7 +674,7 @@ export default function ThirdSection() {
               />
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
