@@ -119,3 +119,29 @@ p, .text-lg, .lg\:text-xl {
   color: #6B6B6B;
   line-height: 1.6;
 }
+
+@keyframes glowdot {
+  0% {
+    transform: translateX(0) translateY(-50%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(100px) translateY(-50%);
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(-50%);
+    opacity: 0;
+  }
+}
+
+.animate-glowdot {
+  animation: glowdot 2s ease-in-out infinite;
+}
+

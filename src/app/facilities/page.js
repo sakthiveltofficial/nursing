@@ -212,19 +212,27 @@ export default function Facilities() {
          
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
+           backgroundSize: '600px 600px'
+          
           
         }}
       >
         {/* Light Color Fade Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-pink-50/80 to-white/90"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-pink-100/40"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-pink-50/80 to-white/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-pink-100/40"></div> */}
+        <div
+  className="absolute inset-0"
+  style={{
+    backgroundImage: 'linear-gradient(to bottom, white, #f7eaef)'
+  }}
+></div>
         
         {/* Content */}
         <div className="relative z-10">
           <div className="mx-auto text-left mb-8 md:mb-16 px-4">
           <h2
             ref={headingRef}
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-[#FB7185] leading-snug">
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl !font-extrabold !text-[#FB7185] !leading-snug">
              State-of-the-Art Facilities Empowering Future Healthcare Professionals
            </h2>
           </div>
@@ -259,12 +267,12 @@ export default function Facilities() {
 
 
       <div className="px-4 md:px-6 lg:px-16 py-12 md:py-16 space-y-16 md:space-y-24">
-      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center text-[#9A8C92] px-4">
+      <h2 className="text-2xl md:text-4xl lg:text-6xl font-bold text-center !text-[#9A8C92] px-4">
         Laboratories and Classrooms
       </h2>
 
       {/* Preclinical Science Lab */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={preclinicalRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={preclinicalRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Preclinical Science Lab.webp"
@@ -305,7 +313,7 @@ export default function Facilities() {
       </div>
 
       {/* OBG Lab */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={obgRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={obgRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Obstetrics and Gynaecology.webp"
@@ -343,7 +351,7 @@ export default function Facilities() {
       </div>
 
       {/* Community Health Lab */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={communityHealthRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={communityHealthRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Community Health Nursing Lab.webp"
@@ -379,7 +387,7 @@ export default function Facilities() {
       </div>
 
       {/* Nutrition Lab */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={nutritionRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={nutritionRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Nutrition Lab.webp"
@@ -413,12 +421,12 @@ export default function Facilities() {
       </div>
 
       {/* Extra Heading */}
-      <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-center text-[#9A8C92] px-4">
+      <h2 className="text-2xl md:text-4xl lg:text-6xl font-bold text-center !text-[#9A8C92] px-4">
         Campus Infrastructure
       </h2>
 
       {/* Hostel Facilities */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={hostelRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={hostelRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Hostel Facilities.webp"
@@ -456,7 +464,7 @@ export default function Facilities() {
       </div>
 
       {/* Library & Study Center */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={libraryRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={libraryRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Auditorium.webp"
@@ -494,7 +502,7 @@ export default function Facilities() {
       </div>
 
       {/* Medical Center */}
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6 md:gap-10" ref={medicalRef}>
+      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10" ref={medicalRef}>
         <div className="w-full md:w-1/2">
           <img
             src="/images/Smart.webp"
