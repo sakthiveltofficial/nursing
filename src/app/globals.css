@@ -88,6 +88,16 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+}
+
 h1, .text-4xl, .lg\:text-6xl, .xl\:text-7xl {
   font-family: var(--font-sans);
   font-size: 4rem;

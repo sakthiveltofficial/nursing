@@ -385,32 +385,34 @@ export default function ToggleMenu() {
                   />
                   
                   {/* Menu Item Text with Dots */}
-                  <div className="flex items-end h-full relative z-10">
-                    <div className="flex items-center gap-2 sm:gap-3 relative">
-                      <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold leading-tight break-words">{item.name}</h3>
-                      
-                      {/* Decorative Dot Grid - Next to text in normal state, moves to corner on hover */}
-                      <div 
-                        ref={(el) => {
-                          if (el) dotsRefs.current[index] = el
-                        }}
-                        className="inline-block"
-                      >
-                        <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
-                          {[...Array(9)].map((_, i) => (
-                            <div 
-                              key={i} 
-                              className={`w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full transition-all duration-300 ${
-                                isActive || isHovered 
-                                  ? "bg-[#FFAABD] opacity-100" 
-                                  : "bg-[#FFAABD] opacity-60"
-                              }`} 
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <div className="flex items-end gap-2 sm:gap-3 relative">
+  {/* Menu Name */}
+  <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold leading-tight break-words">
+    {item.name}
+  </h3>
+
+  {/* Arrow Dots */}
+  <div
+    ref={(el) => {
+      if (el) dotsRefs.current[index] = el;
+    }}
+    className="inline-block"
+  >
+    <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
+      {[0, 1, 2, 4, 5, 6, 8].map((i) => (
+        <div
+          key={i}
+          className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full transition-all duration-300 ${
+            isActive || isHovered
+              ? "bg-[#ee9b9b] opacity-100"
+              : "bg-[#040404] opacity-100"
+          }`}
+          style={{ gridColumn: (i % 3) + 1, gridRow: Math.floor(i / 3) + 1 }}
+        />
+      ))}
+    </div>
+  </div>
+</div>
                 </div>
               )
             })}
