@@ -40,9 +40,9 @@ export default function ThirdSection() {
           <div className="flex-shrink-0">
             <div className="w-20 h-20 rounded-xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1594824476967-48c8b9642738?auto=format&fit=crop&w=400&q=80"
+                src="/logoOnlyBlack.png"
                 alt="Focused student nurse"
-                className="w-full h-full object-cover"
+                className="w-full h-auto object-fit"
               />
             </div>
           </div>
@@ -70,9 +70,9 @@ export default function ThirdSection() {
         <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-[30rem]">
           <div className="w-full h-20 mx-auto mb-4 overflow-hidden rounded-lg">
             <img
-              src="https://images.unsplash.com/photo-1588776814546-ec7d30dd4f9f?auto=format&fit=crop&w=600&q=80"
+              src="/logoBlack.png"
               alt="Nursing classroom"
-              className="w-full h-full object-cover"
+              className="w-full h-auto object-fit"
             />
           </div>
           <h3 className="text-lg sm:text-xl font-semibold text-green-900 mb-2 text-center">
