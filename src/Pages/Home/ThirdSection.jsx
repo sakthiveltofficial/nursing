@@ -232,24 +232,24 @@ export default function ThirdSection() {
               onTheatreDebugUpdate={setTheatreDebugInfo}
             />
           </div>
-        </div>
 
-        {/* Content overlay - Mobile optimized */}
-        <div
-          ref={contentRef}
-          className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-1/2 transform -translate-x-1/2 text-center z-20 px-4 max-w-sm sm:max-w-md lg:max-w-lg"
-          style={{
-            transformOrigin: "center center",
-          }}
-        >
-          {/* Mobile-friendly overlay content */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg">
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
-              Interactive Learning Experience
-            </h3>
-            <p className="text-sm sm:text-base text-gray-600">
-              Explore our state-of-the-art facilities and modern learning environments.
-            </p>
+          {/* Content overlay - Positioned on top of 3D Canvas with exact same dimensions */}
+          <div
+            ref={contentRef}
+            className="absolute inset-0 w-full h-full flex items-center justify-center z-20 rounded-xl sm:rounded-2xl lg:rounded-none"
+            style={{
+              transformOrigin: "center center",
+            }}
+          >
+            {/* Mobile-friendly overlay content */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-sm sm:max-w-md lg:max-w-lg mx-4">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+                Interactive Learning Experience
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600">
+                Explore our state-of-the-art facilities and modern learning environments.
+              </p>
+            </div>
           </div>
         </div>
 
