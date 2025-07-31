@@ -83,7 +83,7 @@ export default function ThirdSection() {
       // Set initial state - mobile-responsive shrunk in
       const isMobile = window.innerWidth <= 768;
       gsap.set(canvasContainer, {
-        clipPath: isMobile ? "inset(5% 5% 5% 5% round 15px)" : "inset(10% 10% 10% 10% round 20px)",
+        clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(10% 2% 10% 2% round 20px)",
         scale: 1,
         opacity: 1,
         transformOrigin: "center center",
@@ -111,10 +111,10 @@ export default function ThirdSection() {
         // PHASE 1: IN Animation - mobile-responsive expand when entering (30% of timeline)
         .fromTo(canvasContainer, 
           {
-            clipPath: isMobile ? "inset(5% 5% 5% 5% round 15px)" : "inset(20% 20% 20% 20% round 20px)",
+            clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(10% 2% 10% 2% round 20px)",
           },
           {
-            clipPath: isMobile ? "inset(2% 2% 2% 2% round 12px)" : "inset(10% 2% 10% 2% round 50px)",
+            clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(0% 0% 0% 0% round 50px)",
             duration: 0.3, // 30% of timeline for expansion
             ease: "power2.out",
           }
@@ -220,28 +220,28 @@ export default function ThirdSection() {
         {/* Inner canvas container with mobile-optimized dimensions */}
         <div
           ref={canvasContainerRef}
-          className="relative w-[95vw] sm:w-[90vw] lg:w-[100vw] h-[60vh] xs:h-[70vh] sm:h-[80vh] lg:h-[100vh] bg-white overflow-hidden z-10 mx-auto rounded-xl sm:rounded-2xl lg:rounded-none"
+          className="relative w-[95vw] sm:w-[90vw] lg:w-[100vw] h-[100vh] md:h-[100vh] bg-transparent md:bg-white overflow-hidden z-10 mx-auto rounded-xl sm:rounded-2xl lg:rounded-none flex flex-col"
           style={{
             // clip-path, scale, and opacity will be animated via GSAP
           }}
         >
-          {/* 3D Canvas Content */}
-          <div className="relative w-full h-full flex items-center justify-center">
+          {/* 3D Canvas Content - Takes 70vh on mobile, full height on desktop */}
+          <div className="relative w-full h-[70vh] md:h-full flex items-center justify-center">
             <MainCanvesScene 
               isActive={isInViewport} 
               onTheatreDebugUpdate={setTheatreDebugInfo}
             />
           </div>
 
-          {/* Content overlay - Positioned on top of 3D Canvas with exact same dimensions */}
+          {/* Content overlay - Hidden on mobile, visible on desktop */}
           <div
             ref={contentRef}
-            className="absolute inset-0 w-full h-full flex items-center justify-center z-20 rounded-xl sm:rounded-2xl lg:rounded-none"
+            className="hidden md:absolute md:inset-0 md:w-full md:h-full md:flex md:items-center md:justify-center z-20 rounded-xl sm:rounded-2xl lg:rounded-none"
             style={{
               transformOrigin: "center center",
             }}
           >
-            {/* Mobile-friendly overlay content */}
+            {/* Desktop overlay content */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg max-w-sm sm:max-w-md lg:max-w-lg mx-4">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
                 Interactive Learning Experience
@@ -249,6 +249,25 @@ export default function ThirdSection() {
               <p className="text-sm sm:text-base text-gray-600">
                 Explore our state-of-the-art facilities and modern learning environments.
               </p>
+            </div>
+          </div>
+
+          {/* Mobile Content Section - Only visible on mobile with 30vh height, pinned with canvas */}
+          <div className="md:hidden h-[30vh] flex items-center justify-center px-4">
+            <div className="w-full max-w-sm mx-auto text-center">
+              <div className="bg-white rounded-3xl p-6  border border-gray-100">
+                <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 008 10.172V5L8 4z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Interactive Learning
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Explore our state-of-the-art facilities and modern learning environments designed for excellence.
+                </p>
+              </div>
             </div>
           </div>
         </div>

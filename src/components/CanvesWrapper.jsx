@@ -39,12 +39,12 @@ function CanvesWrapper({ children }) {
           {children}
           {/* <OrbitControls  /> */}
           <ambientLight intensity={0.5} />
-          <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
+          {/* <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
             <GizmoViewport
               axisColors={["red", "green", "blue"]}
               labelColor="black"
             />
-          </GizmoHelper>
+          </GizmoHelper> */}
           {/* <Grid
             position={[0, -0.65, 0]}
             args={[150, 200]}
