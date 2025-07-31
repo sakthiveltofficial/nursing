@@ -19,7 +19,7 @@ export default function Footer() {
   ]
 
   return (
-    <div className="relative p-2 sm:p-4 lg:p-8">
+    <div className="relative p-2 sm:p-4 lg:p-8 overflow-hidden">
       {/* Section-specific background - only on home page */}
       {isHomePage && (
         <>
@@ -55,25 +55,25 @@ export default function Footer() {
       )}
 
       {/* Main Container with exact rounded corners */}
-             <div className={`relative z-10 w-full min-h-[50vh] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden ${isHomePage ? 'shadow-2xl' : 'bg-white'}`}>
-        <div className="flex flex-col lg:flex-row min-h-full">
+             <div className={`relative z-10 w-full h-[75vh] max-h-[75vh] rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden ${isHomePage ? 'shadow-2xl' : 'bg-white'}`}>
+        <div className="flex flex-col lg:flex-row h-full">
           {/* Left Side - Navigation with exact color #2F0014 */}
           <div className="w-full lg:w-3/5 flex flex-col relative" style={{ backgroundColor: "#2F0014" }}>
             {/* Logo Section */}
-            <div className="flex-shrink-0 p-4 sm:p-8 lg:p-12">
+            <div className="flex-shrink-0 p-3 sm:p-4 lg:p-6">
               <Image 
                 src="/logo.png" 
                 alt="AJK College of Nursing" 
                 width={200}
                 height={80}
-                className="h-16 sm:h-20 lg:h-28 w-auto object-contain"
+                className="h-12 sm:h-16 lg:h-20 w-auto object-contain"
                 priority
               />
             </div>
 
             {/* Navigation Menu - Always visible, centered */}
-            <div className="flex-1 flex items-center justify-center py-4 sm:py-6 lg:py-8">
-              <nav className="space-y-2 sm:space-y-4 lg:space-y-6">
+            <div className="flex-1 flex items-center justify-center py-2 sm:py-4 lg:py-6">
+              <nav className="space-y-1 sm:space-y-3 lg:space-y-4">
                 {navigationItems.map((item, index) => {
                   const IconComponent = item.icon
                   const isActive = pathname === item.href
@@ -81,7 +81,7 @@ export default function Footer() {
                     <div key={index} className="text-center group">
                       <a
                         href={item.href}
-                        className="relative text-white text-sm sm:text-lg lg:text-xl font-normal block py-2 sm:py-3 px-4 sm:px-6 rounded-xl sm:rounded-2xl transition-all duration-500 ease-out overflow-hidden group-hover:scale-105 group-hover:shadow-2xl"
+                        className="relative text-white text-sm sm:text-lg lg:text-xl font-normal block py-2 sm:py-3 lg:py-4 px-4 sm:px-6 lg:px-8 rounded-lg sm:rounded-xl transition-all duration-500 ease-out overflow-hidden group-hover:scale-105 group-hover:shadow-2xl"
                         style={{
                           background: isActive ? "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 170, 189, 0.2) 100%)" : "transparent",
                           backdropFilter: isActive ? "blur(20px)" : "blur(0px)",
@@ -136,10 +136,10 @@ export default function Footer() {
             </div>
 
             {/* Address Section */}
-            <div className="flex-shrink-0 p-4 sm:p-8 lg:p-12 text-white">
-              <div className="space-y-2">
+            <div className="flex-shrink-0 p-3 sm:p-4 lg:p-6 text-white">
+              <div className="space-y-1">
                 <p className="text-xs sm:text-sm text-white opacity-80">Address</p>
-                <p className="text-sm sm:text-base lg:text-lg font-light text-white">
+                <p className="text-xs sm:text-sm lg:text-base font-light text-white">
                   2972 Westheimer Rd. Santa Ana,
                   <br />
                   Illinois 85486
@@ -149,9 +149,9 @@ export default function Footer() {
           </div>
 
           {/* Right Side - with padding around map section */}
-          <div className="w-full lg:w-2/5 relative flex flex-col p-3 sm:p-6" style={{ backgroundColor: "#2F0014" }}>
+          <div className="w-full lg:w-2/5 relative flex flex-col p-2 sm:p-3 lg:p-4" style={{ backgroundColor: "#2F0014" }}>
             {/* Pink Map Section - full height */}
-            <div className="flex-1 relative rounded-2xl sm:rounded-3xl overflow-hidden">
+            <div className="flex-1 relative rounded-xl sm:rounded-2xl overflow-hidden">
               {/* Google Maps Full Size */}
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.427469514332!2d76.86946907588424!3d10.855055857736698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba85b09a70a6d93%3A0xf583adc977c313eb!2sAJK%20College%20of%20Nursing!5e0!3m2!1sen!2sin!4v1753753320464!5m2!1sen!2sin" 
