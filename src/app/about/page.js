@@ -259,7 +259,7 @@ export default function AboutSection() {
 
       {/* Marquee Section */}
 
-      <div className="top-20 md:top-0 min-h-screen py-12 md:py-16 px-0 !pt-20 relative w-full mb-20 md:mb-0">
+      <div className="top-20 md:top-0  py-12 md:py-16 px-0 !pt-20 relative w-full mb-20 md:mb-0">
         {/* Main Heading */}
         <div className="text-center mb-12 md:mb-16 w-full">
           <h1 className="text-2xl md:text-4xl lg:text-6xl !text-[#9A8C92] font-light leading-tight w-full max-w-none px-4">
@@ -269,7 +269,7 @@ export default function AboutSection() {
         </div>
 
         {/* Marquee Rows */}
-        <div className="space-y-3 md:space-y-4 relative w-full">
+        <div className="space-y-3 md:space-y-4 relative w-full ">
           {features.map((row, rowIndex) => (
             <div key={rowIndex} className="overflow-hidden w-full">
               <div
