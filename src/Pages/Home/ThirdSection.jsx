@@ -75,19 +75,24 @@ export default function ThirdSection() {
     }
   ];
 
-  // Create refs for each content piece
-  const contentRefs = useRef(overlayContents.map(() => useRef(null)));
+  // Create refs for each content piece (desktop + mobile)
+  const contentRefs = useRef([
+    ...overlayContents.map(() => useRef(null)), // Desktop refs (0 to length-1)
+    ...overlayContents.map(() => useRef(null))  // Mobile refs (length to 2*length-1)
+  ]);
 
   // Function to update content visibility based on sequence position
   const updateContentVisibility = (sequencePosition) => {
     setCurrentSequencePosition(sequencePosition);
     
+    // Check if we're on mobile (768px and below)
+    const isMobile = window.innerWidth <= 768;
+    
     overlayContents.forEach((contentItem, index) => {
-      const contentElement = contentRefs.current[index]?.current;
-      if (!contentElement) {
-        console.log(`Content element ${contentItem.id} ref not found`);
-        return;
-      }
+      // Desktop content (first half of refs)
+      const desktopElement = contentRefs.current[index]?.current;
+      // Mobile content (second half of refs)
+      const mobileElement = contentRefs.current[index + overlayContents.length]?.current;
 
       const isVisible = sequencePosition >= contentItem.start && sequencePosition <= contentItem.end;
       
@@ -108,18 +113,58 @@ export default function ThirdSection() {
         }
         
         const finalOpacity = Math.max(0, Math.min(1, opacity));
-        console.log(`Setting ${contentItem.id} opacity to ${finalOpacity}`);
+        console.log(`Setting ${contentItem.id} opacity to ${finalOpacity}, isMobile: ${isMobile}`);
         
-        gsap.set(contentElement, {
-          opacity: finalOpacity,
-          pointerEvents: 'auto',
-          display: 'block'
-        });
+        // Update desktop element (only show on desktop)
+        if (desktopElement) {
+          if (!isMobile) {
+            gsap.set(desktopElement, {
+              opacity: finalOpacity,
+              pointerEvents: 'auto',
+              display: 'block'
+            });
+          } else {
+            // Force hide on mobile
+            gsap.set(desktopElement, {
+              opacity: 0,
+              pointerEvents: 'none',
+              display: 'none'
+            });
+          }
+        }
+        
+        // Update mobile element (only show on mobile)
+        if (mobileElement) {
+          if (isMobile) {
+            gsap.set(mobileElement, {
+              opacity: finalOpacity,
+              pointerEvents: 'auto'
+            });
+          } else {
+            // Force hide on desktop
+            gsap.set(mobileElement, {
+              opacity: 0,
+              pointerEvents: 'none'
+            });
+          }
+        }
       } else {
-        gsap.set(contentElement, {
-          opacity: 0,
-          pointerEvents: 'none'
-        });
+        // Hide desktop element
+        if (desktopElement) {
+          gsap.set(desktopElement, {
+            opacity: 0,
+            pointerEvents: 'none',
+            display: isMobile ? 'none' : 'block'
+          });
+        }
+        
+        // Hide mobile element
+        if (mobileElement) {
+          gsap.set(mobileElement, {
+            opacity: 0,
+            pointerEvents: 'none'
+          });
+        }
       }
     });
   };
@@ -182,18 +227,21 @@ export default function ThirdSection() {
 
       if (!container || !outerDiv || !canvasContainer) return;
 
-      // Initialize all content elements with opacity 0
-      contentRefs.current.forEach(ref => {
-        if (ref.current) {
+      // Set initial state - mobile-responsive shrunk in
+      const isMobile = window.innerWidth <= 768;
+      
+      // Initialize all content elements with opacity 0 (both desktop and mobile)
+      contentRefs.current.forEach((ref, index) => {
+        if (ref?.current) {
+          const isDesktopElement = index < overlayContents.length;
           gsap.set(ref.current, {
             opacity: 0,
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            // Force hide desktop elements on mobile
+            display: (isDesktopElement && isMobile) ? 'none' : 'block'
           });
         }
       });
-
-      // Set initial state - mobile-responsive shrunk in
-      const isMobile = window.innerWidth <= 768;
       gsap.set(canvasContainer, {
         clipPath: isMobile ? "inset(0% 0% 0% 0% round 5px)" : "inset(10% 2% 10% 2% round 20px)",
         scale: 1,
@@ -339,23 +387,29 @@ export default function ThirdSection() {
           {/* Legacy content ref for backward compatibility (hidden) */}
           <div ref={contentRef} style={{ display: 'none' }} />
 
-          {/* Mobile Content Section - Only visible on mobile with 30vh height, pinned with canvas */}
-          <div className="md:hidden h-[30vh] flex items-center justify-center px-4">
-            <div className="w-full max-w-sm mx-auto text-center">
-              <div className="bg-white rounded-3xl p-6  border border-gray-100">
-                <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 008 10.172V5L8 4z" />
-                  </svg>
+          {/* Dynamic Mobile Content Section - Only visible on mobile with 30vh height, pinned with canvas */}
+          <div className="md:hidden h-[30vh] relative overflow-hidden">
+            {overlayContents.map((contentItem, index) => (
+              <div
+                key={`mobile-${contentItem.id}`}
+                ref={el => {
+                  // Create separate refs for mobile content
+                  if (!contentRefs.current[index + overlayContents.length]) {
+                    contentRefs.current[index + overlayContents.length] = { current: null };
+                  }
+                  contentRefs.current[index + overlayContents.length].current = el;
+                }}
+                className="absolute inset-0 flex items-center justify-center px-4"
+                style={{
+                  opacity: 0,
+                  pointerEvents: 'none'
+                }}
+              >
+                <div className="w-full max-w-sm mx-auto text-center">
+                  {contentItem.content}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Interactive Learning
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Explore our state-of-the-art facilities and modern learning environments designed for excellence.
-                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
