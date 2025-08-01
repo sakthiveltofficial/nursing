@@ -42,7 +42,16 @@ const features = [
 
 export default function AboutSection() {
   const headingRef = useRef(null);
+  const imageRef = useRef(null);
+  const cell1Ref = useRef(null);
+  const missionSectionRef = useRef(null);
   const [mounted, setMounted] = useState(false);
+
+
+  
+
+
+
 
   // 
   useEffect(() => {
@@ -87,6 +96,73 @@ export default function AboutSection() {
         ease: "power2.out",
         delay: 0.5
       });
+    }
+
+    // Scroll trigger animation for the image
+    const image = imageRef.current;
+    if (image) {
+      // Set initial position (400px from top)
+      gsap.set(image, {
+        y: -500,
+        opacity: 0
+      });
+
+      // Create scroll trigger animation
+      gsap.to(image, {
+        y: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: image,
+          start: "top 80%",
+          end: "top 20%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+
+    // Cell 1 travel animation to mission section
+    const cell1 = cell1Ref.current;
+    const missionSection = missionSectionRef.current;
+    
+    if (cell1 && missionSection) {
+      // Create a timeline for the cell travel animation
+      const cellTravelTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: missionSection,
+          start: "top 80%",
+          end: "top 20%",
+          scrub: 1,
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Add the travel animation to the timeline
+      cellTravelTimeline.to(cell1, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        xPercent: -50,
+        yPercent: -50,
+        zIndex: 1000,
+        scale: 1.5,
+        duration: 1,
+        ease: "power2.inOut"
+      }, 0);
+
+      // Add a reverse animation when scrolling back up
+      cellTravelTimeline.to(cell1, {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        xPercent: -50,
+        yPercent: -50,
+        scale: 1,
+        zIndex: 3,
+        duration: 1,
+        ease: "power2.inOut"
+      }, 1);
     }
   }, []);
 
@@ -185,8 +261,8 @@ export default function AboutSection() {
           <div className="relative flex-1 flex items-center justify-center min-h-[250px] md:min-h-[350px] lg:min-h-[420px] h-full w-full md:w-auto mb-8 md:mb-0">
             <div className="relative w-[200px] h-[220px] md:w-[280px] md:h-[300px] lg:w-[520px] lg:h-[400px] -top-20">
               {/* 3 images, each with its own oval animation */}
-              <div className="absolute top-1/2 left-1/2 oval-anim oval-1">
-                <Image src="/images/mission.webp" alt="Cell 1" width={100} height={100} className="rounded-full transition-all duration-500 w-[100px] h-[100px] md:w-[140px] md:h-[140px]" />
+              <div className="absolute top-1/2 left-1/2 oval-anim oval-1" ref={cell1Ref}>
+                <Image src="/images/mission.webp" alt="Cell 1" id='#cookie' width={100} height={100} className="rounded-full transition-all duration-500 w-[100px] h-[100px] md:w-[140px] md:h-[140px]" />
               </div>
               <div className="absolute top-1/2 left-1/2 oval-anim oval-2">
                 <Image src="/images/mission.webp" alt="Cell 2" width={70} height={70} className="rounded-full transition-all duration-500 w-[70px] h-[70px] md:w-[100px] md:h-[100px]" />
@@ -216,7 +292,7 @@ export default function AboutSection() {
           {/* Center rotating image */}
           <div className="flex justify-center -mb-16 md:-mb-20">
 
-              <div className="relative flex justify-center items-start z-50">
+              <div className="relative flex justify-center items-start z-50" ref={imageRef}>
                 {/* White Background Circle - perfectly centered */}
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[150px] h-[150px] md:w-[215px] md:h-[215px] rounded-full bg-white z-0 " />
               
