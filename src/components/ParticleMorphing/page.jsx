@@ -383,17 +383,21 @@ const ParticleMorphing = forwardRef(function ParticleMorphing({
     return {
       pointSize: isMobile ? 0.08 : 0.1,
       mouseRadius: isMobile ? mouseRadius * 1.2 : mouseRadius,
-      mouseInfluence: isMobile ? mouseInfluence * 1.1 : mouseInfluence
+      mouseInfluence: isMobile ? mouseInfluence * 1.1 : mouseInfluence,
+      scale: isMobile ? 0.7 : 1.0, // Scale down for mobile
+      yPosition: isMobile ? 0 : -1, // Move higher on mobile
+      colorA: isMobile ? "#D499C2" : "#FEC8DE", // Much darker pink for mobile
+      colorB: isMobile ? "#551A42" : "#8B2D6B"  // Much darker purple for mobile
     }
   }, [mouseRadius, mouseInfluence])
 
   return (
-    <group position={[0, -1, 0]} ref={morphingRef}>
+    <group position={[0, optimizedProps.yPosition, 0]} scale={optimizedProps.scale} ref={morphingRef}>
       <Particles 
         modelPath={modelPath} 
         scrollProgress={scrollProgress}
-        colorA="#FEC8DE"
-        colorB="#8B2D6B"
+        colorA={optimizedProps.colorA}
+        colorB={optimizedProps.colorB}
         pointSize={optimizedProps.pointSize}
         mouseRadius={optimizedProps.mouseRadius}
         mouseInfluence={optimizedProps.mouseInfluence}
