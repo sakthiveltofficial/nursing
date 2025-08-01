@@ -7,9 +7,11 @@ import Link from "next/link"
 export default function Footer() {
   const quickLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
-    { name: "Admissions", href: "/admissions" },
-    { name: "Contact", href: "/contact" },
+    { name: "About Us", href: "/about" },
+    { name: "Admissions/ Academies", href: "/admissions" },
+    { name: "Facilities", href: "/facilities" },
+    { name: "Gallery", href: "/gallery" },
+    { name: "Contact us", href: "/contact" },
   ]
 
   const socialLinks = [
