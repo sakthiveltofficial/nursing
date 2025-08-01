@@ -397,12 +397,12 @@ export default function Hero() {
       </div>
 
       {/* Loading Screen Overlay */}
-      {/* {!isLoaded && (
+      {!isLoaded && (
         <LoadingScreen 
           progress={loadingProgress} 
           onComplete={() => setIsLoaded(true)} 
         />
-      )} */}
+      )}
     </>
   );
 }
