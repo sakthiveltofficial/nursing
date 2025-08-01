@@ -266,10 +266,10 @@ export default function Hero() {
           <div className="absolute inset-0 z-20 h-full flex flex-col pointer-events-none">
 
             {/* Main Content */}
-            <main className="flex-1 flex items-end pb-8 sm:pb-12 lg:pb-16">
+            <main className="flex-1 flex items-end pb-6 sm:pb-8 md:pb-10 lg:pb-12 xl:pb-16">
               <div className="w-full">
-                {/* Mobile Layout */}
-                <div className="block lg:hidden px-4 sm:px-6">
+                {/* Mobile & Small Tablet Layout */}
+                <div className="block md:hidden px-4 sm:px-6">
                   <div className="hero-content text-center pointer-events-auto">
                     <h1 className="text-2xl xs:text-3xl sm:text-4xl font-medium text-black leading-[1.15] mb-4 sm:mb-6 tracking-tight">
                       Start Your Journey in Nursing
@@ -303,30 +303,66 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Desktop Layout */}
-                <div className="hidden lg:flex justify-between items-end px-[4rem]">
-                  {/* Left Content */}
-                  <div className="hero-content pl-6 lg:pl-8 lg:max-w-xl text-left self-end pointer-events-auto">
-                    <h1 className="text-4xl lg:text-6xl xl:text-7xl font-light text-black leading-tight mb-6">
+                {/* Medium Tablet Layout */}
+                <div className="hidden md:block lg:hidden px-6 md:px-8">
+                  <div className="hero-content text-center pointer-events-auto max-w-2xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-light text-black leading-tight mb-6 tracking-tight">
                       Start Your Journey in Nursing
                       <br />
-                      With Confidence and Compassion
+                      With Confidence
                     </h1>
-                    <p className="text-gray-600 text-lg lg:text-xl mb-8 max-w-lg">
+                    <p className="text-gray-600 text-lg md:text-xl mb-8 max-w-xl mx-auto leading-relaxed">
                       Step into the future of healthcare with AJK College of Nursing. Our programs blend
-                      theory, hands-on clinical training, and personal growth. Learn from experienced faculty and graduate
-                      ready for global opportunities in nursing.
+                      theory, hands-on clinical training, and personal growth.
                     </p>
-                    <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-lg font-medium inline-flex items-center space-x-2">
+                    
+                    {/* Tablet tags - Single row layout */}
+                    <div className="flex flex-wrap justify-center gap-3 mb-8 max-w-lg mx-auto">
+                      <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/80 backdrop-blur-sm font-medium">
+                        B.Sc Nursing
+                      </span>
+                      <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/80 backdrop-blur-sm font-medium">
+                        Post Basic B.Sc
+                      </span>
+                      <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/80 backdrop-blur-sm font-medium">
+                        GNM
+                      </span>
+                      <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/80 backdrop-blur-sm font-medium">
+                        Clinical Training
+                      </span>
+                    </div>
+                    
+                    <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 text-lg font-medium inline-flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-200">
                       <span className="text-white">APPLY NOW</span>
                       <ArrowUpRight className="w-5 h-5 text-orange-400" />
                     </Button>
                   </div>
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden lg:flex justify-between items-end px-6 lg:px-12 xl:px-16 2xl:px-20">
+                  {/* Left Content */}
+                  <div className="hero-content pl-4 lg:pl-6 xl:pl-8 lg:max-w-xl xl:max-w-2xl text-left self-end pointer-events-auto">
+                    <h1 className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-light text-black leading-tight mb-6 tracking-tight">
+                      Start Your Journey in Nursing
+                      <br />
+                      With Confidence
+                    </h1>
+                    <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-8 max-w-lg xl:max-w-xl leading-relaxed">
+                      Step into the future of healthcare with AJK College of Nursing. Our programs blend
+                      theory, hands-on clinical training, and personal growth. Learn from experienced faculty and graduate
+                      ready for global opportunities in nursing.
+                    </p>
+                    <Button className="bg-black text-white hover:bg-gray-800 rounded-full px-8 py-3 lg:px-10 lg:py-4 text-lg lg:text-xl font-medium inline-flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all duration-200">
+                      <span className="text-white">APPLY NOW</span>
+                      <ArrowUpRight className="w-5 h-5 lg:w-6 lg:h-6 text-orange-400" />
+                    </Button>
+                  </div>
 
                   {/* Right Content - Desktop Only */}
-                  <div className="hero-content hidden lg:block self-end pr-6 lg:pr-8 lg:max-w-sm pointer-events-auto">
-                    <div className="space-y-6">
-                      <p className="text-gray-600 text-lg leading-relaxed">
+                  <div className="hero-content self-end pr-4 lg:pr-6 xl:pr-8 lg:max-w-sm xl:max-w-md pointer-events-auto">
+                    <div className="space-y-6 lg:space-y-8">
+                      <p className="text-gray-600 text-lg lg:text-xl leading-relaxed">
                         From foundational courses to advanced clinical rotations, we prepare you to lead with compassion
                         and care. Our labs, training hospitals, and personalized academic support ensure you're career-ready.
                         <span className="text-black font-medium">
@@ -335,19 +371,19 @@ export default function Hero() {
                         </span>
                       </p>
                       <div className="flex flex-wrap gap-3">
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm lg:text-base text-gray-700 bg-white/50 backdrop-blur-sm font-medium">
                           B.Sc Nursing
                         </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm lg:text-base text-gray-700 bg-white/50 backdrop-blur-sm font-medium">
                           Post Basic B.Sc
                         </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm lg:text-base text-gray-700 bg-white/50 backdrop-blur-sm font-medium">
                           GNM
                         </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm lg:text-base text-gray-700 bg-white/50 backdrop-blur-sm font-medium">
                           Clinical Rotations
                         </span>
-                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm text-gray-700 bg-white/50 backdrop-blur-sm">
+                        <span className="px-4 py-2 border border-gray-300 rounded-full text-sm lg:text-base text-gray-700 bg-white/50 backdrop-blur-sm font-medium">
                           Placement Support
                         </span>
                       </div>

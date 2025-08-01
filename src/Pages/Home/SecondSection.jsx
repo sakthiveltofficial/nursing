@@ -158,8 +158,8 @@ export default function SecondSection() {
             fontFamily: "system-ui, -apple-system, sans-serif",
           }}
         >
-          <span className="block">Empowering Nurses</span>
-          <span className="block text-pink-600">With Knowledge</span>
+          <span className="block font-semibold">Empowering Nurses</span>
+          <span className="block text-pink-600 font-semibold">With Knowledge</span>
         </h1>
 
         {/* Mobile optimized subtitle */}
