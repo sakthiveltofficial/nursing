@@ -292,7 +292,7 @@ export default function AboutSection() {
           {/* Center rotating image */}
           <div className="flex justify-center -mb-16 md:-mb-20">
 
-              <div className="relative flex justify-center items-start z-50" ref={imageRef}>
+              <div className="relative flex justify-center items-start z-10" ref={imageRef}>
                 {/* White Background Circle - perfectly centered */}
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[150px] h-[150px] md:w-[215px] md:h-[215px] rounded-full bg-white z-0 " />
               
