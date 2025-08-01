@@ -5,7 +5,7 @@ import { Suspense, useState, useEffect, useRef } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ParticleMorphing from "@/components/ParticleMorphing/page";
-// import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreen from "@/components/LoadingScreen";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
