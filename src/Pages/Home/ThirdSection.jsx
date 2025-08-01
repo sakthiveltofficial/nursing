@@ -269,23 +269,19 @@ export default function ThirdSection() {
         indexToShow = lastActiveMobileContentIndexRef.current;
       }
 
-      // Show/hide mobile content with subtle fade animation
+      // Show/hide mobile content instantly (no fade animation)
       overlayContents.forEach((contentItem, index) => {
         const mobileElement = contentRefs.current[index + overlayContents.length]?.current;
         
         if (mobileElement) {
           if (index === indexToShow) {
-            gsap.to(mobileElement, {
+            gsap.set(mobileElement, {
               opacity: 1,
-              duration: 0.3,
-              ease: "power2.out",
               pointerEvents: "auto",
             });
           } else {
-            gsap.to(mobileElement, {
+            gsap.set(mobileElement, {
               opacity: 0,
-              duration: 0.2,
-              ease: "power2.in",
               pointerEvents: "none",
             });
           }
