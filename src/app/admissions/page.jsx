@@ -325,6 +325,7 @@ const AdmissionsPage = () => {
           backgroundImage: "url('/images/normal.svg')",
           backgroundSize: "contain",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           opacity: 1
         }}
       >
@@ -341,7 +342,7 @@ const AdmissionsPage = () => {
                     Courses of Study <br/>in B.Sc. Nursing
                   
                   </h1>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-600 font-extralight leading-relaxed max-w-lg">
+                  <p className="text-xs pb-8 sm:text-sm md:text-base text-gray-600 font-extralight leading-relaxed max-w-lg">
                     The B.Sc. Nursing program at AJK College offers an extensive curriculum designed to equip students with a strong foundation in various sciences and nursing disciplines. Throughout their undergraduate program, students engage in learning subjects across Biological, Psychological, and Nursing sciences.
                   </p>
                 </div>
@@ -349,7 +350,7 @@ const AdmissionsPage = () => {
 
               {/* Right Section - Full width on mobile, 50% on desktop */}
               <div ref={rightSectionRef} className="w-full lg:w-1/2 lg:py-20 h-[500px] sm:overflow-scroll scrollbar-hide sm:flex-col">
-                <div className="space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12">
+                <div className="space-y-12 sm:space-y-8 md:space-y-10 lg:space-y-12">
                   {courseSections.map((section) => (
                     <div key={section.id} className="">
                       {/* Section Header */}
@@ -361,7 +362,7 @@ const AdmissionsPage = () => {
                       </div>
 
                       {/* Points List */}
-                      <div className="space-y-2 sm:space-y-3 ml-6 sm:ml-8 md:ml-10 lg:ml-14">
+                      <div className="space-y-2 sm:space-y-6 ml-6 sm:ml-8 md:ml-10 lg:ml-14">
                         {section.points.map((point, index) => (
                           <div key={index} className="flex items-start gap-2 sm:gap-3">
                             <div className="flex-shrink-0 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-pink-400 rounded-full mt-1.5 sm:mt-2 md:mt-2.5"></div>
@@ -396,7 +397,7 @@ const AdmissionsPage = () => {
                 </p>
               </div>
             </div>
-          
+                  
             {/* Slot 2: Educational Qualification - Full width on mobile, col-span-2 on larger screens */}
             <div className="col-span-1 sm:col-span-2 row-span-1 bg-[#fff0f6] rounded-xl sm:rounded-2xl md:rounded-3xl lg:rounded-4xl flex p-3 sm:p-4 md:p-6 lg:p-8 shadow-lg">
               <div className="p-2 sm:p-3 md:p-4">

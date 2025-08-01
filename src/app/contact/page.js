@@ -6,7 +6,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
       {/* Header Section */}
-      <div className="w-full max-w-[1400px] flex flex-col lg:flex-row items-center lg:items-center justify-between px-10 sm:px-10 md:px-8 lg:px-20 pt-16 sm:pt-20 md:pt-16 lg:pt-32 pb-16 sm:pb-20 md:pb-32 lg:pb-52 gap-8 lg:gap-0">
+      <div className="w-full max-w-[1400px] flex flex-col lg:flex-row items-center lg:items-center justify-between px-10 sm:px-10 md:px-8 lg:px-20 pt-32 sm:pt-20 md:pt-16 lg:pt-32 pb-16 sm:pb-20 md:pb-32 lg:pb-52 gap-8 lg:gap-0">
         <div className="w-full lg:w-auto text-center lg:text-left">
           <h1 className="text-2xl  md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-[85px] font-bold !text-[#FB7185] leading-[1.1] tracking-tight">
             Get in touch with us.<br />
